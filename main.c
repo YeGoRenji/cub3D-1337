@@ -3,29 +3,26 @@
 // See README in the root project for more information.
 // -----------------------------------------------------------------------------
 
+#include <structs.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <MLX42/MLX42.h>
 
 #define WIDTH 1280
 #define HEIGHT 720
-
-static mlx_image_t* image;
-
-// -----------------------------------------------------------------------------
 
 int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void ft_randomize(void* param)
+void ft_randomize(void* v_vars)
 {
-	(void)param;
-	for (uint32_t i = 0; i < image->width; ++i)
+	t_vars	*vars;
+
+	vars = v_vars;
+	for (uint32_t i = 0; i < vars->img->width; ++i)
 	{
-		for (uint32_t y = 0; y < image->height; ++y)
+		for (uint32_t y = 0; y < vars->img->height; ++y)
 		{
 			uint32_t color = ft_pixel(
 				rand() % 0xFF, // R
@@ -33,25 +30,26 @@ void ft_randomize(void* param)
 				rand() % 0xFF, // B
 				rand() % 0xFF  // A
 			);
-			mlx_put_pixel(image, i, y, color);
+			mlx_put_pixel(vars->img, i, y, color);
 		}
 	}
 }
 
-void ft_hook(void* param)
+void ft_hook(void* v_vars)
 {
-	mlx_t* mlx = param;
+	t_vars	*vars;
 
-	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_UP))
-		image->instances[0].y -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-		image->instances[0].y += 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-		image->instances[0].x -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-		image->instances[0].x += 5;
+    vars = v_vars;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(vars->mlx);
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_UP))
+		vars->img->instances[0].y -= 5;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_DOWN))
+		vars->img->instances[0].y += 5;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
+		vars->img->instances[0].x -= 5;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
+		vars->img->instances[0].x += 5;
 }
 
 // -----------------------------------------------------------------------------
@@ -60,32 +58,31 @@ int32_t main(int32_t argc, const char* argv[])
 {
 	(void)argc;
 	(void)argv;
-	mlx_t* mlx;
+	t_vars vars;
 
 	// Gotta error check this stuff
-	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
+	if (!(vars.mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true)))
 	{
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (!(image = mlx_new_image(mlx, 128, 128)))
+	if (!(vars.img = mlx_new_image(vars.mlx, 128, 128)))
 	{
-		mlx_close_window(mlx);
+		mlx_close_window(vars.mlx);
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (mlx_image_to_window(mlx, image, 0, 0) == -1)
+	if (mlx_image_to_window(vars.mlx, vars.img, 0, 0) == -1)
 	{
-		mlx_close_window(mlx);
+		mlx_close_window(vars.mlx);
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
 	
-	mlx_loop_hook(mlx, ft_randomize, mlx);
-	mlx_loop_hook(mlx, ft_hook, mlx);
-
-	mlx_loop(mlx);
-	mlx_terminate(mlx);
+	mlx_loop_hook(vars.mlx, ft_randomize, &vars);
+	mlx_loop_hook(vars.mlx, ft_hook, &vars);
+	mlx_loop(vars.mlx);
+	mlx_terminate(vars.mlx);
 	return (EXIT_SUCCESS);
 }
 

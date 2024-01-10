@@ -1,12 +1,10 @@
 NAME = cub3D
 
-CFLAGS = -Wall -Wextra -Werror -O3 -Ofast #-fsanitize=address #-g
+CFLAGS = -Wall -Wextra -Werror -O3 -Ofast -g #-fsanitize=address #-g
 
 LINK_H = -Iinclude
 
 OBJSFOLDER = objs/
-
-OS := $(shell uname -s)
 
 OBJS_FILES = main.o
 
@@ -20,7 +18,7 @@ objs:
 	@mkdir objs
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) -o $@ -L`pwd`/lib -lmlx42  $(LINK_H) -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
+	$(CC) $(OBJS) $(CFLAGS) -o $@ -L`pwd`/lib -lmlx42 $(LINK_H) -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 $(OBJSFOLDER)%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LINK_H)
