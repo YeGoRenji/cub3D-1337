@@ -8,6 +8,14 @@ OBJSFOLDER = objs/
 
 OBJS_FILES = main.o
 
+OS := $(shell uname -s)
+
+ifeq ($(OS), Darwin)
+	LINKS = -lmlx42 -L"/Users/$(USER)/.brew/opt/glfw/lib/"
+else
+	LINKS = -lmlx42_linux -ldl -pthread -lm
+endif
+
 OBJS = $(foreach obj, $(OBJS_FILES), $(OBJSFOLDER)$(obj))
 
 GLOBAL_HEADERS = include/structs.h
@@ -18,7 +26,7 @@ objs:
 	@mkdir objs
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) -o $@ -L`pwd`/lib -lmlx42 $(LINK_H) -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
+	$(CC) $(OBJS) $(CFLAGS) -o $@ -L`pwd`/lib $(LINKS) $(LINK_H) -lglfw
 
 $(OBJSFOLDER)%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LINK_H)
