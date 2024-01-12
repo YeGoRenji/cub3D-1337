@@ -37,18 +37,27 @@ void ft_checker(t_vars* vars)
 void ft_hook(void* v_vars)
 {
 	t_vars	*vars;
+	double x = 0;
+	double y = 0;
 
     vars = v_vars;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_UP))
-		vars->player.pos.y -= 5;
+		y -= 5;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_DOWN))
-		vars->player.pos.y += 5;
+		y += 5;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
-		vars->player.pos.x -= 5;
+		x -= 5;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
-		vars->player.pos.x += 5;
+		x += 5;
+	if (x == y)
+	{
+		x /= 1.424;
+		y /= 1.424;
+	}
+	vars->player.pos.x += x;
+	vars->player.pos.y += y;
 	ft_checker(vars);
 }
 
