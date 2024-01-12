@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
+/*   Updated: 2024/01/12 20:52:46 by ylyoussf         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <structs.h>
+#include <drawing.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,6 +31,31 @@ int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 // 	return (b - a);
 // }
 
+t_vect2d vector_add(t_vect2d *vec1, t_vect2d *vec2)
+{
+	return (t_vect2d){vec1->x + vec2->x, vec1->y + vec2->y};
+}
+
+t_vect2d vector_scale(t_vect2d *vec, double scale)
+{
+	return (t_vect2d){scale * vec->x, scale * vec->y};
+}
+
+void ft_put_player(t_vars *vars)
+{
+	t_player	*player = NULL;
+	t_vect2d	look_vec;
+
+	player = &vars->player;
+	// vars->player.pos.x
+	look_vec = vector_scale(&player->dir, 20);
+	draw_line(vars, 
+		   player->pos, 
+		   vector_add(&player->pos, &look_vec), 
+		   0x5050FFFF
+	);
+}
+
 void ft_checker(t_vars* vars)
 {
 	uint32_t color;
@@ -27,8 +65,8 @@ void ft_checker(t_vars* vars)
 		for (uint32_t y = 0; y < vars->img->height; ++y)
 		{
 			color = (i / CHECKER_W + y / CHECKER_W) % 2 ? 0xFF5050FF : 0x202020FF;
-			if (abs((int)i - (int)vars->player.pos.x) <= 4 && abs((int)y - (int)vars->player.pos.y) <= 4)
-				color = 0x50FF50FF;
+			// if (abs((int)i - (int)vars->player.pos.x) <= 4 && abs((int)y - (int)vars->player.pos.y) <= 4)
+			// 	color = 0x50FF50FF;
 			mlx_put_pixel(vars->img, i, y, color);
 		}
 	}
@@ -51,14 +89,31 @@ void ft_hook(void* v_vars)
 		x -= 5;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
 		x += 5;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_D))
+		vars->look_angle -= 0.1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_A))
+		vars->look_angle += 0.1;
 	if (x == y)
 	{
 		x /= 1.424;
 		y /= 1.424;
 	}
+
+	// Moving Logic
+	vars->player.dir = (t_vect2d){cos(vars->look_angle), sin(vars->look_angle)};
+	t_vect2d forward_move = vector_scale(&vars->player.dir, y);
+	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
+	t_vect2d side_move = vector_scale(&side_dir, x);
+	t_vect2d movement = vector_add(&forward_move, &side_move);
+	vars->player.pos = vector_add(&vars->player.pos, &movement);
 	vars->player.pos.x += x;
 	vars->player.pos.y += y;
+
+	// Rotating look
+
+	// Drawing Logic
 	ft_checker(vars);
+	ft_put_player(vars);
 }
 
 void	exit_failure(t_vars *vars)
@@ -82,6 +137,7 @@ void	init_vars(t_vars *vars)
 	// INFO: Remove this
 	vars->player.dir = (t_vect2d){1, 0};
 	vars->player.pos = (t_vect2d){10, 10};
+	vars->look_angle = 0;
 }
 
 int32_t main(int32_t argc, const char* argv[])

@@ -6,7 +6,8 @@ LINK_H = -Iinclude
 
 OBJSFOLDER = objs/
 
-OBJS_FILES = main.o
+OBJS_FILES = main.o \
+			 drawing.o
 
 OS := $(shell uname -s)
 
@@ -31,9 +32,9 @@ $(NAME): $(OBJS)
 $(OBJSFOLDER)%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LINK_H)
 
-# $(OBJSFOLDER)%.o: src/maths/%.c include/maths.h $(GLOBAL_HEADERS)
-# 	@echo "Compiling $<..."
-# 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+$(OBJSFOLDER)%.o: src/drawing/%.c include/drawing.h $(GLOBAL_HEADERS)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 
 re: fclean all
 
