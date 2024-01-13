@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/12 20:52:46 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/13 04:54:43 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,29 @@ void ft_put_player(t_vars *vars)
 {
 	t_player	*player = NULL;
 	t_vect2d	look_vec;
+	int			i;
+	int			j;
 
 	player = &vars->player;
-	// vars->player.pos.x
-	look_vec = vector_scale(&player->dir, 20);
-	draw_line(vars, 
-		   player->pos, 
-		   vector_add(&player->pos, &look_vec), 
-		   0x5050FFFF
-	);
+	look_vec = vector_scale(&player->dir, 50);
+	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
+
+	// Look Rays
+	for (i = -25; i <= 25; ++i)
+	{
+		t_vect2d var_side = (t_vect2d){i * side_dir.x, i * side_dir.y};
+		t_vect2d ray = vector_add(&look_vec, &var_side);
+		draw_line(vars, 
+			   player->pos, 
+			   vector_add(&player->pos, &ray), 
+			   0x5050FFFF
+		);
+	}
+
+	// Player dot
+	for (i = (int)player->pos.x - 1; i <= (int)player->pos.x + 2; ++i)
+		for (j = (int)player->pos.y - 1; j <= (int)player->pos.y + 2; ++j)
+			mlx_put_pixel(vars->img, i, j, 0x50FF50FF);
 }
 
 void ft_checker(t_vars* vars)
@@ -100,14 +114,14 @@ void ft_hook(void* v_vars)
 	}
 
 	// Moving Logic
-	vars->player.dir = (t_vect2d){cos(vars->look_angle), sin(vars->look_angle)};
-	t_vect2d forward_move = vector_scale(&vars->player.dir, y);
+	vars->player.dir = (t_vect2d){cos(-vars->look_angle), sin(-vars->look_angle)};
+	t_vect2d forward_move = vector_scale(&vars->player.dir, -y);
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
-	t_vect2d side_move = vector_scale(&side_dir, x);
+	t_vect2d side_move = vector_scale(&side_dir, -x);
 	t_vect2d movement = vector_add(&forward_move, &side_move);
 	vars->player.pos = vector_add(&vars->player.pos, &movement);
-	vars->player.pos.x += x;
-	vars->player.pos.y += y;
+	// vars->player.pos.x += x;
+	// vars->player.pos.y += y;
 
 	// Rotating look
 
