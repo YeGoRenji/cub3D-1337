@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/13 04:54:43 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/14 03:14:51 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #define WIDTH 1280
 #define HEIGHT 720
 #define CHECKER_W 50
+#define MVT_SPEED 5
 
 int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
@@ -79,8 +80,6 @@ void ft_checker(t_vars* vars)
 		for (uint32_t y = 0; y < vars->img->height; ++y)
 		{
 			color = (i / CHECKER_W + y / CHECKER_W) % 2 ? 0xFF5050FF : 0x202020FF;
-			// if (abs((int)i - (int)vars->player.pos.x) <= 4 && abs((int)y - (int)vars->player.pos.y) <= 4)
-			// 	color = 0x50FF50FF;
 			mlx_put_pixel(vars->img, i, y, color);
 		}
 	}
@@ -96,13 +95,13 @@ void ft_hook(void* v_vars)
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_UP))
-		y -= 5;
+		y -= 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_DOWN))
-		y += 5;
+		y += 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
-		x -= 5;
+		x -= 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
-		x += 5;
+		x += 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_D))
 		vars->look_angle -= 0.1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_A))
@@ -113,17 +112,15 @@ void ft_hook(void* v_vars)
 		y /= 1.424;
 	}
 
-	// Moving Logic
+	// Rotating look
 	vars->player.dir = (t_vect2d){cos(-vars->look_angle), sin(-vars->look_angle)};
-	t_vect2d forward_move = vector_scale(&vars->player.dir, -y);
+
+	// Moving Logic
+	t_vect2d forward_move = vector_scale(&vars->player.dir, -y * MVT_SPEED);
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
-	t_vect2d side_move = vector_scale(&side_dir, -x);
+	t_vect2d side_move = vector_scale(&side_dir, -x * MVT_SPEED);
 	t_vect2d movement = vector_add(&forward_move, &side_move);
 	vars->player.pos = vector_add(&vars->player.pos, &movement);
-	// vars->player.pos.x += x;
-	// vars->player.pos.y += y;
-
-	// Rotating look
 
 	// Drawing Logic
 	ft_checker(vars);
