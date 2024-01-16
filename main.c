@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/14 03:14:51 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/16 16:00:35 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,23 @@ t_vect2d vector_scale(t_vect2d *vec, double scale)
 void ft_put_player(t_vars *vars)
 {
 	t_player	*player = NULL;
-	t_vect2d	look_vec;
+	t_vect2d	forward_scaled;
 	int			i;
 	int			j;
+	int 		plane_half = vars->view_plane_width / 2;
 
 	player = &vars->player;
-	look_vec = vector_scale(&player->dir, 50);
+	forward_scaled = vector_scale(&player->dir, vars->dist_to_plane);
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
 
 	// Look Rays
-	for (i = -25; i <= 25; ++i)
+	for (i = -plane_half; i <= plane_half; ++i)
 	{
 		t_vect2d var_side = (t_vect2d){i * side_dir.x, i * side_dir.y};
-		t_vect2d ray = vector_add(&look_vec, &var_side);
+		t_vect2d ray_end = vector_add(&forward_scaled, &var_side);
 		draw_line(vars, 
 			   player->pos, 
-			   vector_add(&player->pos, &ray), 
+			   vector_add(&player->pos, &ray_end), 
 			   0x5050FFFF
 		);
 	}
@@ -87,38 +88,51 @@ void ft_checker(t_vars* vars)
 
 void ft_hook(void* v_vars)
 {
-	t_vars	*vars;
-	double x = 0;
-	double y = 0;
+	t_vars		*vars;
+	t_vect2d	input_mvt;
 
+	input_mvt.x = 0;
+	input_mvt.y = 0;
     vars = v_vars;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
-	if (mlx_is_key_down(vars->mlx, MLX_KEY_UP))
-		y -= 1;
-	if (mlx_is_key_down(vars->mlx, MLX_KEY_DOWN))
-		y += 1;
-	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
-		x -= 1;
-	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
-		x += 1;
-	if (mlx_is_key_down(vars->mlx, MLX_KEY_D))
-		vars->look_angle -= 0.1;
+	// Movement
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_W))
+		input_mvt.y -= 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_S))
+		input_mvt.y += 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_A))
+		input_mvt.x -= 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_D))
+		input_mvt.x += 1;
+	// Rotation
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
+		vars->look_angle -= 0.1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
 		vars->look_angle += 0.1;
-	if (x == y)
+	// View cone
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_Y))
+		vars->dist_to_plane += 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_H))
+		vars->dist_to_plane -= 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_U))
+		vars->view_plane_width += 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_J))
+		vars->view_plane_width -= 1;
+
+	if (input_mvt.x == input_mvt.y)
 	{
-		x /= 1.424;
-		y /= 1.424;
+		input_mvt.x /= 1.424;
+		input_mvt.y /= 1.424;
 	}
 
 	// Rotating look
 	vars->player.dir = (t_vect2d){cos(-vars->look_angle), sin(-vars->look_angle)};
 
 	// Moving Logic
-	t_vect2d forward_move = vector_scale(&vars->player.dir, -y * MVT_SPEED);
+	t_vect2d forward_move = vector_scale(&vars->player.dir, -input_mvt.y * MVT_SPEED);
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
-	t_vect2d side_move = vector_scale(&side_dir, -x * MVT_SPEED);
+	t_vect2d side_move = vector_scale(&side_dir, -input_mvt.x * MVT_SPEED);
 	t_vect2d movement = vector_add(&forward_move, &side_move);
 	vars->player.pos = vector_add(&vars->player.pos, &movement);
 
@@ -149,6 +163,8 @@ void	init_vars(t_vars *vars)
 	vars->player.dir = (t_vect2d){1, 0};
 	vars->player.pos = (t_vect2d){10, 10};
 	vars->look_angle = 0;
+	vars->dist_to_plane = 50;
+	vars->view_plane_width = 50;
 }
 
 int32_t main(int32_t argc, const char* argv[])
