@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/16 16:00:35 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/18 20:52:28 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_vect2d vector_scale(t_vect2d *vec, double scale)
 	return (t_vect2d){scale * vec->x, scale * vec->y};
 }
 
-void ft_put_player(t_vars *vars)
+void put_player(t_vars *vars)
 {
 	t_player	*player = NULL;
 	t_vect2d	forward_scaled;
@@ -69,10 +69,10 @@ void ft_put_player(t_vars *vars)
 	// Player dot
 	for (i = (int)player->pos.x - 1; i <= (int)player->pos.x + 2; ++i)
 		for (j = (int)player->pos.y - 1; j <= (int)player->pos.y + 2; ++j)
-			mlx_put_pixel(vars->img, i, j, 0x50FF50FF);
+			prot_put_pixel(vars->img, i, j, 0x50FF50FF);
 }
 
-void ft_checker(t_vars* vars)
+void checker(t_vars* vars)
 {
 	uint32_t color;
 
@@ -84,6 +84,32 @@ void ft_checker(t_vars* vars)
 			mlx_put_pixel(vars->img, i, y, color);
 		}
 	}
+}
+
+void	draw_square(t_vars* vars, t_vect2d anchor, int width, uint32_t color)
+{
+	for (int i = 0; i < width; ++i)
+		for (int j = 0; j < width; ++j)
+			mlx_put_pixel(vars->img, anchor.x + i, anchor.y + j, color);
+}
+
+void draw_map(t_vars *vars)
+{
+	// puts("HERE");
+	for(int i = 0; i < vars->map.height; ++i)
+	{
+		for(int j = 0; j < vars->map.width; ++j)
+		{
+			if (vars->map.data[i * vars->map.height + j])
+				draw_square(vars, 
+					(t_vect2d){j * CHECKER_W, i * CHECKER_W},
+					CHECKER_W,
+					0xFF50FFFF);
+			// printf("%d, ", vars->map.data[i * vars->map.height + j]);
+		}
+		// printf("\n");
+	}
+	// printf("-----------\n");
 }
 
 void ft_hook(void* v_vars)
@@ -137,8 +163,9 @@ void ft_hook(void* v_vars)
 	vars->player.pos = vector_add(&vars->player.pos, &movement);
 
 	// Drawing Logic
-	ft_checker(vars);
-	ft_put_player(vars);
+	checker(vars);
+	put_player(vars);
+	draw_map(vars);
 }
 
 void	exit_failure(t_vars *vars)
@@ -172,10 +199,21 @@ int32_t main(int32_t argc, const char* argv[])
 	(void)argc;
 	(void)argv;
 	t_vars vars;
+	int map[5][5] = {
+		{0, 0, 0, 0, 1},
+		{0, 1, 1, 1, 1},
+		{0, 0, 0, 0, 1},
+		{0, 0, 0, 0, 1},
+		{0, 0, 0, 0, 1}
+	};
 
+
+	vars.map.data = (int *)map;
+	vars.map.width = 5;
+	vars.map.height = 5;
 	init_vars(&vars);
 	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
-	ft_checker(&vars);
+	checker(&vars);
 	mlx_loop_hook(vars.mlx, ft_hook, &vars);
 	mlx_loop(vars.mlx);
 	mlx_terminate(vars.mlx);

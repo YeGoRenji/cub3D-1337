@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/16 15:50:27 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/18 20:30:22 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ typedef struct s_player {
 	t_vect2d	dir;
 }				t_player;
 
+typedef struct s_map {
+	int		width;
+	int		height;
+	int		*data;
+}				t_map;
+
 typedef struct s_vars {
 	mlx_t		*mlx;
 	mlx_image_t	*img;
@@ -48,6 +54,7 @@ typedef struct s_vars {
 	double		look_angle;
 	int 		view_plane_width; // dynamic only for debug
 	int 		dist_to_plane; // dynamic only for debug
+	t_map		map;
 }				t_vars;
 
 #endif

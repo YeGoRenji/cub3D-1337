@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:14:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/12 20:29:24 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/18 20:39:15 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,15 @@ int	handle_y_x(t_vect2d *pt1, t_vect2d *pt2)
 		ft_swap(&pt2->x, &pt2->y);
 	}
 	return (y_x_flip);
+}
+
+void	prot_put_pixel(mlx_image_t *image, uint32_t x, uint32_t y, uint32_t color)
+{
+	if (!(0 <= x && x < image->width))
+		return ;
+	if (!(0 <= y && y < image->height))
+		return ;
+	mlx_put_pixel(image, x, y, color);
 }
 
 void	my_mlx_point_put(mlx_image_t *img, t_vect2d *pt, int flip, uint32_t color)
