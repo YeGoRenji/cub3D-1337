@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/19 05:02:26 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/19 12:29:52 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,15 @@ void draw_map(t_vars *vars)
 	}
 }
 
+int get_map_val(t_vars *vars, int x, int y)
+{
+	if (x < 0 || x >= vars->map.width)
+		return 1;
+	if (y < 0 || y >= vars->map.height)
+		return 1;
+	return vars->map.data[y * vars->map.height + x];
+}
+
 
 void	ray_intersect_test(t_vars *vars)
 {
@@ -173,7 +182,6 @@ void	ray_intersect_test(t_vars *vars)
 	double map_x = (int)(vars->player.pos.x / CHECKER_W);
 	double pos_y = vars->player.pos.y / CHECKER_W;
 	double map_y = (int)(vars->player.pos.y / CHECKER_W);
-	// TODO: Understand this more ?
 	if (ray.x < 0)
 		side_dist.x = (pos_x - map_x) * delta_dist.x;
 	else
@@ -214,7 +222,7 @@ void	ray_intersect_test(t_vars *vars)
 			first_side_y = vector_scale(&first_side_y, CHECKER_W);
 			draw_star(vars, vector_add(&vars->player.pos, &first_side_y), 0x00FFFFFF);
 		}
-		if (vars->map.data[(int)map_y * vars->map.height + (int)map_x] > 0) hit = 1;
+		if (get_map_val(vars, map_x, map_y) > 0) hit = 1;
 		//Check if ray has hit a wall
 	}
 
