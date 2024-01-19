@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/18 20:52:28 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/19 05:02:26 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@
 int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
     return (r << 24 | g << 16 | b << 8 | a);
+}
+
+double abs_f(double a)
+{
+	if (a < 0)
+		return (-a);
+	return (a);
 }
 
 // int abs(int a, int b)
@@ -42,12 +49,44 @@ t_vect2d vector_scale(t_vect2d *vec, double scale)
 	return (t_vect2d){scale * vec->x, scale * vec->y};
 }
 
+double	vector_magnitude(t_vect2d *vec)
+{
+	return (sqrt(vec->x * vec->x + vec->y * vec->y));
+}
+
+t_vect2d	vector_normalize(t_vect2d *vec)
+{
+	double	mag;
+
+	mag = vector_magnitude(vec);
+	return ((t_vect2d){
+		vec->x / mag,
+		vec->y / mag
+	});
+}
+
+void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
+{
+	int	i;
+	int	j;
+
+	for (i = (int)center.x - 1; i <= (int)center.x + 1; ++i)
+		for (j = (int)center.y - 1; j <= (int)center.y + 1; ++j)
+			prot_put_pixel(vars->img, i, j, color);
+
+	j = center.y;
+	for (i = (int)center.x - 2; i <= (int)center.x + 2; ++i)
+		prot_put_pixel(vars->img, i, j, color);
+	i = center.x;
+	for (j = (int)center.y - 2; j <= (int)center.y + 2; ++j)
+		prot_put_pixel(vars->img, i, j, color);
+}
+
 void put_player(t_vars *vars)
 {
 	t_player	*player = NULL;
 	t_vect2d	forward_scaled;
 	int			i;
-	int			j;
 	int 		plane_half = vars->view_plane_width / 2;
 
 	player = &vars->player;
@@ -67,9 +106,10 @@ void put_player(t_vars *vars)
 	}
 
 	// Player dot
-	for (i = (int)player->pos.x - 1; i <= (int)player->pos.x + 2; ++i)
-		for (j = (int)player->pos.y - 1; j <= (int)player->pos.y + 2; ++j)
-			prot_put_pixel(vars->img, i, j, 0x50FF50FF);
+	draw_star(vars, player->pos, 0x50FF50FF);
+	// for (i = (int)player->pos.x - 1; i <= (int)player->pos.x + 2; ++i)
+	// 	for (j = (int)player->pos.y - 1; j <= (int)player->pos.y + 2; ++j)
+	// 		prot_put_pixel(vars->img, i, j, 0x50FF50FF);
 }
 
 void checker(t_vars* vars)
@@ -95,7 +135,6 @@ void	draw_square(t_vars* vars, t_vect2d anchor, int width, uint32_t color)
 
 void draw_map(t_vars *vars)
 {
-	// puts("HERE");
 	for(int i = 0; i < vars->map.height; ++i)
 	{
 		for(int j = 0; j < vars->map.width; ++j)
@@ -104,22 +143,93 @@ void draw_map(t_vars *vars)
 				draw_square(vars, 
 					(t_vect2d){j * CHECKER_W, i * CHECKER_W},
 					CHECKER_W,
-					0xFF50FFFF);
-			// printf("%d, ", vars->map.data[i * vars->map.height + j]);
+					0xAA50AAFF);
 		}
-		// printf("\n");
 	}
-	// printf("-----------\n");
+}
+
+
+void	ray_intersect_test(t_vars *vars)
+{
+	t_vect2d	ray;
+	t_vect2d	ray_normalized;
+	// printf("Mouse here (%d, %d)\n", vars->mouseX, vars->mouseY);
+	ray.x = vars->mouseX - vars->player.pos.x;
+	ray.y = vars->mouseY - vars->player.pos.y;
+	ray_normalized = vector_normalize(&ray);
+	ray = vector_scale(&ray_normalized, CHECKER_W);
+
+	draw_line(vars, vars->player.pos, (t_vect2d){vars->mouseX, vars->mouseY}, 0xFFFFFFFF);
+	t_vect2d delta_dist;
+	delta_dist.x = abs_f(1 / ray_normalized.x) ?: 1e30;
+	delta_dist.y = abs_f(1 / ray_normalized.y) ?: 1e30;
+
+	t_vect2d step;
+	step.x = 1 - 2 * (ray.x < 0);
+	step.y = 1 - 2 * (ray.y < 0);
+
+	t_vect2d side_dist;
+	double pos_x = vars->player.pos.x / CHECKER_W;
+	double map_x = (int)(vars->player.pos.x / CHECKER_W);
+	double pos_y = vars->player.pos.y / CHECKER_W;
+	double map_y = (int)(vars->player.pos.y / CHECKER_W);
+	// TODO: Understand this more ?
+	if (ray.x < 0)
+		side_dist.x = (pos_x - map_x) * delta_dist.x;
+	else
+		side_dist.x = (map_x + 1.0 - pos_x) * delta_dist.x;
+	if (ray.y < 0)
+		side_dist.y = (pos_y -  map_y) * delta_dist.y;
+	else
+		side_dist.y = (map_y + 1.0 - pos_y) * delta_dist.y;
+
+	t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
+	first_side_x = vector_scale(&first_side_x, CHECKER_W);
+
+	t_vect2d first_side_y = vector_scale(&ray_normalized, side_dist.y);
+	first_side_y = vector_scale(&first_side_y, CHECKER_W);
+
+	draw_star(vars, vector_add(&vars->player.pos, &first_side_x), 0xFFFF00FF);
+	draw_star(vars, vector_add(&vars->player.pos, &first_side_y), 0x00FFFFFF);
+
+	int hit = 0;
+	while (hit == 0)
+  	{
+		//jump to next map square, either in x-direction, or in y-direction
+		if (side_dist.x < side_dist.y)
+		{
+			side_dist.x += delta_dist.x;
+			map_x += step.x;
+			// side = 0;
+			t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
+			first_side_x = vector_scale(&first_side_x, CHECKER_W);
+			draw_star(vars, vector_add(&vars->player.pos, &first_side_x), 0xFFFF00FF);
+		}
+		else
+		{
+			side_dist.y += delta_dist.y;
+			map_y += step.y;
+			// side = 1;
+			t_vect2d first_side_y = vector_scale(&ray_normalized, side_dist.y);
+			first_side_y = vector_scale(&first_side_y, CHECKER_W);
+			draw_star(vars, vector_add(&vars->player.pos, &first_side_y), 0x00FFFFFF);
+		}
+		if (vars->map.data[(int)map_y * vars->map.height + (int)map_x] > 0) hit = 1;
+		//Check if ray has hit a wall
+	}
+
+	// draw_line(vars, vars->player.pos, vector_add(&vars->player.pos, &first_side_x), 0xFFFF00FF);
 }
 
 void ft_hook(void* v_vars)
 {
 	t_vars		*vars;
 	t_vect2d	input_mvt;
-
+	
 	input_mvt.x = 0;
 	input_mvt.y = 0;
     vars = v_vars;
+	mlx_get_mouse_pos(vars->mlx, &vars->mouseX, &vars->mouseY);
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
 	// Movement
@@ -145,7 +255,6 @@ void ft_hook(void* v_vars)
 		vars->view_plane_width += 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_J))
 		vars->view_plane_width -= 1;
-
 	if (input_mvt.x == input_mvt.y)
 	{
 		input_mvt.x /= 1.424;
@@ -156,6 +265,7 @@ void ft_hook(void* v_vars)
 	vars->player.dir = (t_vect2d){cos(-vars->look_angle), sin(-vars->look_angle)};
 
 	// Moving Logic
+	// TODO : Make speed independent of CPU speed (use deltaTime)
 	t_vect2d forward_move = vector_scale(&vars->player.dir, -input_mvt.y * MVT_SPEED);
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
 	t_vect2d side_move = vector_scale(&side_dir, -input_mvt.x * MVT_SPEED);
@@ -166,7 +276,10 @@ void ft_hook(void* v_vars)
 	checker(vars);
 	put_player(vars);
 	draw_map(vars);
+	if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
+		ray_intersect_test(vars);
 }
+
 
 void	exit_failure(t_vars *vars)
 {
@@ -192,6 +305,8 @@ void	init_vars(t_vars *vars)
 	vars->look_angle = 0;
 	vars->dist_to_plane = 50;
 	vars->view_plane_width = 50;
+	vars->mouseX = 0;
+	vars->mouseY = 0;
 }
 
 int32_t main(int32_t argc, const char* argv[])
@@ -215,6 +330,7 @@ int32_t main(int32_t argc, const char* argv[])
 	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
 	checker(&vars);
 	mlx_loop_hook(vars.mlx, ft_hook, &vars);
+	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
 	mlx_loop(vars.mlx);
 	mlx_terminate(vars.mlx);
 	return (EXIT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/18 20:30:22 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/19 02:34:49 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_vars {
 	int 		view_plane_width; // dynamic only for debug
 	int 		dist_to_plane; // dynamic only for debug
 	t_map		map;
+	int			mouseX;
+	int			mouseY;
 }				t_vars;
 
 #endif

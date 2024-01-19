@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:14:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/18 20:39:15 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/19 01:37:42 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ int	handle_y_x(t_vect2d *pt1, t_vect2d *pt2)
 	return (y_x_flip);
 }
 
-void	prot_put_pixel(mlx_image_t *image, uint32_t x, uint32_t y, uint32_t color)
+void	prot_put_pixel(mlx_image_t *image, int x, int y, uint32_t color)
 {
-	if (!(0 <= x && x < image->width))
+	if (!(0 <= x && x < (int)image->width))
 		return ;
-	if (!(0 <= y && y < image->height))
+	if (!(0 <= y && y < (int)image->height))
 		return ;
 	mlx_put_pixel(image, x, y, color);
 }
@@ -94,7 +94,7 @@ void	my_mlx_point_put(mlx_image_t *img, t_vect2d *pt, int flip, uint32_t color)
 void	draw_line(t_vars *vars, t_vect2d pt1, t_vect2d pt2, uint32_t color)
 {
 	t_dir		dir;
-	t_vect2d		to_draw;
+	t_vect2d	to_draw;
 
 	dir.is_flipped = handle_y_x(&pt1, &pt2);
 	get_direction(&pt1, &pt2, &dir);
