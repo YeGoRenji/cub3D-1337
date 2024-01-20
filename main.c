@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/19 19:01:56 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/20 00:54:20 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,19 +178,16 @@ void	ray_intersect_test(t_vars *vars)
 	ray_normalized = vector_normalize(&ray);
 	ray = vector_scale(&ray_normalized, CHECKER_W);
 
-	printf("-----\n");
 	draw_line(vars, vars->player.pos, (t_vect2d){vars->mouseX, vars->mouseY}, 0xFFFFFFFF);
 	t_vect2d delta_dist;
 	delta_dist.x = ray_normalized.x == 0 ? 1e30 : abs_f(1 / ray_normalized.x);
 	delta_dist.y = ray_normalized.y == 0 ? 1e30 : abs_f(1 / ray_normalized.y);
 
-	debug_vect(&delta_dist, VARNAME(delta_dist));
 
 	t_vect2d step;
 	step.x = 1 - 2 * (ray.x < 0);
 	step.y = 1 - 2 * (ray.y < 0);
 	
-	debug_vect(&step, VARNAME(step));
 
 	t_vect2d side_dist;
 
@@ -210,7 +207,6 @@ void	ray_intersect_test(t_vars *vars)
 	else
 		side_dist.y = (1 - (pos_y - map_y)) * delta_dist.y;
 
-	debug_vect(&side_dist, VARNAME(side_dist));
 
 	t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
 	first_side_x = vector_scale(&first_side_x, CHECKER_W);
@@ -226,7 +222,6 @@ void	ray_intersect_test(t_vars *vars)
   	{
 		int hit = 0;
 		int is_x = 0;
-		// Fix: Hitpoint is delayed maybe
 		// jump to next map square, either in x-direction, or in y-direction
 		if (side_dist.x < side_dist.y)
 		{
@@ -241,29 +236,27 @@ void	ray_intersect_test(t_vars *vars)
 			map_y += step.y;
 			// side = 1;
 		}
-		//Check if ray has hit a wall
+
+		// Check if ray has hit a wall
 		hit = get_map_val(vars, map_x, map_y) > 0;
 
 		if (is_x)
 		{
-			if (hit)
-				printf("X:Hit wall at (%d, %d) in iteration %d\n", map_x, map_y, i);
-			t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x);
+			t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
 			visual_next_side_x = vector_scale(&visual_next_side_x, CHECKER_W);
 			draw_star(vars, vector_add(&vars->player.pos, &visual_next_side_x), hit ? 0xFF0000FF : 0xFFFF00FF);
 		}
 		else
 		{
-			if (hit)
-				printf("Y:Hit wall at (%d, %d) in iteration %d\n", map_x, map_y, i);
-			t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y);
+			t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
 			visual_next_side_y = vector_scale(&visual_next_side_y, CHECKER_W);
 			draw_star(vars, vector_add(&vars->player.pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
 		}
+		if (hit)
+			break;
 		++i;
 	}
 
-	// draw_line(vars, vars->player.pos, vector_add(&vars->player.pos, &first_side_x), 0xFFFF00FF);
 }
 
 void ft_hook(void* v_vars)
@@ -362,13 +355,12 @@ int32_t main(int32_t argc, const char* argv[])
 	(void)argv;
 	t_vars vars;
 	int map[5][5] = {
-		{0, 0, 0, 0, 1},
-		{0, 0, 1, 0, 1},
-		{0, 0, 1, 0, 1},
-		{0, 0, 1, 1, 1},
-		{0, 0, 0, 0, 1}
+		{1, 1, 1, 0, 1},
+		{1, 0, 1, 0, 1},
+		{1, 1, 1, 0, 1},
+		{1, 0, 0, 0, 1},
+		{1, 0, 0, 0, 1}
 	};
-
 
 	vars.map.data = (int *)map;
 	vars.map.width = 5;
