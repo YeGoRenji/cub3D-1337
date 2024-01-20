@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/20 00:54:20 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/20 20:52:38 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 #define CHECKER_COLOR_2 0x202020FF
 #define MAP_WALL_COLOR 0xAA50AAFF
 
-#define MVT_SPEED 5
+#define MVT_SPEED 2
+#define ROT_SPEED 0.05
 #define VARNAME(var) #var
 
 
@@ -48,6 +49,11 @@ double abs_f(double a)
 t_vect2d vector_add(t_vect2d *vec1, t_vect2d *vec2)
 {
 	return (t_vect2d){vec1->x + vec2->x, vec1->y + vec2->y};
+}
+
+t_vect2d vector_sub(t_vect2d *vec1, t_vect2d *vec2)
+{
+	return (t_vect2d){vec1->x - vec2->x, vec1->y - vec2->y};
 }
 
 t_vect2d vector_scale(t_vect2d *vec, double scale)
@@ -88,31 +94,36 @@ void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 		prot_put_pixel(vars->img, i, j, color);
 }
 
+double ray_cast(t_vars *vars, t_vect2d ray);
+
 void put_player(t_vars *vars)
 {
-	t_player	*player = NULL;
+	// t_player	*player = NULL;
 	t_vect2d	forward_scaled;
 	int			i;
 	int 		plane_half = vars->view_plane_width / 2;
 
-	player = &vars->player;
-	forward_scaled = vector_scale(&player->dir, vars->dist_to_plane);
-	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
+	t_player visual_player = vars->player;
+	visual_player.pos = vector_scale(&visual_player.pos, CHECKER_W);
+
+	forward_scaled = vector_scale(&visual_player.dir, vars->dist_to_plane);
+	t_vect2d side_dir = (t_vect2d){visual_player.dir.y, -visual_player.dir.x};
 
 	// Look Rays
 	for (i = -plane_half; i <= plane_half; ++i)
 	{
 		t_vect2d var_side = (t_vect2d){i * side_dir.x, i * side_dir.y};
 		t_vect2d ray_end = vector_add(&forward_scaled, &var_side);
-		draw_line(vars, 
-			   player->pos, 
-			   vector_add(&player->pos, &ray_end), 
-			   0x5050FFFF
-		);
+		ray_cast(vars, ray_end);
+		// draw_line(vars, 
+		// 	   visual_player.pos, 
+		// 	   vector_add(&visual_player.pos, &ray_end), 
+		// 	   0x5050FFFF
+		// );
 	}
 
 	// Player dot
-	draw_star(vars, player->pos, 0x50FF50FF);
+	draw_star(vars, visual_player.pos, 0x50FF50FF);
 	// for (i = (int)player->pos.x - 1; i <= (int)player->pos.x + 2; ++i)
 	// 	for (j = (int)player->pos.y - 1; j <= (int)player->pos.y + 2; ++j)
 	// 		prot_put_pixel(vars->img, i, j, 0x50FF50FF);
@@ -168,17 +179,21 @@ void debug_vect(t_vect2d *vec, char *name)
 	printf("%s = (%f, %f)\n", name, vec->x, vec->y);
 }
 
-void	ray_intersect_test(t_vars *vars)
+// TODO: make ray_cast return a struct t_rayhit
+// distance to hit (Use Parallel instead of Euclidean)
+// side
+// idx in map of hit
+// pos_in_texture from 0 to 1 ?
+double ray_cast(t_vars *vars, t_vect2d ray)
 {
-	t_vect2d	ray;
 	t_vect2d	ray_normalized;
-	// printf("Mouse here (%d, %d)\n", vars->mouseX, vars->mouseY);
-	ray.x = vars->mouseX - vars->player.pos.x;
-	ray.y = vars->mouseY - vars->player.pos.y;
+	t_vect2d	visual_player_pos;
+	t_vect2d	visual_ray;
 	ray_normalized = vector_normalize(&ray);
-	ray = vector_scale(&ray_normalized, CHECKER_W);
+	visual_ray = vector_scale(&ray_normalized, CHECKER_W);
+	visual_player_pos = vector_scale(&vars->player.pos, CHECKER_W);
 
-	draw_line(vars, vars->player.pos, (t_vect2d){vars->mouseX, vars->mouseY}, 0xFFFFFFFF);
+	// draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_ray), 0xFFFFFFFF);
 	t_vect2d delta_dist;
 	delta_dist.x = ray_normalized.x == 0 ? 1e30 : abs_f(1 / ray_normalized.x);
 	delta_dist.y = ray_normalized.y == 0 ? 1e30 : abs_f(1 / ray_normalized.y);
@@ -190,12 +205,11 @@ void	ray_intersect_test(t_vars *vars)
 	
 
 	t_vect2d side_dist;
+	double pos_x = vars->player.pos.x;// / CHECKER_W;
+	double pos_y = vars->player.pos.y;// / CHECKER_W;
 
-	double pos_x = vars->player.pos.x / CHECKER_W;
-	double pos_y = vars->player.pos.y / CHECKER_W;
-
-	int map_x = (int)(vars->player.pos.x / CHECKER_W);
-	int map_y = (int)(vars->player.pos.y / CHECKER_W);
+	int map_x = (int)(vars->player.pos.x);// / CHECKER_W);
+	int map_y = (int)(vars->player.pos.y);// / CHECKER_W);
 
 
 	if (ray.x < 0)
@@ -208,21 +222,22 @@ void	ray_intersect_test(t_vars *vars)
 		side_dist.y = (1 - (pos_y - map_y)) * delta_dist.y;
 
 
-	t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
-	first_side_x = vector_scale(&first_side_x, CHECKER_W);
-	draw_star(vars, vector_add(&vars->player.pos, &first_side_x), 0xFFFF00FF);
+	// t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
+	// first_side_x = vector_scale(&first_side_x, CHECKER_W);
+	// draw_star(vars, vector_add(&visual_player_pos, &first_side_x), 0xFFFF00FF);
 
-	t_vect2d first_side_y = vector_scale(&ray_normalized, side_dist.y);
-	first_side_y = vector_scale(&first_side_y, CHECKER_W);
-	draw_star(vars, vector_add(&vars->player.pos, &first_side_y), 0x00FFFFFF);
+	// t_vect2d first_side_y = vector_scale(&ray_normalized, side_dist.y);
+	// first_side_y = vector_scale(&first_side_y, CHECKER_W);
+	// draw_star(vars, vector_add(&visual_player_pos, &first_side_y), 0x00FFFFFF);
 
-	int iterations = 8;
+	int iterations = 1e9;
 	int i = 0;
+	int is_x = 0;
+	t_vect2d hit_rel_player;
 	while (i < iterations)
   	{
+		is_x = 0;
 		int hit = 0;
-		int is_x = 0;
-		// jump to next map square, either in x-direction, or in y-direction
 		if (side_dist.x < side_dist.y)
 		{
 			is_x = 1;
@@ -242,22 +257,129 @@ void	ray_intersect_test(t_vars *vars)
 
 		if (is_x)
 		{
-			t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
-			visual_next_side_x = vector_scale(&visual_next_side_x, CHECKER_W);
-			draw_star(vars, vector_add(&vars->player.pos, &visual_next_side_x), hit ? 0xFF0000FF : 0xFFFF00FF);
+			hit_rel_player = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
+			// t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
+			// visual_next_side_x = vector_scale(&visual_next_side_x, CHECKER_W);
+			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_x), hit ? 0xFF0000FF : 0xFFFF00FF);
 		}
 		else
 		{
-			t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
-			visual_next_side_y = vector_scale(&visual_next_side_y, CHECKER_W);
-			draw_star(vars, vector_add(&vars->player.pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
+			hit_rel_player = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
+			// t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
+			// visual_next_side_y = vector_scale(&visual_next_side_y, CHECKER_W);
+			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
 		}
 		if (hit)
 			break;
 		++i;
 	}
 
+	t_vect2d visual_hit = vector_scale(&hit_rel_player, CHECKER_W);
+	// draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
+	draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
+	return vector_magnitude(&hit_rel_player);
 }
+
+void	mouse_ray_test(t_vars *vars)
+{
+	t_vect2d	ray;
+	t_vect2d	ray_normalized;
+	t_vect2d	visual_player_pos;
+	// printf("Mouse here (%d, %d)\n", vars->mouseX, vars->mouseY);
+	ray.x = vars->mouse.x - vars->player.pos.x * CHECKER_W;
+	ray.y = vars->mouse.y - vars->player.pos.y * CHECKER_W;
+	ray_normalized = vector_normalize(&ray);
+	ray = vector_scale(&ray_normalized, CHECKER_W);
+	visual_player_pos = vector_scale(&vars->player.pos, CHECKER_W);
+
+	draw_line(vars, visual_player_pos, (t_vect2d){vars->mouse.x, vars->mouse.y}, 0xFFFFFFFF);
+	t_vect2d delta_dist;
+	delta_dist.x = ray_normalized.x == 0 ? 1e30 : abs_f(1 / ray_normalized.x);
+	delta_dist.y = ray_normalized.y == 0 ? 1e30 : abs_f(1 / ray_normalized.y);
+
+
+	t_vect2d step;
+	step.x = 1 - 2 * (ray.x < 0);
+	step.y = 1 - 2 * (ray.y < 0);
+	
+
+	t_vect2d side_dist;
+
+	double pos_x = vars->player.pos.x;// / CHECKER_W;
+	double pos_y = vars->player.pos.y;// / CHECKER_W;
+
+	int map_x = (int)(vars->player.pos.x);// / CHECKER_W);
+	int map_y = (int)(vars->player.pos.y);// / CHECKER_W);
+
+
+	if (ray.x < 0)
+		side_dist.x = (pos_x - map_x) * delta_dist.x;
+	else
+		side_dist.x = (1 - (pos_x - map_x)) * delta_dist.x;
+	if (ray.y < 0)
+		side_dist.y = (pos_y -  map_y) * delta_dist.y;
+	else
+		side_dist.y = (1 - (pos_y - map_y)) * delta_dist.y;
+
+
+	// t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
+	// first_side_x = vector_scale(&first_side_x, CHECKER_W);
+	// draw_star(vars, vector_add(&visual_player_pos, &first_side_x), 0xFFFF00FF);
+
+	// t_vect2d first_side_y = vector_scale(&ray_normalized, side_dist.y);
+	// first_side_y = vector_scale(&first_side_y, CHECKER_W);
+	// draw_star(vars, vector_add(&visual_player_pos, &first_side_y), 0x00FFFFFF);
+
+	int iterations = 8;
+	int i = 0;
+	int is_x = 0;
+	t_vect2d hit_rel_player;
+	while (i < iterations)
+  	{
+		is_x = 0;
+		int hit = 0;
+		if (side_dist.x < side_dist.y)
+		{
+			is_x = 1;
+			side_dist.x += delta_dist.x;
+			map_x += step.x;
+			// side = 0;
+		}
+		else
+		{
+			side_dist.y += delta_dist.y;
+			map_y += step.y;
+			// side = 1;
+		}
+
+		// Check if ray has hit a wall
+		hit = get_map_val(vars, map_x, map_y) > 0;
+
+		if (is_x)
+		{
+			hit_rel_player = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
+			// t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
+			// visual_next_side_x = vector_scale(&visual_next_side_x, CHECKER_W);
+			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_x), hit ? 0xFF0000FF : 0xFFFF00FF);
+		}
+		else
+		{
+			hit_rel_player = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
+			// t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
+			// visual_next_side_y = vector_scale(&visual_next_side_y, CHECKER_W);
+			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
+		}
+		if (hit)
+			break;
+		++i;
+	}
+
+	t_vect2d visual_hit = vector_scale(&hit_rel_player, CHECKER_W);
+	draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
+}
+
+
+
 
 void ft_hook(void* v_vars)
 {
@@ -267,7 +389,7 @@ void ft_hook(void* v_vars)
 	input_mvt.x = 0;
 	input_mvt.y = 0;
     vars = v_vars;
-	mlx_get_mouse_pos(vars->mlx, &vars->mouseX, &vars->mouseY);
+	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
 	// Movement
@@ -280,10 +402,11 @@ void ft_hook(void* v_vars)
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_D))
 		input_mvt.x += 1;
 	// Rotation
+	// TODO: check if look_angle doesn't overflow
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
-		vars->look_angle -= 0.1;
+		vars->look_angle -= ROT_SPEED;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
-		vars->look_angle += 0.1;
+		vars->look_angle += ROT_SPEED;
 	// View cone
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_Y))
 		vars->dist_to_plane += 1;
@@ -303,19 +426,18 @@ void ft_hook(void* v_vars)
 	vars->player.dir = (t_vect2d){cos(-vars->look_angle), sin(-vars->look_angle)};
 
 	// Moving Logic
-	// TODO : Make speed independent of CPU speed (use deltaTime)
-	t_vect2d forward_move = vector_scale(&vars->player.dir, -input_mvt.y * MVT_SPEED);
+	t_vect2d forward_move = vector_scale(&vars->player.dir, -input_mvt.y * vars->mlx->delta_time * MVT_SPEED);
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
-	t_vect2d side_move = vector_scale(&side_dir, -input_mvt.x * MVT_SPEED);
+	t_vect2d side_move = vector_scale(&side_dir, -input_mvt.x * vars->mlx->delta_time * MVT_SPEED);
 	t_vect2d movement = vector_add(&forward_move, &side_move);
 	vars->player.pos = vector_add(&vars->player.pos, &movement);
 
 	// Drawing Logic
 	checker(vars);
-	put_player(vars);
 	draw_map(vars);
+	put_player(vars);
 	if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
-		ray_intersect_test(vars);
+		mouse_ray_test(vars);
 }
 
 
@@ -340,13 +462,13 @@ void	init_vars(t_vars *vars)
 	// INFO: get this from data
 	vars->player.dir = (t_vect2d){1, 0};
 	vars->look_angle = 0;
-	vars->player.pos = (t_vect2d){10, 10};
+	vars->player.pos = (t_vect2d){1.5, 1.5};
 
 	// Fix these values later
 	vars->dist_to_plane = 50;
 	vars->view_plane_width = 50;
-	vars->mouseX = 0;
-	vars->mouseY = 0;
+	vars->mouse.x = 0;
+	vars->mouse.y = 0;
 }
 
 int32_t main(int32_t argc, const char* argv[])
@@ -354,21 +476,27 @@ int32_t main(int32_t argc, const char* argv[])
 	(void)argc;
 	(void)argv;
 	t_vars vars;
-	int map[5][5] = {
-		{1, 1, 1, 0, 1},
-		{1, 0, 1, 0, 1},
-		{1, 1, 1, 0, 1},
-		{1, 0, 0, 0, 1},
-		{1, 0, 0, 0, 1}
+	int map[10][10] = {
+		{1, 1, 1, 1, 1, 0, 0, 1, 0, 0},
+		{1, 0, 0, 0, 1, 0, 0, 1, 0, 0},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
+		{1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
+		{1, 0, 0, 1, 0, 1, 0, 1, 0, 0},
+		{1, 0, 0, 1, 0, 1, 0, 1, 0, 0},
+		{1, 0, 0, 1, 0, 1, 0, 1, 0, 0},
+		{1, 0, 0, 1, 0, 0, 0, 0, 0, 0}
 	};
 
 	vars.map.data = (int *)map;
-	vars.map.width = 5;
-	vars.map.height = 5;
+	vars.map.width = 10;
+	vars.map.height = 10;
 	init_vars(&vars);
 	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
 	checker(&vars);
 	mlx_loop_hook(vars.mlx, ft_hook, &vars);
+	// mlx_key_hook(mlx_t *mlx, mlx_keyfunc func, void *param)
 	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
 	mlx_loop(vars.mlx);
 	mlx_terminate(vars.mlx);

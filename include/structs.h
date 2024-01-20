@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/19 02:34:49 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/20 16:34:43 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ typedef struct s_vect2d
 	double		x;
 	double		y;
 }				t_vect2d;
+
+typedef struct s_ivect2d
+{
+	int		x;
+	int		y;
+}				t_ivect2d;
 
 typedef struct s_dir
 {
@@ -55,8 +61,9 @@ typedef struct s_vars {
 	int 		view_plane_width; // dynamic only for debug
 	int 		dist_to_plane; // dynamic only for debug
 	t_map		map;
-	int			mouseX;
-	int			mouseY;
+	t_ivect2d	mouse;
 }				t_vars;
+
+
 
 #endif
