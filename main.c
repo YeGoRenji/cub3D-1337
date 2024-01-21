@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 15:00:01 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/21 16:16:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,10 @@ void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 		prot_put_pixel(vars->img, i, j, color);
 }
 
-void  verLine(t_vars *vars, int x, int drawStart, int drawEnd, uint32_t color)
+void  verStripe(t_vars *vars, int x, int drawStart, int drawEnd, uint32_t color)
 {
 	for (int i = drawStart; i <= drawEnd; ++i)
-		for (int j = x - 2; j <= x + 2; ++j)
-			prot_put_pixel(vars->img, j, i, color);
+			prot_put_pixel(vars->img, x, i, color);
 }
 
 
@@ -133,7 +132,7 @@ void put_player(t_vars *vars)
 		int drawEnd = lineHeight / 2 + h / 2;
 		if (drawEnd >= h) drawEnd = h - 1;
 
-		verLine(vars, cameraX * WIDTH, drawStart, drawEnd, hit.side ? 0xFF5050FF : 0x50FF50FF);
+		verStripe(vars, cameraX * WIDTH, drawStart, drawEnd, hit.side ? 0xFF5050FF : 0x50FF50FF);
 		// draw_line(vars, 
 		// 	   visual_player.pos, 
 		// 	   vector_add(&visual_player.pos, &ray_end), 
