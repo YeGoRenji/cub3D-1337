@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 13:13:33 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/21 15:00:01 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WIDTH 1280
-#define HEIGHT 720
-#define CHECKER_W 50
+#define WIDTH 1920
+#define HEIGHT 1080
+#define CHECKER_W 100
 #define CHECKER_COLOR_1 0xFF8050FF
 #define CHECKER_COLOR_2 0x202020FF
 #define MAP_WALL_COLOR 0xAA50AAFF
@@ -133,7 +133,7 @@ void put_player(t_vars *vars)
 		int drawEnd = lineHeight / 2 + h / 2;
 		if (drawEnd >= h) drawEnd = h - 1;
 
-		verLine(vars, cameraX * WIDTH, drawStart, drawEnd, hit.side ? 0xFF0000FF : 0x00FF00FF);
+		verLine(vars, cameraX * WIDTH, drawStart, drawEnd, hit.side ? 0xFF5050FF : 0x50FF50FF);
 		// draw_line(vars, 
 		// 	   visual_player.pos, 
 		// 	   vector_add(&visual_player.pos, &ray_end), 
@@ -296,11 +296,15 @@ t_rayhit ray_cast(t_vars *vars, t_vect2d ray)
 
 
 	hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
-	t_vect2d visual_hit = vector_scale(&hit_data.where, CHECKER_W);
+	// t_vect2d visual_hit = vector_scale(&hit_data.where, CHECKER_W);
 	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
 	hit_data.side = side;
+
+	t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
+	hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
+
 	// draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
-	draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
+	// draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
 	return hit_data;
 }
 
