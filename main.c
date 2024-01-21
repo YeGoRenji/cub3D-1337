@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/20 20:52:38 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/21 03:37:30 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,14 @@ void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 		prot_put_pixel(vars->img, i, j, color);
 }
 
-double ray_cast(t_vars *vars, t_vect2d ray);
+void  verLine(t_vars *vars, int x, int drawStart, int drawEnd, uint32_t color)
+{
+	for (int i = drawStart; i <= drawEnd; ++i)
+		prot_put_pixel(vars->img, x, i, color);
+}
+
+
+t_rayhit ray_cast(t_vars *vars, t_vect2d ray);
 
 void put_player(t_vars *vars)
 {
@@ -112,9 +119,20 @@ void put_player(t_vars *vars)
 	// Look Rays
 	for (i = -plane_half; i <= plane_half; ++i)
 	{
-		t_vect2d var_side = (t_vect2d){i * side_dir.x, i * side_dir.y};
+		t_vect2d var_side = (t_vect2d){-i * side_dir.x, -i * side_dir.y};
 		t_vect2d ray_end = vector_add(&forward_scaled, &var_side);
-		ray_cast(vars, ray_end);
+		t_rayhit hit = ray_cast(vars, ray_end);
+		int h = HEIGHT;
+		int lineHeight = (int)(h / hit.dist);
+
+		// calculate lowest and highest pixel to fill in current stripe
+		double cameraX = (double)(i + plane_half) / (2 * plane_half);
+		int drawStart = -lineHeight / 2 + h / 2;
+		if (drawStart < 0) drawStart = 0;
+		int drawEnd = lineHeight / 2 + h / 2;
+		if (drawEnd >= h) drawEnd = h - 1;
+
+		verLine(vars, cameraX * WIDTH, drawStart, drawEnd, hit.side ? 0xFF0000FF : 0x00FF00FF);
 		// draw_line(vars, 
 		// 	   visual_player.pos, 
 		// 	   vector_add(&visual_player.pos, &ray_end), 
@@ -179,18 +197,13 @@ void debug_vect(t_vect2d *vec, char *name)
 	printf("%s = (%f, %f)\n", name, vec->x, vec->y);
 }
 
-// TODO: make ray_cast return a struct t_rayhit
-// distance to hit (Use Parallel instead of Euclidean)
-// side
-// idx in map of hit
-// pos_in_texture from 0 to 1 ?
-double ray_cast(t_vars *vars, t_vect2d ray)
+t_rayhit ray_cast(t_vars *vars, t_vect2d ray)
 {
 	t_vect2d	ray_normalized;
 	t_vect2d	visual_player_pos;
-	t_vect2d	visual_ray;
+	// t_vect2d	visual_ray;
 	ray_normalized = vector_normalize(&ray);
-	visual_ray = vector_scale(&ray_normalized, CHECKER_W);
+	// visual_ray = vector_scale(&ray_normalized, CHECKER_W);
 	visual_player_pos = vector_scale(&vars->player.pos, CHECKER_W);
 
 	// draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_ray), 0xFFFFFFFF);
@@ -208,18 +221,20 @@ double ray_cast(t_vars *vars, t_vect2d ray)
 	double pos_x = vars->player.pos.x;// / CHECKER_W;
 	double pos_y = vars->player.pos.y;// / CHECKER_W;
 
-	int map_x = (int)(vars->player.pos.x);// / CHECKER_W);
-	int map_y = (int)(vars->player.pos.y);// / CHECKER_W);
+	t_ivect2d mapidx = (t_ivect2d) {
+		(int)(vars->player.pos.x),
+		(int)(vars->player.pos.y)
+	};
 
 
 	if (ray.x < 0)
-		side_dist.x = (pos_x - map_x) * delta_dist.x;
+		side_dist.x = (pos_x - mapidx.x) * delta_dist.x;
 	else
-		side_dist.x = (1 - (pos_x - map_x)) * delta_dist.x;
+		side_dist.x = (1 - (pos_x - mapidx.x)) * delta_dist.x;
 	if (ray.y < 0)
-		side_dist.y = (pos_y -  map_y) * delta_dist.y;
+		side_dist.y = (pos_y -  mapidx.y) * delta_dist.y;
 	else
-		side_dist.y = (1 - (pos_y - map_y)) * delta_dist.y;
+		side_dist.y = (1 - (pos_y - mapidx.y)) * delta_dist.y;
 
 
 	// t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
@@ -233,7 +248,9 @@ double ray_cast(t_vars *vars, t_vect2d ray)
 	int iterations = 1e9;
 	int i = 0;
 	int is_x = 0;
-	t_vect2d hit_rel_player;
+	// t_vect2d hit_rel_player;
+	int side = 0;
+	t_rayhit hit_data;
 	while (i < iterations)
   	{
 		is_x = 0;
@@ -242,29 +259,31 @@ double ray_cast(t_vars *vars, t_vect2d ray)
 		{
 			is_x = 1;
 			side_dist.x += delta_dist.x;
-			map_x += step.x;
-			// side = 0;
+			mapidx.x += step.x;
+			side = 0;
 		}
 		else
 		{
 			side_dist.y += delta_dist.y;
-			map_y += step.y;
-			// side = 1;
+			mapidx.y += step.y;
+			side = 1;
 		}
 
 		// Check if ray has hit a wall
-		hit = get_map_val(vars, map_x, map_y) > 0;
+		hit = get_map_val(vars, mapidx.x, mapidx.y) > 0;
 
 		if (is_x)
 		{
-			hit_rel_player = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
+			hit_data.dist = side_dist.x - delta_dist.x;
+			// hit_rel_player = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
 			// t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
 			// visual_next_side_x = vector_scale(&visual_next_side_x, CHECKER_W);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_x), hit ? 0xFF0000FF : 0xFFFF00FF);
 		}
 		else
 		{
-			hit_rel_player = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
+			hit_data.dist = side_dist.y - delta_dist.y;
+			// hit_rel_player = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
 			// t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
 			// visual_next_side_y = vector_scale(&visual_next_side_y, CHECKER_W);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
@@ -274,10 +293,12 @@ double ray_cast(t_vars *vars, t_vect2d ray)
 		++i;
 	}
 
-	t_vect2d visual_hit = vector_scale(&hit_rel_player, CHECKER_W);
+	hit_data.side = side;
+	hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
+	t_vect2d visual_hit = vector_scale(&hit_data.where, CHECKER_W);
 	// draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
 	draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
-	return vector_magnitude(&hit_rel_player);
+	return hit_data;
 }
 
 void	mouse_ray_test(t_vars *vars)
@@ -402,7 +423,7 @@ void ft_hook(void* v_vars)
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_D))
 		input_mvt.x += 1;
 	// Rotation
-	// TODO: check if look_angle doesn't overflow
+	// TODO: check if look_angle doesn't overflow also use deltaTime
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
 		vars->look_angle -= ROT_SPEED;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
