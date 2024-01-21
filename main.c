@@ -6,14 +6,15 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 16:16:31 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/21 19:04:49 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <structs.h>
-#include <drawing.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <structs.h>
+#include <maths.h>
+#include <drawing.h>
 
 #define WIDTH 1920
 #define HEIGHT 1080
@@ -26,56 +27,6 @@
 #define ROT_SPEED 0.05
 #define VARNAME(var) #var
 
-
-int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
-{
-    return (r << 24 | g << 16 | b << 8 | a);
-}
-
-double abs_f(double a)
-{
-	if (a < 0)
-		return (-a);
-	return (a);
-}
-
-// int abs(int a, int b)
-// {
-// 	if (a - b >= 0)
-// 		return (a - b);
-// 	return (b - a);
-// }
-
-t_vect2d vector_add(t_vect2d *vec1, t_vect2d *vec2)
-{
-	return (t_vect2d){vec1->x + vec2->x, vec1->y + vec2->y};
-}
-
-t_vect2d vector_sub(t_vect2d *vec1, t_vect2d *vec2)
-{
-	return (t_vect2d){vec1->x - vec2->x, vec1->y - vec2->y};
-}
-
-t_vect2d vector_scale(t_vect2d *vec, double scale)
-{
-	return (t_vect2d){scale * vec->x, scale * vec->y};
-}
-
-double	vector_magnitude(t_vect2d *vec)
-{
-	return (sqrt(vec->x * vec->x + vec->y * vec->y));
-}
-
-t_vect2d	vector_normalize(t_vect2d *vec)
-{
-	double	mag;
-
-	mag = vector_magnitude(vec);
-	return ((t_vect2d){
-		vec->x / mag,
-		vec->y / mag
-	});
-}
 
 void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 {
@@ -145,6 +96,13 @@ void put_player(t_vars *vars)
 	// for (i = (int)player->pos.x - 1; i <= (int)player->pos.x + 2; ++i)
 	// 	for (j = (int)player->pos.y - 1; j <= (int)player->pos.y + 2; ++j)
 	// 		prot_put_pixel(vars->img, i, j, 0x50FF50FF);
+}
+
+void	clear_screen(t_vars* vars, uint32_t color)
+{
+	for (uint32_t i = 0; i < vars->img->width; ++i)
+		for (uint32_t y = 0; y < vars->img->height; ++y)
+			mlx_put_pixel(vars->img, i, y, color);
 }
 
 void checker(t_vars* vars)
@@ -460,11 +418,14 @@ void ft_hook(void* v_vars)
 	vars->player.pos = vector_add(&vars->player.pos, &movement);
 
 	// Drawing Logic
-	checker(vars);
-	draw_map(vars);
+	// checker(vars);
+	//draw_map(vars);
+	clear_screen(vars, 0xFFFFFF10);
 	put_player(vars);
 	if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
 		mouse_ray_test(vars);
+	printf("%d        \r" , (int)(1 / vars->mlx->delta_time));
+	fflush(stdout);
 }
 
 
@@ -521,7 +482,6 @@ int32_t main(int32_t argc, const char* argv[])
 	vars.map.height = 10;
 	init_vars(&vars);
 	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
-	checker(&vars);
 	mlx_loop_hook(vars.mlx, ft_hook, &vars);
 	// mlx_key_hook(mlx_t *mlx, mlx_keyfunc func, void *param)
 	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
