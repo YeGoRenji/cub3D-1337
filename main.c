@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 03:37:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/21 13:13:33 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 void  verLine(t_vars *vars, int x, int drawStart, int drawEnd, uint32_t color)
 {
 	for (int i = drawStart; i <= drawEnd; ++i)
-		prot_put_pixel(vars->img, x, i, color);
+		for (int j = x - 2; j <= x + 2; ++j)
+			prot_put_pixel(vars->img, j, i, color);
 }
 
 
@@ -120,8 +121,8 @@ void put_player(t_vars *vars)
 	for (i = -plane_half; i <= plane_half; ++i)
 	{
 		t_vect2d var_side = (t_vect2d){-i * side_dir.x, -i * side_dir.y};
-		t_vect2d ray_end = vector_add(&forward_scaled, &var_side);
-		t_rayhit hit = ray_cast(vars, ray_end);
+		t_vect2d ray = vector_add(&forward_scaled, &var_side);
+		t_rayhit hit = ray_cast(vars, ray);
 		int h = HEIGHT;
 		int lineHeight = (int)(h / hit.dist);
 
@@ -293,15 +294,17 @@ t_rayhit ray_cast(t_vars *vars, t_vect2d ray)
 		++i;
 	}
 
-	hit_data.side = side;
+
 	hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
 	t_vect2d visual_hit = vector_scale(&hit_data.where, CHECKER_W);
+	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
+	hit_data.side = side;
 	// draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
 	draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
 	return hit_data;
 }
 
-void	mouse_ray_test(t_vars *vars)
+void	mouse_ray_test(t_vars *vars) // DEBUG
 {
 	t_vect2d	ray;
 	t_vect2d	ray_normalized;
