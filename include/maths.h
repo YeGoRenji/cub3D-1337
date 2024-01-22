@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 17:49:40 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/22 20:33:02 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ typedef struct s_vect2d
 	double		y;
 }				t_vect2d;
 
-/* Vector operations */
+/* VECTOR OPERATIONS */
 t_vect2d	vector_add(t_vect2d *vec1, t_vect2d *vec2);
 t_vect2d	vector_sub(t_vect2d *vec1, t_vect2d *vec2);
 t_vect2d	vector_scale(t_vect2d *vec, double scale);

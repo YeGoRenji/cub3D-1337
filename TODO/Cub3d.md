@@ -1,0 +1,7 @@
+- [x] Quality changer (number of stripes)
+- [x] Maybe FOV ?
+- [ ] MiniMap
+	- [ ] Circle of the minimap
+	- [ ] Player fixed and it rotates
+	- [ ] Player cursor
+- [ ] Textures (Hopefully jeff will do it)

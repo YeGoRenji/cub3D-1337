@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/22 18:28:35 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/22 20:36:43 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,17 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray);
 
 void draw_wall_stripes(t_vars *vars)
 {
-	// t_player	*player = NULL;
 	t_vect2d	forward_scaled;
+	t_vect2d	side_dir;
 	int			i;
 
-	forward_scaled = vars->player.dir;// vector_scale(&vars->player.dir, vars->dist_to_plane);
-	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
+	forward_scaled = vars->player.dir;
+	side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
 
-	// Look Rays
 	int steps = WIDTH / vars->nb_vert_stripes;
 	for (i = 0; i < WIDTH; i += steps)
 	{
-		double cameraX = 2 * i / (double)(WIDTH) - 1;// (double)(i + plane_half) / (2 * plane_half);
+		double cameraX = 2 * i / (double)(WIDTH) - 1;
 		
 		t_vect2d var_side = (t_vect2d){-cameraX * vars->fov * side_dir.x, -cameraX * vars->fov * side_dir.y};
 		t_vect2d ray = vector_add(&forward_scaled, &var_side);
@@ -85,25 +84,7 @@ void draw_wall_stripes(t_vars *vars)
 		if (drawEnd >= h) drawEnd = h - 1;
 
 		draw_stripe(vars, i, drawStart, drawEnd, hit.side ? 0xFF5050FF : 0x50FF50FF, steps);
-
 	}
-	// for (i = -plane_half; i <= plane_half; ++i)
-	// {
-	// 	t_vect2d var_side = (t_vect2d){-i * side_dir.x, -i * side_dir.y};
-	// 	t_vect2d ray = vector_add(&forward_scaled, &var_side);
-	// 	t_rayhit hit = ray_cast_dda(vars, ray);
-	// 	int h = HEIGHT;
-	// 	int lineHeight = (int)(h / hit.dist);
-
-	// 	// calculate lowest and highest pixel to fill in current stripe
-	// 	double cameraX = (double)(i + plane_half) / (2 * plane_half);
-	// 	int drawStart = -lineHeight / 2 + h / 2;
-	// 	if (drawStart < 0) drawStart = 0;
-	// 	int drawEnd = lineHeight / 2 + h / 2;
-	// 	if (drawEnd >= h) drawEnd = h - 1;
-
-	// 	draw_stripe(vars, cameraX * WIDTH, drawStart, drawEnd, hit.side ? 0xFF5050FF : 0x50FF50FF);
-	// }
 }
 
 void put_player(t_vars *vars)
