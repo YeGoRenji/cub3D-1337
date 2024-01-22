@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 17:13:14 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:27:23 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ typedef struct s_vars {
 	mlx_image_t	*img;
 	t_player	player;
 	double		look_angle;
-	int 		view_plane_width; // dynamic only for debug
-	int 		dist_to_plane; // dynamic only for debug
+	int 		fov;
+	int 		nb_vert_stripes;
 	t_map		map;
 	t_ivect2d	mouse;
 }				t_vars;
