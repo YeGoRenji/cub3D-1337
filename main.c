@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/23 03:57:41 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/23 14:27:50 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 #include <maths.h>
 #include <drawing.h>
 
-#define WIDTH 1280
-#define HEIGHT 720
+#define WIDTH 1920
+#define HEIGHT 1080
 #define CHECKER_W 25
 #define CHECKER_COLOR_1 0xFF8050FF
 #define CHECKER_COLOR_2 0x202020FF
 #define MAP_WALL_COLOR 0xAA50AAFF
-#define MINI_MAP_WIDTH 250
+#define MINI_MAP_WIDTH 300
 
 #define MVT_SPEED 2
 #define ROT_SPEED 2
