@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/22 20:36:43 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/23 03:57:41 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 #include <maths.h>
 #include <drawing.h>
 
-#define WIDTH 1920
-#define HEIGHT 1080
-#define CHECKER_W 100
+#define WIDTH 1280
+#define HEIGHT 720
+#define CHECKER_W 25
 #define CHECKER_COLOR_1 0xFF8050FF
 #define CHECKER_COLOR_2 0x202020FF
 #define MAP_WALL_COLOR 0xAA50AAFF
+#define MINI_MAP_WIDTH 250
 
 #define MVT_SPEED 2
 #define ROT_SPEED 2
@@ -169,6 +170,64 @@ int get_map_val(t_vars *vars, int i, int j)
 	return vars->map.data[j * vars->map.height + i];
 }
 
+bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius)
+{
+	t_ivect2d	diff;
+
+	diff = (t_ivect2d){pt.x - center.x, pt.y - center.y};
+	if (diff.x * diff.x + diff.y * diff.y <= radius * radius)
+		return (true);
+	return (false);
+}
+
+void mini_map(t_vars *vars)
+{
+	// TODO: the signs of the vectors are just tweaked bruteforce (UNDERSTAND MORE ?)
+	t_vect2d forward = (t_vect2d){vars->player.dir.x, -vars->player.dir.y};
+	t_vect2d right = (t_vect2d){-vars->player.dir.y, -vars->player.dir.x};
+	t_vect2d center = (t_vect2d){(double)MINI_MAP_WIDTH / 2, (double)MINI_MAP_WIDTH / 2};
+	double	 inv_det = - 1 / (right.x * forward.y - right.y * forward.x);
+
+	// Testing
+	t_vect2d mat_col1 = (t_vect2d){forward.y, -right.y};
+	t_vect2d mat_col2 = (t_vect2d){-forward.x, right.x};
+	mat_col1 = vector_scale(&mat_col1, inv_det);
+	mat_col2 = vector_scale(&mat_col2, inv_det);
+
+	forward = vector_scale(&forward, CHECKER_W);
+	right = vector_scale(&right, CHECKER_W);
+
+	forward = vector_add(&forward, &center);
+	right = vector_add(&right, &center);
+
+	for (int i = 0; i < MINI_MAP_WIDTH; ++i)
+	{
+		for (int j = 0; j < MINI_MAP_WIDTH; ++j)
+		{
+			if (inside_circle((t_ivect2d){j, i}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2 - 10))
+			{
+				t_vect2d coord_rel_center = (t_vect2d){j - center.x, i - center.y};
+				t_vect2d coord_transform = vector_scale(&mat_col1, coord_rel_center.x);
+				t_vect2d addit = vector_scale(&mat_col2, coord_rel_center.y);
+				coord_transform = vector_add(&coord_transform, &addit);
+				coord_transform = vector_scale(&coord_transform, 1/(double)CHECKER_W);
+				t_vect2d map_coord = vector_sub(&vars->player.pos, &coord_transform);
+				if (get_map_val(vars, map_coord.x, map_coord.y) > 0)
+					prot_put_pixel(vars->img, j, i, 0xFF69FFFF);
+				else
+					prot_put_pixel(vars->img, j, i, 0x69FFFFFF);
+				// prot_put_pixel(vars->img, j, i, 0xFF69FFFF);
+			}
+			else if (inside_circle((t_ivect2d){j, i}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2))
+					prot_put_pixel(vars->img, j, i, 0x303030FF);
+		}
+	}
+	// draw_line(vars, center, forward, 0xFF0000FF);
+	// draw_line(vars, center, right, 0x0000FFFF);
+	draw_star(vars, center, 0x0000FFFF);
+}
+
+
 void debug_vect(t_vect2d *vec, char *name)
 {
 	printf("%s = (%f, %f)\n", name, vec->x, vec->y);
@@ -177,13 +236,8 @@ void debug_vect(t_vect2d *vec, char *name)
 t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 {
 	t_vect2d	ray_normalized;
-	t_vect2d	visual_player_pos;
-	// t_vect2d	visual_ray;
 	ray_normalized = vector_normalize(&ray);
-	// visual_ray = vector_scale(&ray_normalized, CHECKER_W);
-	visual_player_pos = vector_scale(&vars->player.pos, CHECKER_W);
 
-	// draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_ray), 0xFFFFFFFF);
 	t_vect2d delta_dist;
 	delta_dist.x = ray_normalized.x == 0 ? 1e30 : abs_f(1 / ray_normalized.x);
 	delta_dist.y = ray_normalized.y == 0 ? 1e30 : abs_f(1 / ray_normalized.y);
@@ -413,7 +467,7 @@ void ft_hook(void* v_vars)
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_D))
 		input_mvt.x += 1;
 	// Rotation
-	// TODO: check if look_angle doesn't overflow also use deltaTime
+	// TODO: check if look_angle doesn't overflow
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
 		vars->look_angle -= vars->mlx->delta_time * ROT_SPEED;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
@@ -452,8 +506,10 @@ void ft_hook(void* v_vars)
 	clear_screen(vars, 0xFFFFFF10);
 	// put_player(vars);
 	draw_wall_stripes(vars);
-	if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
-		mouse_ray_test(vars);
+	mini_map(vars);
+
+	// if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
+	// 	mouse_ray_test(vars);
 
 	int fps = (int)(1 / vars->mlx->delta_time);
 	if (mlx_get_time() - old_time > 0.1)

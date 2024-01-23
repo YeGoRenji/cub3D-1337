@@ -1,7 +1,13 @@
+## Tasks:
+
 - [x] Quality changer (number of stripes)
 - [x] Maybe FOV ?
 - [ ] MiniMap
-	- [ ] Circle of the minimap
-	- [ ] Player fixed and it rotates
+	- [x] Circle of the minimap
+	- [x] Player fixed and it rotates
 	- [ ] Player cursor
 - [ ] Textures (Hopefully jeff will do it)
+
+## Issues:
+
+- [ ] Wall clipping before even reaching the end of the map ?
