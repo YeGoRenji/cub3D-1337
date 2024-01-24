@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/22 18:27:23 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:00:49 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_vars {
 	double		look_angle;
 	int 		fov;
 	int 		nb_vert_stripes;
+	int			tile_size;
 	t_map		map;
 	t_ivect2d	mouse;
 }				t_vars;

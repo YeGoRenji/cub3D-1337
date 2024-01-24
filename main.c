@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/23 14:27:50 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:41:27 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@
 
 #define WIDTH 1920
 #define HEIGHT 1080
-#define CHECKER_W 25
-#define CHECKER_COLOR_1 0xFF8050FF
-#define CHECKER_COLOR_2 0x202020FF
-#define MAP_WALL_COLOR 0xAA50AAFF
+
+#define TILE_W 25
+#define TILE_COL_1 0xFF69FFFF
+#define TILE_COL_2 0x69FFFFFF
 #define MINI_MAP_WIDTH 300
+
+#define OLD_MAP_2D 0xAA50AAFF
 
 #define MVT_SPEED 2
 #define ROT_SPEED 2
@@ -96,7 +98,7 @@ void put_player(t_vars *vars)
 	int 		plane_half = vars->fov / 2;
 
 	t_player visual_player = vars->player;
-	visual_player.pos = vector_scale(&visual_player.pos, CHECKER_W);
+	visual_player.pos = vector_scale(&visual_player.pos, vars->tile_size);
 
 	forward_scaled = visual_player.dir;
 	t_vect2d side_dir = (t_vect2d){visual_player.dir.y, -visual_player.dir.x};
@@ -133,7 +135,7 @@ void checker(t_vars* vars)
 	{
 		for (uint32_t y = 0; y < vars->img->height; ++y)
 		{
-			color = (i / CHECKER_W + y / CHECKER_W) % 2 ? CHECKER_COLOR_1 : CHECKER_COLOR_2;
+			color = (i / vars->tile_size + y / vars->tile_size) % 2 ? TILE_COL_1 : TILE_COL_2;
 			mlx_put_pixel(vars->img, i, y, color);
 		}
 	}
@@ -154,20 +156,20 @@ void draw_map(t_vars *vars)
 		{
 			if (vars->map.data[i * vars->map.height + j])
 				draw_square(vars, 
-					(t_vect2d){j * CHECKER_W, i * CHECKER_W},
-					CHECKER_W,
-					MAP_WALL_COLOR);
+					(t_vect2d){j * vars->tile_size, i * vars->tile_size},
+					vars->tile_size,
+					OLD_MAP_2D);
 		}
 	}
 }
 
-int get_map_val(t_vars *vars, int i, int j)
+int get_map_val(t_vars *vars, int x, int y)
 {
-	if (i < 0 || i >= vars->map.width)
+	if (x < 0 || x >= vars->map.width)
 		return 1;
-	if (j < 0 || j >= vars->map.height)
+	if (y < 0 || y >= vars->map.height)
 		return 1;
-	return vars->map.data[j * vars->map.height + i];
+	return vars->map.data[y * vars->map.width + x];
 }
 
 bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius)
@@ -186,7 +188,7 @@ void mini_map(t_vars *vars)
 	t_vect2d forward = (t_vect2d){vars->player.dir.x, -vars->player.dir.y};
 	t_vect2d right = (t_vect2d){-vars->player.dir.y, -vars->player.dir.x};
 	t_vect2d center = (t_vect2d){(double)MINI_MAP_WIDTH / 2, (double)MINI_MAP_WIDTH / 2};
-	double	 inv_det = - 1 / (right.x * forward.y - right.y * forward.x);
+	double	 inv_det = -1; /// (right.x * forward.y - right.y * forward.x);
 
 	// Testing
 	t_vect2d mat_col1 = (t_vect2d){forward.y, -right.y};
@@ -194,32 +196,32 @@ void mini_map(t_vars *vars)
 	mat_col1 = vector_scale(&mat_col1, inv_det);
 	mat_col2 = vector_scale(&mat_col2, inv_det);
 
-	forward = vector_scale(&forward, CHECKER_W);
-	right = vector_scale(&right, CHECKER_W);
+	forward = vector_scale(&forward, vars->tile_size);
+	right = vector_scale(&right, vars->tile_size);
 
 	forward = vector_add(&forward, &center);
 	right = vector_add(&right, &center);
 
-	for (int i = 0; i < MINI_MAP_WIDTH; ++i)
+	for (int y = 0; y < MINI_MAP_WIDTH; ++y)
 	{
-		for (int j = 0; j < MINI_MAP_WIDTH; ++j)
+		for (int x = 0; x < MINI_MAP_WIDTH; ++x)
 		{
-			if (inside_circle((t_ivect2d){j, i}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2 - 10))
+			if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2 - 10))
 			{
-				t_vect2d coord_rel_center = (t_vect2d){j - center.x, i - center.y};
+				t_vect2d coord_rel_center = {x - center.x, y - center.y};
+				coord_rel_center = vector_scale(&coord_rel_center, (double)1/vars->tile_size);
 				t_vect2d coord_transform = vector_scale(&mat_col1, coord_rel_center.x);
 				t_vect2d addit = vector_scale(&mat_col2, coord_rel_center.y);
 				coord_transform = vector_add(&coord_transform, &addit);
-				coord_transform = vector_scale(&coord_transform, 1/(double)CHECKER_W);
 				t_vect2d map_coord = vector_sub(&vars->player.pos, &coord_transform);
+				// t_vect2d map_coord = vector_sub(&vars->player.pos, &coord_rel_center);
 				if (get_map_val(vars, map_coord.x, map_coord.y) > 0)
-					prot_put_pixel(vars->img, j, i, 0xFF69FFFF);
+					prot_put_pixel(vars->img, x, y, TILE_COL_1);
 				else
-					prot_put_pixel(vars->img, j, i, 0x69FFFFFF);
-				// prot_put_pixel(vars->img, j, i, 0xFF69FFFF);
+					prot_put_pixel(vars->img, x, y, TILE_COL_2);
 			}
-			else if (inside_circle((t_ivect2d){j, i}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2))
-					prot_put_pixel(vars->img, j, i, 0x303030FF);
+			else if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2))
+					prot_put_pixel(vars->img, x, y, 0x303030FF);
 		}
 	}
 	// draw_line(vars, center, forward, 0xFF0000FF);
@@ -247,8 +249,8 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	step.y = 1 - 2 * (ray.y < 0);
 	
 	t_vect2d side_dist;
-	double pos_x = vars->player.pos.x;// / CHECKER_W;
-	double pos_y = vars->player.pos.y;// / CHECKER_W;
+	double pos_x = vars->player.pos.x;// / vars->tile_size;
+	double pos_y = vars->player.pos.y;// / vars->tile_size;
 
 	t_ivect2d mapidx = (t_ivect2d) {
 		(int)(vars->player.pos.x),
@@ -266,11 +268,11 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 		side_dist.y = (1 - (pos_y - mapidx.y)) * delta_dist.y;
 
 	// t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
-	// first_side_x = vector_scale(&first_side_x, CHECKER_W);
+	// first_side_x = vector_scale(&first_side_x, vars->tile_size);
 	// draw_star(vars, vector_add(&visual_player_pos, &first_side_x), 0xFFFF00FF);
 
 	// t_vect2d first_side_y = vector_scale(&ray_normalized, side_dist.y);
-	// first_side_y = vector_scale(&first_side_y, CHECKER_W);
+	// first_side_y = vector_scale(&first_side_y, vars->tile_size);
 	// draw_star(vars, vector_add(&visual_player_pos, &first_side_y), 0x00FFFFFF);
 
 	int iterations = 1e9;
@@ -305,7 +307,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 			hit_data.dist = side_dist.x - delta_dist.x;
 			// hit_rel_player = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
 			// t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
-			// visual_next_side_x = vector_scale(&visual_next_side_x, CHECKER_W);
+			// visual_next_side_x = vector_scale(&visual_next_side_x, vars->tile_size);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_x), hit ? 0xFF0000FF : 0xFFFF00FF);
 		}
 		else
@@ -313,7 +315,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 			hit_data.dist = side_dist.y - delta_dist.y;
 			// hit_rel_player = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
 			// t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
-			// visual_next_side_y = vector_scale(&visual_next_side_y, CHECKER_W);
+			// visual_next_side_y = vector_scale(&visual_next_side_y, vars->tile_size);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
 		}
 		if (hit)
@@ -323,7 +325,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 
 
 	hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
-	// t_vect2d visual_hit = vector_scale(&hit_data.where, CHECKER_W);
+	// t_vect2d visual_hit = vector_scale(&hit_data.where, vars->tile_size);
 	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
 	hit_data.side = side;
 
@@ -342,11 +344,11 @@ void	mouse_ray_test(t_vars *vars) // DEBUG
 	t_vect2d	ray_normalized;
 	t_vect2d	visual_player_pos;
 	// printf("Mouse here (%d, %d)\n", vars->mouseX, vars->mouseY);
-	ray.x = vars->mouse.x - vars->player.pos.x * CHECKER_W;
-	ray.y = vars->mouse.y - vars->player.pos.y * CHECKER_W;
+	ray.x = vars->mouse.x - vars->player.pos.x * vars->tile_size;
+	ray.y = vars->mouse.y - vars->player.pos.y * vars->tile_size;
 	ray_normalized = vector_normalize(&ray);
-	ray = vector_scale(&ray_normalized, CHECKER_W);
-	visual_player_pos = vector_scale(&vars->player.pos, CHECKER_W);
+	ray = vector_scale(&ray_normalized, vars->tile_size);
+	visual_player_pos = vector_scale(&vars->player.pos, vars->tile_size);
 
 	draw_line(vars, visual_player_pos, (t_vect2d){vars->mouse.x, vars->mouse.y}, 0xFFFFFFFF);
 	t_vect2d delta_dist;
@@ -361,11 +363,11 @@ void	mouse_ray_test(t_vars *vars) // DEBUG
 
 	t_vect2d side_dist;
 
-	double pos_x = vars->player.pos.x;// / CHECKER_W;
-	double pos_y = vars->player.pos.y;// / CHECKER_W;
+	double pos_x = vars->player.pos.x;// / vars->tile_size;
+	double pos_y = vars->player.pos.y;// / vars->tile_size;
 
-	int map_x = (int)(vars->player.pos.x);// / CHECKER_W);
-	int map_y = (int)(vars->player.pos.y);// / CHECKER_W);
+	int map_x = (int)(vars->player.pos.x);// / vars->tile_size);
+	int map_y = (int)(vars->player.pos.y);// / vars->tile_size);
 
 
 	if (ray.x < 0)
@@ -379,11 +381,11 @@ void	mouse_ray_test(t_vars *vars) // DEBUG
 
 
 	// t_vect2d first_side_x = vector_scale(&ray_normalized, side_dist.x);
-	// first_side_x = vector_scale(&first_side_x, CHECKER_W);
+	// first_side_x = vector_scale(&first_side_x, vars->tile_size);
 	// draw_star(vars, vector_add(&visual_player_pos, &first_side_x), 0xFFFF00FF);
 
 	// t_vect2d first_side_y = vector_scale(&ray_normalized, side_dist.y);
-	// first_side_y = vector_scale(&first_side_y, CHECKER_W);
+	// first_side_y = vector_scale(&first_side_y, vars->tile_size);
 	// draw_star(vars, vector_add(&visual_player_pos, &first_side_y), 0x00FFFFFF);
 
 	int iterations = 8;
@@ -415,14 +417,14 @@ void	mouse_ray_test(t_vars *vars) // DEBUG
 		{
 			hit_rel_player = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
 			// t_vect2d visual_next_side_x = vector_scale(&ray_normalized, side_dist.x - delta_dist.x);
-			// visual_next_side_x = vector_scale(&visual_next_side_x, CHECKER_W);
+			// visual_next_side_x = vector_scale(&visual_next_side_x, vars->tile_size);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_x), hit ? 0xFF0000FF : 0xFFFF00FF);
 		}
 		else
 		{
 			hit_rel_player = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
 			// t_vect2d visual_next_side_y = vector_scale(&ray_normalized, side_dist.y - delta_dist.y);
-			// visual_next_side_y = vector_scale(&visual_next_side_y, CHECKER_W);
+			// visual_next_side_y = vector_scale(&visual_next_side_y, vars->tile_size);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
 		}
 		if (hit)
@@ -430,7 +432,7 @@ void	mouse_ray_test(t_vars *vars) // DEBUG
 		++i;
 	}
 
-	t_vect2d visual_hit = vector_scale(&hit_rel_player, CHECKER_W);
+	t_vect2d visual_hit = vector_scale(&hit_rel_player, vars->tile_size);
 	draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
 }
 
@@ -481,14 +483,21 @@ void ft_hook(void* v_vars)
 		vars->fov += 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_J))
 		vars->fov -= 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_T))
+		vars->tile_size += 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_G))
+		vars->tile_size -= 1;
+
+	// if (mlx_is_mouse_down(vars->mlx, mouse_key_t key)
 	if (input_mvt.x == input_mvt.y)
 	{
 		input_mvt.x /= 1.424;
 		input_mvt.y /= 1.424;
 	}
 
-	vars->nb_vert_stripes = clamp_value(vars->nb_vert_stripes, 2, WIDTH);
-	vars->fov = clamp_value(vars->fov, 1, 100);
+	vars->tile_size = clamp_value(vars->tile_size, 5, 50);
+	vars->nb_vert_stripes = clamp_value(vars->nb_vert_stripes, 42, WIDTH);
+	vars->fov = clamp_value(vars->fov, 1, 50);
 
 	// Rotating look
 	vars->player.dir = (t_vect2d){cos(-vars->look_angle), sin(-vars->look_angle)};
@@ -550,6 +559,7 @@ void	init_vars(t_vars *vars)
 	vars->fov = 1;
 	vars->mouse.x = 0;
 	vars->mouse.y = 0;
+	vars->tile_size = TILE_W;
 }
 
 int32_t main(int32_t argc, const char* argv[])
@@ -558,21 +568,30 @@ int32_t main(int32_t argc, const char* argv[])
 	(void)argv;
 	t_vars vars;
 	int map[10][10] = {
-		{1, 1, 1, 1, 1, 0, 0, 1, 0, 0},
-		{1, 0, 0, 0, 1, 0, 0, 1, 0, 0},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
-		{1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
-		{1, 0, 0, 1, 0, 1, 0, 1, 0, 0},
-		{1, 0, 0, 1, 0, 1, 0, 1, 0, 0},
-		{1, 0, 0, 1, 0, 1, 0, 1, 0, 0},
-		{1, 0, 0, 1, 0, 0, 0, 0, 0, 0}
+		{1, 1, 1, 1, 1, 0, 0, 1, 1, 1},
+		{1, 0, 0, 0, 1, 0, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
 
 	vars.map.data = (int *)map;
 	vars.map.width = 10;
 	vars.map.height = 10;
+
+	for (int j = 0; j < vars.map.height; j++)
+	{
+		for (int i = 0; i < vars.map.width; i++)
+		{
+			printf("%d ", get_map_val(&vars, i, j));
+		}
+		printf("\n");
+	}
 	init_vars(&vars);
 	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
 	mlx_loop_hook(vars.mlx, ft_hook, &vars);
