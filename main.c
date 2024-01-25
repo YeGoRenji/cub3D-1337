@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/24 16:41:27 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/25 19:47:18 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #define ROT_SPEED 2
 #define VARNAME(var) #var
 
+int	clamp_value(int val, int min, int max);
 
 void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 {
@@ -48,13 +49,16 @@ void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 		prot_put_pixel(vars->img, i, j, color);
 }
 
-void  draw_stripe(t_vars *vars, int x, int drawStart, int drawEnd, uint32_t color, int width)
+void  draw_stripe(t_vars *vars, int x_stripe, int drawStart, int drawEnd, uint32_t color, int width)
 {
 	int	half_width = width >> 1;
 
-	for (int i = drawStart; i <= drawEnd; ++i)
-		for (int j = x - half_width; j <= x + half_width; j++)
-			prot_put_pixel(vars->img, j, i, color);
+	// for (int y = drawStart - 50; y < drawStart; ++y)
+	// 	for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
+	// 		prot_put_pixel(vars->img, x, y, 0x5050FF50);
+	for (int y = drawStart; y <= drawEnd; ++y)
+		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
+			prot_put_pixel(vars->img, x, y, color);
 }
 
 
@@ -70,6 +74,7 @@ void draw_wall_stripes(t_vars *vars)
 	side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
 
 	int steps = WIDTH / vars->nb_vert_stripes;
+	int64_t fog = 0xFF;
 	for (i = 0; i < WIDTH; i += steps)
 	{
 		double cameraX = 2 * i / (double)(WIDTH) - 1;
@@ -86,39 +91,41 @@ void draw_wall_stripes(t_vars *vars)
 		int drawEnd = lineHeight / 2 + h / 2;
 		if (drawEnd >= h) drawEnd = h - 1;
 
-		draw_stripe(vars, i, drawStart, drawEnd, hit.side ? 0xFF5050FF : 0x50FF50FF, steps);
+		fog = 0xFF - hit.dist * 50;
+		fog = clamp_value(fog, 0, 0xFF);
+		draw_stripe(vars, i, drawStart, drawEnd, hit.side ? ((0xFF5050 << 8) | fog) : ((0x50FF50 << 8) | fog), steps);
 	}
 }
 
-void put_player(t_vars *vars)
-{
-	// WARNING : THIS IS OLD need to be synced with ray_cast_dda
-	t_vect2d	forward_scaled;
-	int			i;
-	int 		plane_half = vars->fov / 2;
+// void put_player(t_vars *vars)
+// {
+// 	// WARNING : THIS IS OLD need to be synced with ray_cast_dda
+// 	t_vect2d	forward_scaled;
+// 	int			i;
+// 	int 		plane_half = vars->fov / 2;
 
-	t_player visual_player = vars->player;
-	visual_player.pos = vector_scale(&visual_player.pos, vars->tile_size);
+// 	t_player visual_player = vars->player;
+// 	visual_player.pos = vector_scale(&visual_player.pos, vars->tile_size);
 
-	forward_scaled = visual_player.dir;
-	t_vect2d side_dir = (t_vect2d){visual_player.dir.y, -visual_player.dir.x};
+// 	forward_scaled = visual_player.dir;
+// 	t_vect2d side_dir = (t_vect2d){visual_player.dir.y, -visual_player.dir.x};
 
-	// Look Rays
-	for (i = -plane_half; i <= plane_half; ++i)
-	{
-		t_vect2d var_side = (t_vect2d){-i * side_dir.x, -i * side_dir.y};
-		t_vect2d ray = vector_add(&forward_scaled, &var_side);
+// 	// Look Rays
+// 	for (i = -plane_half; i <= plane_half; ++i)
+// 	{
+// 		t_vect2d var_side = (t_vect2d){-i * side_dir.x, -i * side_dir.y};
+// 		t_vect2d ray = vector_add(&forward_scaled, &var_side);
 
-		draw_line(vars, 
-			   visual_player.pos, 
-			   vector_add(&visual_player.pos, &ray), 
-			   0x5050FFFF
-		);
-	}
+// 		draw_line(vars, 
+// 			   visual_player.pos, 
+// 			   vector_add(&visual_player.pos, &ray), 
+// 			   0x5050FFFF
+// 		);
+// 	}
 
-	// Player dot
-	draw_star(vars, visual_player.pos, 0x50FF50FF);
-}
+// 	// Player dot
+// 	draw_star(vars, visual_player.pos, 0x50FF50FF);
+// }
 
 void	clear_screen(t_vars* vars, uint32_t color)
 {
@@ -182,12 +189,77 @@ bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius)
 	return (false);
 }
 
-void mini_map(t_vars *vars)
+void draw_trig(t_vars *vars, t_vect2d pos, int width, int height, uint32_t color)
+{
+	double percent;
+
+	for (int y = pos.y; y < pos.y + height; ++y)
+	{
+		percent = (double)(y - pos.y)/height;
+		for (int x = pos.x - percent * width/2; x < pos.x + percent * width/2; ++x)
+		{
+			prot_put_pixel(vars->img, x, y, color);
+		}
+	}
+}
+
+void	put_mini_map_cursor(t_vars *vars, t_vect2d center)
+{
+	const int half_width = 10;
+	const int trig_width = 2 * half_width - 2;
+	const int trig_height = 2 * half_width - 2;
+
+	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y  - half_width - 10}, trig_width - 3, trig_height, 0);
+
+	for (int y = -half_width; y < half_width; ++y)
+	{
+		for (int x = -half_width; x < half_width; ++x)
+		{
+			if (inside_circle((t_ivect2d){center.x + x, center.y + y}, (t_ivect2d){center.x, center.y}, half_width - 5))
+				prot_put_pixel(vars->img, center.x + x, center.y + y, 0xFFFFFFFF);
+			else if (inside_circle((t_ivect2d){center.x + x, center.y + y}, (t_ivect2d){center.x, center.y}, half_width - 2))
+				prot_put_pixel(vars->img, center.x + x, center.y + y, 0);
+		}
+	}
+
+
+	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y - half_width - 3}, trig_width - 6, trig_height - 2, 0xFFFFFFFF);
+
+	// draw_trig(vars, (t_vect2d){center.x, center.y - 15}, half_width + 6 - 10, half_width + 3 - 10, 0xFFFFFFFF);
+}
+
+void draw_texture(t_vars *vars, mlx_texture_t *texture, t_ivect2d pos)
+{
+	int *pixels = (int *)texture->pixels;
+
+	for (uint32_t y = pos.y; y < pos.y + texture->height; ++y)
+	{
+		for (uint32_t x = pos.x; x < pos.x + texture->width; ++x)
+		{
+			uint32_t color = pixels[(y - pos.y) * texture->width + (x - pos.x)];
+			color =  (color & (0xFF << 24)) >> 24  | (color << 8);
+			prot_put_pixel(vars->img, x, y, color);
+		}
+	}
+}
+
+void draw_circle(t_vars *vars, t_ivect2d center, int radius, uint32_t color)
+{
+	int start_x = center.x - radius;
+	int start_y = center.y - radius;
+
+	for (int y = start_y; y < start_y + 2 * radius; ++y)
+		for (int x = start_x; x < start_x + 2 * radius; ++x)
+			if (inside_circle((t_ivect2d){x, y}, center, radius))
+				prot_put_pixel(vars->img, x, y, color);
+}
+
+void mini_map(t_vars *vars, t_ivect2d pos)
 {
 	// TODO: the signs of the vectors are just tweaked bruteforce (UNDERSTAND MORE ?)
 	t_vect2d forward = (t_vect2d){vars->player.dir.x, -vars->player.dir.y};
 	t_vect2d right = (t_vect2d){-vars->player.dir.y, -vars->player.dir.x};
-	t_vect2d center = (t_vect2d){(double)MINI_MAP_WIDTH / 2, (double)MINI_MAP_WIDTH / 2};
+	t_vect2d center = (t_vect2d){(double)MINI_MAP_WIDTH / 2 + pos.x, (double)MINI_MAP_WIDTH / 2 + pos.y};
 	double	 inv_det = -1; /// (right.x * forward.y - right.y * forward.x);
 
 	// Testing
@@ -202,11 +274,11 @@ void mini_map(t_vars *vars)
 	forward = vector_add(&forward, &center);
 	right = vector_add(&right, &center);
 
-	for (int y = 0; y < MINI_MAP_WIDTH; ++y)
+	for (int y = pos.y; y < pos.y + MINI_MAP_WIDTH; ++y)
 	{
-		for (int x = 0; x < MINI_MAP_WIDTH; ++x)
+		for (int x = pos.x; x < pos.x + MINI_MAP_WIDTH; ++x)
 		{
-			if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2 - 10))
+			if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2 - 10))
 			{
 				t_vect2d coord_rel_center = {x - center.x, y - center.y};
 				coord_rel_center = vector_scale(&coord_rel_center, (double)1/vars->tile_size);
@@ -220,13 +292,28 @@ void mini_map(t_vars *vars)
 				else
 					prot_put_pixel(vars->img, x, y, TILE_COL_2);
 			}
-			else if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){MINI_MAP_WIDTH / 2, MINI_MAP_WIDTH / 2}, MINI_MAP_WIDTH / 2))
+			else if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2))
 					prot_put_pixel(vars->img, x, y, 0x303030FF);
 		}
 	}
 	// draw_line(vars, center, forward, 0xFF0000FF);
 	// draw_line(vars, center, right, 0x0000FFFF);
-	draw_star(vars, center, 0x0000FFFF);
+	// draw_star(vars, center, 0x0000FFFF);
+	put_mini_map_cursor(vars, center);
+	t_vect2d center_to_n = vector_scale(&vars->player.dir, (double)MINI_MAP_WIDTH / 2 - 5);
+	t_ivect2d north_center = (t_ivect2d){center.x - center_to_n.x, center.y + center_to_n.y};
+	int n_radius = 20;
+	draw_circle(vars, north_center, n_radius, 0);
+	draw_texture(vars, vars->nig_pic, (t_ivect2d){north_center.x - n_radius, north_center.y - n_radius});
+}
+
+int	clamp_value(int val, int min, int max)
+{
+	if (val < min)
+		return min;
+	if (val > max)
+		return max;
+	return val;
 }
 
 
@@ -436,14 +523,6 @@ void	mouse_ray_test(t_vars *vars) // DEBUG
 	draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
 }
 
-int	clamp_value(int val, int min, int max)
-{
-	if (val < min)
-		return min;
-	if (val > max)
-		return max;
-	return val;
-}
 
 
 void ft_hook(void* v_vars)
@@ -512,10 +591,10 @@ void ft_hook(void* v_vars)
 	// Drawing Logic
 	// checker(vars);
 	//draw_map(vars);
-	clear_screen(vars, 0xFFFFFF10);
+	clear_screen(vars, 0x505050FF);
 	// put_player(vars);
 	draw_wall_stripes(vars);
-	mini_map(vars);
+	mini_map(vars, (t_ivect2d){25, 25});
 
 	// if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
 	// 	mouse_ray_test(vars);
@@ -560,6 +639,9 @@ void	init_vars(t_vars *vars)
 	vars->mouse.x = 0;
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
+
+	// Noice 69
+	vars->nig_pic = mlx_load_png("./resources/NLetter.png");
 }
 
 int32_t main(int32_t argc, const char* argv[])
