@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/25 19:47:18 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/26 03:30:18 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,7 +238,8 @@ void draw_texture(t_vars *vars, mlx_texture_t *texture, t_ivect2d pos)
 		{
 			uint32_t color = pixels[(y - pos.y) * texture->width + (x - pos.x)];
 			color =  (color & (0xFF << 24)) >> 24  | (color << 8);
-			prot_put_pixel(vars->img, x, y, color);
+			if (color & 0xFF)
+				prot_put_pixel(vars->img, x, y, color);
 		}
 	}
 }
@@ -666,14 +667,6 @@ int32_t main(int32_t argc, const char* argv[])
 	vars.map.width = 10;
 	vars.map.height = 10;
 
-	for (int j = 0; j < vars.map.height; j++)
-	{
-		for (int i = 0; i < vars.map.width; i++)
-		{
-			printf("%d ", get_map_val(&vars, i, j));
-		}
-		printf("\n");
-	}
 	init_vars(&vars);
 	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
 	mlx_loop_hook(vars.mlx, ft_hook, &vars);

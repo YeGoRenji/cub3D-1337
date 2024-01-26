@@ -2,11 +2,14 @@
 
 - [x] Quality changer (number of stripes) 
 - [x] Maybe FOV ?
-- [ ] MiniMap
+- [x] MiniMap
 	- [x] Circle of the minimap
 	- [x] Player fixed and it rotates
-	- [ ] Player cursor
+	- [x] Player cursor / GTA (N)
 - [ ] Textures (Hopefully jeff will do it)
+- [ ] Wall Collision
+- [ ] Doors
+    - [ ] Manually Openable ?
 
 ## Issues:
 
