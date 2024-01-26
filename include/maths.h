@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/22 20:33:02 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:25:00 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,6 @@ t_vect2d	vector_normalize(t_vect2d *vec);
 double		vector_dot(t_vect2d *vec1, t_vect2d *vec2);
 
 /* UTILS */
-double		abs_f(double a);
+int	clamp_value(int val, int min, int max);
 
 #endif

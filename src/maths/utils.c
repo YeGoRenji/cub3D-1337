@@ -6,13 +6,13 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:17:53 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 17:18:02 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:23:53 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-double abs_f(double a)
+int	clamp_value(int val, int min, int max)
 {
-	if (a < 0)
-		return (-a);
-	return (a);
+	val += (val < min) * (min - val);
+	val += (val > max) * (max - val);
+	return (val);
 }

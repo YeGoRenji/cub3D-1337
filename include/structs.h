@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/25 18:40:59 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:44:53 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,19 @@
 # include <maths.h>
 # include <MLX42/MLX42.h>
 
+#define WIDTH 1920
+#define HEIGHT 1080
+
+#define TILE_W 25
+#define TILE_COL_1 0xFF69FFFF
+#define TILE_COL_2 0x69FFFFFF
+#define MINI_MAP_WIDTH 300
+
+#define OLD_MAP_2D 0xAA50AAFF
+
+#define MVT_SPEED 2
+#define ROT_SPEED 2
+#define VARNAME(var) #var
 
 typedef struct s_ivect2d
 {

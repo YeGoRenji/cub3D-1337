@@ -10,7 +10,12 @@ OBJS_FILES = main.o \
 			 drawing.o \
 			 vectors_binary.o \
 			 utils.o \
-			 vectors_unary.o
+			 vectors_unary.o \
+			 draw_primitives.o \
+			 draw_utils.o \
+			 draw_walls.o \
+			 draw_minimap.o
+
 
 OS := $(shell uname -s)
 
