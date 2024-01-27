@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/26 19:53:22 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/27 02:45:10 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <structs.h>
 #include <maths.h>
 #include <drawing.h>
-
 
 void debug_vect(t_vect2d *vec, char *name)
 {

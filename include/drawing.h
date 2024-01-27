@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/26 19:51:09 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/27 03:14:57 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define DRAWING_H
 
 # include <structs.h>
+# include <stdio.h>
 
 void	draw_line(t_vars *vars, t_vect2d pt1, t_vect2d pt2, uint32_t color);
 void	prot_put_pixel(mlx_image_t *image, int x, int y, uint32_t color);

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/26 19:48:38 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/27 03:20:59 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,12 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	// first_side_y = vector_scale(&first_side_y, vars->tile_size);
 	// draw_star(vars, vector_add(&visual_player_pos, &first_side_y), 0x00FFFFFF);
 
-	int iterations = 1e9;
 	int i = 0;
 	int is_x = 0;
 	// t_vect2d hit_rel_player;
 	int side = 0;
 	t_rayhit hit_data;
-	while (i < iterations)
+	while (i < 1e9)
   	{
 		is_x = 0;
 		int hit = 0;
