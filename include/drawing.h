@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/27 20:53:47 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/27 20:55:47 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define DRAWING_H
 
 # include <structs.h>
+# include <stdio.h>
 
 /* Entry func */
 void	do_graphics(t_vars* vars);
