@@ -6,16 +6,25 @@ LINK_H = -Iinclude
 
 OBJSFOLDER = objs/
 
-OBJS_FILES = main.o \
-			 drawing.o \
-			 vectors_binary.o \
-			 utils.o \
-			 vectors_unary.o \
-			 draw_primitives.o \
-			 draw_utils.o \
-			 draw_walls.o \
-			 draw_minimap.o
+OBJS_FILES = main.o
 
+# Hot reloading by @Jeff
+
+HOT_RELOAD_FILES = drawing.o \
+				   vectors_binary.o \
+				   utils.o \
+				   vectors_unary.o \
+				   draw_primitives.o \
+				   draw_utils.o \
+				   draw_walls.o \
+				   draw_minimap.o \
+				   graphics.o
+
+HOT_RELOAD = $(foreach obj, $(HOT_RELOAD_FILES), $(OBJSFOLDER)$(obj))
+
+LIB = lib/lib.so
+
+#######
 
 OS := $(shell uname -s)
 
@@ -29,7 +38,7 @@ OBJS = $(foreach obj, $(OBJS_FILES), $(OBJSFOLDER)$(obj))
 
 GLOBAL_HEADERS = include/structs.h
 
-all: objs $(NAME)
+all: objs $(NAME) $(LIB)
 
 objs:
 	@mkdir objs
@@ -40,18 +49,21 @@ $(NAME): $(OBJS)
 $(OBJSFOLDER)%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LINK_H)
 
+$(LIB): $(HOT_RELOAD)
+	$(CC) $(CFLAGS) -shared $(HOT_RELOAD) -o $(LIB) -L`pwd`/lib $(LINKS) $(LINK_H) -lglfw
+
 $(OBJSFOLDER)%.o: src/drawing/%.c include/drawing.h $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
-	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+	@$(CC) $(CFLAGS) -fPIC $(LINK_H) -c $< -o $@
 
 $(OBJSFOLDER)%.o: src/maths/%.c include/maths.h $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
-	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+	@$(CC) $(CFLAGS) -fPIC $(LINK_H) -c $< -o $@
 
 re: fclean all
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -rf $(NAME) $(LIB)
 
 clean:
 	rm -rf $(OBJS)

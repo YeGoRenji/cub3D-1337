@@ -6,13 +6,14 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/26 19:44:53 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/27 20:51:44 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
 # include <stdbool.h>
+# include <stdio.h>
 # include <maths.h>
 # include <MLX42/MLX42.h>
 
