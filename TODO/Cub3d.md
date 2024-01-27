@@ -13,5 +13,5 @@
 
 ## Issues:
 
-- [ ] When map is not closed there is a problem near border y = 0
+- [x] When map is not closed there is a problem near border y = 0
       Probably wont fix this ? cause parsing gonna fix it 
