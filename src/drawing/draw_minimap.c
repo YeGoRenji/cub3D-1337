@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/27 03:22:22 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/29 02:08:30 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void mini_map(t_vars *vars, t_ivect2d pos)
 	t_ivect2d north_center = (t_ivect2d){center.x - center_to_n.x, center.y + center_to_n.y};
 	int n_radius = 20;
 	draw_circle(vars, north_center, n_radius, 0);
-	draw_texture(vars, vars->nig_pic, (t_ivect2d){north_center.x - n_radius, north_center.y - n_radius});
+	draw_texture(vars, vars->nletter_pic, (t_ivect2d){north_center.x - n_radius, north_center.y - n_radius});
 	// draw_line(vars, center, forward, 0xFF0000FF);
 	// draw_line(vars, center, right, 0x0000FFFF);
 }

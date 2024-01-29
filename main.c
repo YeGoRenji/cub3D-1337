@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/28 01:49:54 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/29 03:15:22 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ void	init_vars(t_vars *vars)
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
 	// Noice 69
-	vars->nig_pic = mlx_load_png("./resources/NLetter.png");
+	vars->nletter_pic = mlx_load_png("./resources/NLetter.png");
+	vars->wall_pic = mlx_load_png("./resources/wolftex/redbrick.png");
 
 	hot_reload();
 }

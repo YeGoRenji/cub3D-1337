@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/27 03:20:59 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/29 03:12:05 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,10 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	// t_vect2d visual_hit = vector_scale(&hit_data.where, vars->tile_size);
 	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
 	hit_data.side = side;
+	if (side == 0)
+		hit_data.pos_in_texture = hit_data.where.y - floor(hit_data.where.y);
+	else
+		hit_data.pos_in_texture = hit_data.where.x - floor(hit_data.where.x);
 
 	// t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
@@ -123,16 +127,34 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	return hit_data;
 }
 
-void  draw_stripe(t_vars *vars, int x_stripe, int drawStart, int drawEnd, uint32_t color, int width)
+void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int drawEnd, uint32_t color, int width)
 {
 	int	half_width = width >> 1;
+	int *pixels = (int *)vars->wall_pic->pixels;
+	double h_percent = hit->pos_in_texture;
+	mlx_texture_t *tex = vars->wall_pic;
+	int start = drawStart;
+	if (start < 0) start = 0;
+	int end = drawEnd;
+	if (end >= HEIGHT) end = HEIGHT - 1;
+	(void)color;
+
 
 	// for (int y = drawStart - 50; y < drawStart; ++y)
 	// 	for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 	// 		prot_put_pixel(vars->img, x, y, 0x5050FF50);
-	for (int y = drawStart; y <= drawEnd; ++y)
+	
+	// TODO: use fog
+	
+	for (int y = start; y <= end; ++y)
+	{
+		double v_percent = (double)(y - drawStart) / (drawEnd - drawStart);
+		int x_tex = h_percent * tex->width;
+		int y_tex = v_percent * tex->height;
+		uint32_t color = pixels[y_tex * tex->width + x_tex];
 		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 			prot_put_pixel(vars->img, x, y, color);
+	}
 }
 
 // t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray);
@@ -160,12 +182,12 @@ void draw_wall_stripes(t_vars *vars)
 
 		// calculate lowest and highest pixel to fill in current stripe
 		int drawStart = -lineHeight / 2 + h / 2;
-		if (drawStart < 0) drawStart = 0;
+		// if (drawStart < 0) drawStart = 0;
 		int drawEnd = lineHeight / 2 + h / 2;
-		if (drawEnd >= h) drawEnd = h - 1;
+		// if (drawEnd >= h) drawEnd = h - 1;
 
 		fog = 0xFF - hit.dist * 20;
 		fog = clamp_value(fog, 0, 0xFF);
-		draw_stripe(vars, i, drawStart, drawEnd, hit.side ? ((0xFF5050 << 8) | fog) : ((0x50FF50 << 8) | fog), steps);
+		draw_stripe(vars, &hit, i, drawStart, drawEnd, hit.side ? ((0xFF5050 << 8) | fog) : ((0x50FF50 << 8) | fog), steps);
 	}
 }
