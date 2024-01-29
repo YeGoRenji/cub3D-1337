@@ -32,6 +32,7 @@ ifeq ($(OS), Darwin)
 	LINKS = -lmlx42 -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 else
 	LINKS = -lmlx42_linux -ldl -pthread -lm
+	CFLAGS += -Wno-unused-result
 endif
 
 OBJS = $(foreach obj, $(OBJS_FILES), $(OBJSFOLDER)$(obj))

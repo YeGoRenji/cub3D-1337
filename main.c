@@ -6,11 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/01/27 20:50:53 by ylyoussf         ###   ########.fr       */
-=======
-/*   Updated: 2024/01/27 02:45:10 by ylyoussf         ###   ########.fr       */
->>>>>>> 873c47b008830c1b694bac78df114d07a7836206
+/*   Updated: 2024/01/28 01:49:54 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +17,11 @@
 #include <drawing.h>
 #include <dlfcn.h>
 
-<<<<<<< HEAD
 typedef void (*do_graphics_ptr_t)(t_vars* vars);
 do_graphics_ptr_t do_graphics_ptr = NULL;
 void	*module = NULL;
 
 void hot_reload()
-=======
-void debug_vect(t_vect2d *vec, char *name)
->>>>>>> 873c47b008830c1b694bac78df114d07a7836206
 {
 	if (module)
 		dlclose(module);
@@ -101,6 +93,8 @@ int32_t main(int32_t argc, const char* argv[])
 		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
+
+	rand();
 
 	vars.map.data = (int *)map;
 	vars.map.width = 10;
