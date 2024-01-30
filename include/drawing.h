@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/27 20:55:47 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/30 17:14:58 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <structs.h>
 # include <stdio.h>
+# include <stdlib.h>
 
 /* Entry func */
 void	do_graphics(t_vars* vars);
@@ -38,5 +39,8 @@ int		get_map_val(t_vars *vars, int x, int y);
 
 /* Mini map */
 void mini_map(t_vars *vars, t_ivect2d pos);
+
+/* Textures */
+mlx_texture_t	*load_tex_png(const char *path);
 
 #endif

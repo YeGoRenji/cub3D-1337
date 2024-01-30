@@ -1,12 +1,13 @@
 NAME = cub3D
 
-CFLAGS = -Wall -Wextra -Werror -O3 -Ofast #-g #-fsanitize=address #-g
+CFLAGS = -Wall -Wextra -Werror  -Ofast #-O3 #-g #-fsanitize=address #-g
 
 LINK_H = -Iinclude
 
 OBJSFOLDER = objs/
 
-OBJS_FILES = main.o
+OBJS_FILES = main.o \
+		     texture.o
 
 # Hot reloading by @Jeff
 
@@ -67,6 +68,6 @@ fclean: clean
 	rm -rf $(NAME) $(LIB)
 
 clean:
-	rm -rf $(OBJS)
+	rm -rf $(OBJS) $(HOT_RELOAD)
 
 .PHONY: all clean fclean re

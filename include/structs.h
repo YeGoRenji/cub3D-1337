@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/29 02:08:07 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/30 20:06:37 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,18 @@
 #define MVT_SPEED 2
 #define ROT_SPEED 2
 #define VARNAME(var) #var
+
+typedef enum orientation {
+	NORTH,
+	EAST,
+	SOUTH,
+	WEST
+}	e_orientation;
+
+enum {
+	WE,
+	NS
+};
 
 typedef struct s_ivect2d
 {
@@ -72,9 +84,8 @@ typedef struct s_vars {
 	int			tile_size;
 	t_map		map;
 	t_ivect2d	mouse;
-	// TODO: Put these in an array of textures
-	mlx_texture_t *nletter_pic;
-	mlx_texture_t *wall_pic;
+	mlx_texture_t *nletter_tex;
+	mlx_texture_t *wall_tex[4];
 }				t_vars;
 
 typedef struct s_rayhit {

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/29 03:15:22 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/30 18:16:38 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void hot_reload()
 	system("make lib/lib.so");
 	module = dlopen("lib/lib.so", RTLD_NOW);
 	do_graphics_ptr = dlsym(module, "do_graphics");
+	system("clear");
+	system("echo Reloaded !!");
 }
 
 void	exit_failure(t_vars *vars)
@@ -60,9 +62,12 @@ void	init_vars(t_vars *vars)
 	vars->mouse.x = 0;
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
-	// Noice 69
-	vars->nletter_pic = mlx_load_png("./resources/NLetter.png");
-	vars->wall_pic = mlx_load_png("./resources/wolftex/redbrick.png");
+	// Test for NULL
+	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
+	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/redbrick.png");
+	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/wood.png");
+	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/eagle.png");
+	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/bluestone.png");
 
 	hot_reload();
 }
@@ -94,8 +99,6 @@ int32_t main(int32_t argc, const char* argv[])
 		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
-
-	rand();
 
 	vars.map.data = (int *)map;
 	vars.map.width = 10;
