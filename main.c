@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/30 18:16:38 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 04:01:40 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,17 @@ void	init_vars(t_vars *vars)
 	vars->look_angle = 0;
 	vars->player.pos = (t_vect2d){1.5, 1.5};
 
-	// Fix these values later
+	// Fix these values later (in parsing)
 	vars->nb_vert_stripes = WIDTH;
 	vars->fov = 1;
 	vars->mouse.x = 0;
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
-	// Test for NULL
 	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
 	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/redbrick.png");
 	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/wood.png");
 	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/eagle.png");
-	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/bluestone.png");
+	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greystone.png");
 
 	hot_reload();
 }
@@ -91,9 +90,9 @@ int32_t main(int32_t argc, const char* argv[])
 		{1, 1, 1, 1, 1, 0, 0, 1, 1, 1},
 		{1, 0, 0, 0, 1, 0, 0, 1, 0, 1},
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 0, 0, 0, 0, 1, 0, 1, 0, 1},
-		{1, 0, 0, 0, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
 		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
 		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
 		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},

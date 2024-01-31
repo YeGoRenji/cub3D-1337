@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/30 20:03:25 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 03:54:59 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,19 @@ int get_map_val(t_vars *vars, int x, int y)
 	if (y < 0 || y >= vars->map.height)
 		return 1;
 	return vars->map.data[y * vars->map.width + x];
+}
+
+e_orientation get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
+{
+	if ((int)hit->side == NS)
+	{
+		if (raydir->y > 0)
+			return (NORTH);
+		return (SOUTH);
+	}
+	if (raydir->x > 0)
+		return (WEST);
+	return (EAST);
 }
 
 t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
@@ -66,13 +79,13 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 			is_x = 1;
 			side_dist.x += delta_dist.x;
 			mapidx.x += step.x;
-			hit_data.side = WE;
+			hit_data.side = (e_orientation)WE;
 		}
 		else
 		{
 			side_dist.y += delta_dist.y;
 			mapidx.y += step.y;
-			hit_data.side = NS;
+			hit_data.side = (e_orientation)NS;
 		}
 
 		// Check if ray has hit a wall
@@ -103,26 +116,27 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
 	// t_vect2d visual_hit = vector_scale(&hit_data.where, vars->tile_size);
 	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
-	if (hit_data.side == WE)
-		hit_data.pos_in_texture = hit_data.where.y - mapidx.y;
+	if ((int)hit_data.side == WE)
+		hit_data.pos_in_texture = fabs(hit_data.where.y - mapidx.y);
 	else
-		hit_data.pos_in_texture = hit_data.where.x - mapidx.x;
+		hit_data.pos_in_texture = fabs(hit_data.where.x - mapidx.x);
 
 	// t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
 	hit_data.dist /= vector_magnitude(&ray);
+	hit_data.side = get_wall_oriantation(&hit_data, &ray_normalized);
 
 	// draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
 	// draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
 	return hit_data;
 }
 
+
 void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int drawEnd, int fog, int width)
 {
 	int	half_width = width >> 1;
 	double h_percent = hit->pos_in_texture;
-	// TODO: get actual side dependent Texture (NORTH, SOUTH, WEST, EAST) make func ?
-	mlx_texture_t *tex = vars->wall_tex[NORTH];
+	mlx_texture_t *tex = vars->wall_tex[hit->side];
 	int start = drawStart;
 	if (start < 0) start = 0;
 	int end = drawEnd;
@@ -131,15 +145,14 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 	// for (int y = drawStart - 50; y < drawStart; ++y)
 	// 	for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 	// 		prot_put_pixel(vars->img, x, y, 0x5050FF50);
-	
-	
-	(void)fog;
+	double fog_prs = (double)fog / 0xFF;
 	for (int y = start; y <= end - 1; ++y)
 	{
 		double v_percent = (double)(y - drawStart) / (drawEnd - drawStart);
-		int x_tex = (h_percent) * tex->width;
+		int x_tex = h_percent * tex->width;
 		int y_tex = v_percent * tex->height;
 		uint32_t color = ((int *)tex->pixels)[y_tex * tex->width + x_tex];
+		color = (color & 0xFFFFFF00) | (int)((color & 0xFF) * fog_prs);
 		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 			prot_put_pixel(vars->img, x, y, color);
 	}

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/30 20:06:37 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 03:52:40 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ typedef struct s_vars {
 }				t_vars;
 
 typedef struct s_rayhit {
-	t_vect2d	where;
-	double		dist;
-	int			side;
-	t_ivect2d	map;
-	double		pos_in_texture;
+	t_vect2d		where;
+	double			dist;
+	e_orientation	side;
+	t_ivect2d		map;
+	double			pos_in_texture;
 }				t_rayhit;
 
 #endif
