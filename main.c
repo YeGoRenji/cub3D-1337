@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 17:15:56 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 21:25:07 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <maths.h>
 #include <drawing.h>
 #include <dlfcn.h>
+#include <time.h>
+// #include <mlx.h>
 
 typedef void (*do_graphics_ptr_t)(t_vars* vars);
 do_graphics_ptr_t do_graphics_ptr = NULL;
@@ -63,10 +65,10 @@ void	init_vars(t_vars *vars)
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
 	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
-	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/redbrick.png");
-	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/wood.png");
-	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/eagle.png");
-	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greystone.png");
+	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/MyPic.png");
+	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/afatimi.png");
+	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/greystone.png");
+	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/rghouzraSquared.png");
 
 	hot_reload();
 }
@@ -86,7 +88,6 @@ void on_resize(int32_t new_width, int32_t new_height, void *param)
 	t_vars	*vars;
 
 	vars = param;
-	// printf("Got (%d, %d)\n", new_width, new_height);
 	mlx_delete_image(vars->mlx, vars->img);
 	vars->img = mlx_new_image(vars->mlx, new_width, new_height);
 	if (!vars->img)

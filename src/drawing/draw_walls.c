@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 17:39:29 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 21:36:35 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,9 +117,12 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	// t_vect2d visual_hit = vector_scale(&hit_data.where, vars->tile_size);
 	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
 	if ((int)hit_data.side == WE)
-		hit_data.pos_in_texture = fabs(hit_data.where.y - mapidx.y);
+		hit_data.pos_in_texture =  fabs(hit_data.where.y - mapidx.y);
 	else
 		hit_data.pos_in_texture = fabs(hit_data.where.x - mapidx.x);
+	// TODO: Fix flipped textures pls ;-;
+	// if (ray.y < 0 || ray.x < 0)
+	// 	hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
 
 	// t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
@@ -146,12 +149,17 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 	// 	for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 	// 		prot_put_pixel(vars->img, x, y, 0x5050FF50);
 	double fog_prs = (double)fog / 0xFF;
+	(void)fog_prs;
 	for (int y = start; y <= end - 1; ++y)
 	{
 		double v_percent = (double)(y - drawStart) / (drawEnd - drawStart);
 		int x_tex = h_percent * tex->width;
 		int y_tex = v_percent * tex->height;
-		uint32_t color = ((int *)tex->pixels)[y_tex * tex->width + x_tex];
+		uint32_t color = ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
+		// color = 0x0000FF50;
+		// color = (0xFF000000 >> (int)(v_percent * 16)) | 0xFF;
+		color = ((color & 0xFF000000) >> 24 | color << 8);
+		color = (color & 0x00FF00FF)  | ((color & 0x0000FF00) << 16) | ((color & 0xFF000000) >> 16);
 		color = (color & 0xFFFFFF00) | (int)((color & 0xFF) * fog_prs);
 		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 			prot_put_pixel(vars->img, x, y, color);
