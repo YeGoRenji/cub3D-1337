@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 03:54:59 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 17:39:29 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 	int start = drawStart;
 	if (start < 0) start = 0;
 	int end = drawEnd;
-	if (end >= HEIGHT) end = HEIGHT - 1;
+	if (end >= vars->mlx->height) end = vars->mlx->height - 1;
 
 	// for (int y = drawStart - 50; y < drawStart; ++y)
 	// 	for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
@@ -167,17 +167,17 @@ void draw_wall_stripes(t_vars *vars)
 	forward_scaled = vars->player.dir;
 	side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
 
-	int steps = WIDTH / vars->nb_vert_stripes;
+	int steps = vars->mlx->width / vars->nb_vert_stripes;
 	int64_t fog = 0xFF;
-	for (i = 0; i < WIDTH; i += steps)
+	for (i = 0; i < vars->mlx->width; i += steps)
 	{
-		double cameraX = 2 * i / (double)(WIDTH) - 1;
+		double cameraX = 2 * (i + ((double)WIDTH/2 - (double)vars->mlx->width/2)) / (double)(WIDTH) - 1;
 
 		t_vect2d var_side = (t_vect2d){-cameraX * vars->fov * side_dir.x, -cameraX * vars->fov * side_dir.y};
 		t_vect2d ray = vector_add(&forward_scaled, &var_side);
 		t_rayhit hit = ray_cast_dda(vars, ray);
-		int h = HEIGHT;
-		int lineHeight = (int)(h / (hit.dist * vars->fov));
+		int h = vars->mlx->height;
+		int lineHeight = (int)(HEIGHT / (hit.dist * vars->fov));
 
 		// calculate lowest and highest pixel to fill in current stripe
 		int drawStart = -lineHeight / 2 + h / 2;
@@ -185,7 +185,7 @@ void draw_wall_stripes(t_vars *vars)
 		int drawEnd = lineHeight / 2 + h / 2;
 		// if (drawEnd >= h) drawEnd = h - 1;
 
-		fog = 0xFF - hit.dist * 20;
+		fog = 0xFF - hit.dist * 25;
 		fog = clamp_value(fog, 0, 0xFF);
 		// hit.side ? ((0xFF5050 << 8) | fog) : ((0x50FF50 << 8) | fog)
 		draw_stripe(vars, &hit, i, drawStart, drawEnd, fog, steps);

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 04:01:40 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 17:15:56 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,20 @@ void ft_loop(void* v_vars)
 	do_graphics_ptr(vars);
 }
 
+void on_resize(int32_t new_width, int32_t new_height, void *param)
+{
+	t_vars	*vars;
+
+	vars = param;
+	// printf("Got (%d, %d)\n", new_width, new_height);
+	mlx_delete_image(vars->mlx, vars->img);
+	vars->img = mlx_new_image(vars->mlx, new_width, new_height);
+	if (!vars->img)
+		exit_failure(vars);
+	if (mlx_image_to_window(vars->mlx, vars->img, 0, 0) == -1)
+		exit_failure(vars);
+}
+
 int32_t main(int32_t argc, const char* argv[])
 {
 	(void)argc;
@@ -106,7 +120,9 @@ int32_t main(int32_t argc, const char* argv[])
 	init_vars(&vars);
 	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
 	mlx_loop_hook(vars.mlx, ft_loop, &vars);
-	// mlx_key_hook(mlx_t *mlx, mlx_keyfunc func, void *param)
+
+	// mlx_resizefunc
+	mlx_resize_hook(vars.mlx, on_resize, &vars);
 	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
 	mlx_loop(vars.mlx);
 	mlx_terminate(vars.mlx);

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/30 18:08:24 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/01/31 17:07:12 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ static void player_input(t_vars *vars)
 {
 	t_vect2d	input_mvt;
 
+	// mlx_delete_image(vars->mlx, vars->img);
+	// vars->img = mlx_new_image(vars->mlx, vars->mlx->width, vars->mlx->height);
+	// if (!vars->img)
+	// 	exit(-1);
 	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
@@ -61,7 +65,7 @@ static void player_input(t_vars *vars)
 		vars->tile_size -= 1;
 
 	vars->tile_size = clamp_value(vars->tile_size, 5, 50);
-	vars->nb_vert_stripes = clamp_value(vars->nb_vert_stripes, 42, WIDTH);
+	vars->nb_vert_stripes = clamp_value(vars->nb_vert_stripes, 42, vars->mlx->width);
 	vars->fov = clamp_value(vars->fov, 1, 50);
 
 	// Rotating look
