@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 17:07:12 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:00:58 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ static void player_input(t_vars *vars)
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
 	t_vect2d side_move = vector_scale(&side_dir, -input_mvt.x * vars->mlx->delta_time * MVT_SPEED);
 	t_vect2d movement = vector_add(&forward_move, &side_move);
-	vars->player.pos = vector_add(&vars->player.pos, &movement);
+	t_vect2d next_pos = vector_add(&vars->player.pos, &movement);
+	if (get_map_val(vars, floor(next_pos.x), floor(next_pos.y)) == 0)
+		vars->player.pos = next_pos;
 }
 
 void do_graphics(t_vars* vars)

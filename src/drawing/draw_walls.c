@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 16:27:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 20:10:09 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int get_map_val(t_vars *vars, int x, int y)
 {
 	if (x < 0 || x >= vars->map.width)
-		return 1;
+		return 0;
 	if (y < 0 || y >= vars->map.height)
-		return 1;
+		return 0;
 	return vars->map.data[y * vars->map.width + x];
 }
 
@@ -53,8 +53,8 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	pos = &vars->player.pos;
 
 	t_ivect2d	mapidx = (t_ivect2d) {
-		(int)(vars->player.pos.x),
-		(int)(vars->player.pos.y)
+		(int)floor(vars->player.pos.x),
+		(int)floor(vars->player.pos.y)
 	};
 
 	if (ray.x < 0)
@@ -70,7 +70,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	int is_x = 0;
 	// t_vect2d hit_rel_player;
 	t_rayhit hit_data;
-	while (i < 1e9)
+	while (i < 1e3)
   	{
 		is_x = 0;
 		int did_hit = 0;
