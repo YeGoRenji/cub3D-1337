@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 03:37:24 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:27:30 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,20 +153,17 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 	// for (int y = drawStart - 50; y < drawStart; ++y)
 	// 	for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 	// 		prot_put_pixel(vars->img, x, y, 0x5050FF50);
-	double fog_prs = (double)fog / 0xFF;
-	(void)fog_prs;
+	
+	// Shadow ??
+	if (hit->side == SOUTH || hit->side == WEST)
+		fog = clamp_value(fog - 0x69, 0, 0xFF);
 	for (int y = start; y <= end - 1; ++y)
 	{
 		double v_percent = (double)(y - drawStart) / (drawEnd - drawStart);
 		int x_tex = h_percent * tex->width;
 		int y_tex = v_percent * tex->height;
 		uint32_t color =  ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
-		// uint32_t color = tex_pixel(tex, x_tex, y_tex);
-		// color = 0x0000FF50;
-		// color = (0xFF000000 >> (int)(v_percent * 16)) | 0xFF;
-		// color = ((color & 0xFF000000) >> 24 | color << 8);
-		// color = (color & 0x00FF00FF)  | ((color & 0x0000FF00) << 16) | ((color & 0xFF000000) >> 16);
-		// color = (color & 0xFFFFFF00) | (int)((color & 0xFF) * fog_prs);
+		color = (color & 0xFFFFFF00) | fog;
 		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 			prot_put_pixel(vars->img, x, y, color);
 	}
@@ -199,8 +196,7 @@ void draw_wall_stripes(t_vars *vars)
 		int drawEnd = lineHeight / 2 + h / 2;
 		// if (drawEnd >= h) drawEnd = h - 1;
 
-		fog = 0xFF - hit.dist * 25;
-		fog = clamp_value(fog, 0, 0xFF);
+		fog = clamp_value(0xFF + 10 - hit.dist * 20, 0, 0xFF);
 		// hit.side ? ((0xFF5050 << 8) | fog) : ((0x50FF50 << 8) | fog)
 		draw_stripe(vars, &hit, i, drawStart, drawEnd, fog, steps);
 	}

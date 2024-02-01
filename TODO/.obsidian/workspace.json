@@ -18,14 +18,6 @@
                 "source": false
               }
             }
-          },
-          {
-            "id": "86553c85e8569b91",
-            "type": "leaf",
-            "state": {
-              "type": "empty",
-              "state": {}
-            }
           }
         ]
       }
@@ -56,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#type",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -78,7 +70,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "94fb99a87c1b7528",
@@ -155,7 +148,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "eebea99159592c1a",
+  "active": "cc525009cd1072ef",
   "lastOpenFiles": [
     "Cub3d.md"
   ]

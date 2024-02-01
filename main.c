@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 03:22:38 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:36:32 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,13 @@ void	init_vars(t_vars *vars)
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
 	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
-	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/MyPic.png");
-	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/afatimi.png");
-	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/greystone.png");
-	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/rghouzraSquared.png");
+	// vars->wall_tex[NORTH] = load_tex_png("./resources/pics/MyPic.png");
+	// vars->wall_tex[EAST] = load_tex_png("./resources/pics/afatimi.png");
+	// vars->wall_tex[WEST] = load_tex_png("./resources/pics/rghouzra.png");
+	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/greybricks.png");
+	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
+	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/greybricks.png");
+	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
 
 	hot_reload();
 }
