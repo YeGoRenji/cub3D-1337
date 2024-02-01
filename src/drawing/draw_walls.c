@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 21:36:35 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 02:58:54 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,17 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	// t_vect2d visual_hit = vector_scale(&hit_data.where, vars->tile_size);
 	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
 	if ((int)hit_data.side == WE)
+	{
 		hit_data.pos_in_texture =  fabs(hit_data.where.y - mapidx.y);
+		if (ray.x < 0)
+			hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+	}
 	else
+	{
 		hit_data.pos_in_texture = fabs(hit_data.where.x - mapidx.x);
-	// TODO: Fix flipped textures pls ;-;
-	// if (ray.y < 0 || ray.x < 0)
-	// 	hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+		if (ray.y > 0)
+			hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+	}
 
 	// t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 21:25:07 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 02:38:59 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <drawing.h>
 #include <dlfcn.h>
 #include <time.h>
-// #include <mlx.h>
 
 typedef void (*do_graphics_ptr_t)(t_vars* vars);
 do_graphics_ptr_t do_graphics_ptr = NULL;
@@ -119,10 +118,7 @@ int32_t main(int32_t argc, const char* argv[])
 	vars.map.height = 10;
 
 	init_vars(&vars);
-	// mlx_loop_hook(vars.mlx, ft_checker, &vars);
 	mlx_loop_hook(vars.mlx, ft_loop, &vars);
-
-	// mlx_resizefunc
 	mlx_resize_hook(vars.mlx, on_resize, &vars);
 	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
 	mlx_loop(vars.mlx);
