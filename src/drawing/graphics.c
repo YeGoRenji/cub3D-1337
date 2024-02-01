@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 18:00:58 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 21:48:24 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,39 @@ static void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt)
 	}
 }
 
-static void player_input(t_vars *vars)
+static void	move_player(t_vars *vars, t_vect2d *movement)
+{
+	// TODO: refactor this garbage
+	t_vect2d	test1 = *movement;
+	t_vect2d	test2 = (t_vect2d){movement->x, 0};
+	t_vect2d	test3 = (t_vect2d){0, movement->y};
+	t_vect2d	next_pos;
+	t_ivect2d	next_mapidx;
+	
+	next_pos = vector_add(&vars->player.pos, &test1);
+	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
+	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) == 0)
+	{
+		vars->player.pos = next_pos;
+		return ;
+	}
+	next_pos = vector_add(&vars->player.pos, &test2);
+	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
+	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) == 0)
+	{
+		vars->player.pos = next_pos;
+		return ;
+	}
+	next_pos = vector_add(&vars->player.pos, &test3);
+	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
+	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) == 0)
+	{
+		vars->player.pos = next_pos;
+		return ;
+	}
+}
+
+static void player_mvt(t_vars *vars)
 {
 	t_vect2d	input_mvt;
 
@@ -42,7 +74,7 @@ static void player_input(t_vars *vars)
 	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
-	// Movement
+	// Movement from input
 	get_input_mvt(vars, &input_mvt);
 	// Rotation
 	// TODO: check if look_angle doesn't overflow
@@ -76,21 +108,19 @@ static void player_input(t_vars *vars)
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
 	t_vect2d side_move = vector_scale(&side_dir, -input_mvt.x * vars->mlx->delta_time * MVT_SPEED);
 	t_vect2d movement = vector_add(&forward_move, &side_move);
-	t_vect2d next_pos = vector_add(&vars->player.pos, &movement);
-	if (get_map_val(vars, floor(next_pos.x), floor(next_pos.y)) == 0)
-		vars->player.pos = next_pos;
+	move_player(vars, &movement);
 }
 
 void do_graphics(t_vars* vars)
 {
 	static double old_time = 0;
 
-	player_input(vars);
+	player_mvt(vars);
 
 	// Drawing Logic
 	// checker(vars);
 	// draw_map(vars);
-	clear_screen(vars, 0x505050FF);
+	clear_screen(vars, 0x303030FF);
 	// put_player(vars);
 	draw_wall_stripes(vars);
 	mini_map(vars, (t_ivect2d){25, 25});

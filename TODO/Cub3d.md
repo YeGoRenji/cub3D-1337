@@ -8,7 +8,7 @@
 	- [x] Player cursor / GTA (N)
 - [x] Textures
 - [x] Fog / Shadow
-- [ ] Wall Collision
+- [x] Wall Collision
 - [ ] Doors
 	    - [ ] Manually Openable ?
 - [ ] Rotate POV with mouse
