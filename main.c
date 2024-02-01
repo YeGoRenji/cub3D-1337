@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 02:38:59 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 03:22:38 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void hot_reload()
 	system("make lib/lib.so");
 	module = dlopen("lib/lib.so", RTLD_NOW);
 	do_graphics_ptr = dlsym(module, "do_graphics");
-	system("clear");
+	// system("clear");
 	system("echo Reloaded !!");
 }
 

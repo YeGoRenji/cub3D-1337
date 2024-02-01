@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 18:01:30 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 20:59:02 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 03:39:51 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void draw_texture(t_vars *vars, mlx_texture_t *texture, t_ivect2d pos)
 		for (uint32_t x = pos.x; x < pos.x + texture->width; ++x)
 		{
 			uint32_t color = pixels[(y - pos.y) * texture->width + (x - pos.x)];
-			// color =  (color & (0xFF << 24)) >> 24  | (color << 8);
 			if (color & 0xFF)
 				prot_put_pixel(vars->img, x, y, color);
 		}

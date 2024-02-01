@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 02:58:54 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/01 03:37:24 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,12 +160,13 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 		double v_percent = (double)(y - drawStart) / (drawEnd - drawStart);
 		int x_tex = h_percent * tex->width;
 		int y_tex = v_percent * tex->height;
-		uint32_t color = ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
+		uint32_t color =  ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
+		// uint32_t color = tex_pixel(tex, x_tex, y_tex);
 		// color = 0x0000FF50;
 		// color = (0xFF000000 >> (int)(v_percent * 16)) | 0xFF;
-		color = ((color & 0xFF000000) >> 24 | color << 8);
-		color = (color & 0x00FF00FF)  | ((color & 0x0000FF00) << 16) | ((color & 0xFF000000) >> 16);
-		color = (color & 0xFFFFFF00) | (int)((color & 0xFF) * fog_prs);
+		// color = ((color & 0xFF000000) >> 24 | color << 8);
+		// color = (color & 0x00FF00FF)  | ((color & 0x0000FF00) << 16) | ((color & 0xFF000000) >> 16);
+		// color = (color & 0xFFFFFF00) | (int)((color & 0xFF) * fog_prs);
 		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 			prot_put_pixel(vars->img, x, y, color);
 	}
