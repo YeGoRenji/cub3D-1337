@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "9d93feeaa57c49a6",
+        "id": "19d0a89950666d3a",
         "type": "tabs",
         "children": [
           {
-            "id": "eebea99159592c1a",
+            "id": "4ec3797d14a5bd0e",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Cub3d.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -87,7 +83,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Cub3d.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +99,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Cub3d.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,9 +120,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Cub3d.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -148,7 +140,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "cc525009cd1072ef",
+  "active": "4ec3797d14a5bd0e",
   "lastOpenFiles": [
     "Cub3d.md"
   ]

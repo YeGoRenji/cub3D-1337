@@ -8,10 +8,10 @@
 	- [x] Player cursor / GTA (N)
 - [x] Textures
 - [x] Fog / Shadow
-- [x] Wall Collision
-- [ ] Doors
-	    - [ ] Manually Openable ?
+- [x] Wall Collision / Wall Sliding
 - [ ] Rotate POV with mouse
+- [ ] Doors
+	- [ ] Manually Openable ?
 - [ ] Animated Sprites
 
 ## Issues:
