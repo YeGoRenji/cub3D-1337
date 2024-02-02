@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 20:34:49 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/02 17:35:33 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	init_vars(t_vars *vars)
 	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
 	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/greybricks.png");
 	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
+	vars->door_tex = load_tex_png("./resources/wolftex/door.png");
 
 	hot_reload();
 }
@@ -106,12 +107,12 @@ int32_t main(int32_t argc, const char* argv[])
 	int map[10][10] = {
 		{1, 1, 1, 1, 1, 0, 0, 1, 1, 1},
 		{1, 0, 0, 0, 1, 0, 0, 1, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 2, 0, 0, 0, 0, 1},
 		{1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
 		{1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
 		{1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
 		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
-		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 1, 0, 2, 0, 1, 0, 1},
 		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};

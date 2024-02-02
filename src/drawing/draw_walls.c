@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 20:10:09 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:03:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ e_orientation get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
 
 t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 {
+	t_rayhit	hit_data;
 	t_vect2d	ray_normalized;
 	ray_normalized = vector_normalize(&ray);
 
@@ -52,44 +53,44 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 
 	pos = &vars->player.pos;
 
-	t_ivect2d	mapidx = (t_ivect2d) {
+	hit_data.map = (t_ivect2d) {
 		(int)floor(vars->player.pos.x),
 		(int)floor(vars->player.pos.y)
 	};
 
 	if (ray.x < 0)
-		side_dist.x = (pos->x - mapidx.x) * delta_dist.x;
+		side_dist.x = (pos->x - hit_data.map.x) * delta_dist.x;
 	else
-		side_dist.x = (1 - (pos->x - mapidx.x)) * delta_dist.x;
+		side_dist.x = (1 - (pos->x - hit_data.map.x)) * delta_dist.x;
 	if (ray.y < 0)
-		side_dist.y = (pos->y -  mapidx.y) * delta_dist.y;
+		side_dist.y = (pos->y -  hit_data.map.y) * delta_dist.y;
 	else
-		side_dist.y = (1 - (pos->y - mapidx.y)) * delta_dist.y;
+		side_dist.y = (1 - (pos->y - hit_data.map.y)) * delta_dist.y;
 
 	int i = 0;
 	int is_x = 0;
 	// t_vect2d hit_rel_player;
-	t_rayhit hit_data;
+	
+	hit_data.hit_what = 0;
 	while (i < 1e3)
   	{
 		is_x = 0;
-		int did_hit = 0;
 		if (side_dist.x < side_dist.y)
 		{
 			is_x = 1;
 			side_dist.x += delta_dist.x;
-			mapidx.x += step.x;
+			hit_data.map.x += step.x;
 			hit_data.side = (e_orientation)WE;
 		}
 		else
 		{
 			side_dist.y += delta_dist.y;
-			mapidx.y += step.y;
+			hit_data.map.y += step.y;
 			hit_data.side = (e_orientation)NS;
 		}
 
 		// Check if ray has hit a wall
-		did_hit = get_map_val(vars, mapidx.x, mapidx.y) > 0;
+		hit_data.hit_what = get_map_val(vars, hit_data.map.x, hit_data.map.y);
 
 		if (is_x)
 		{
@@ -107,7 +108,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 			// visual_next_side_y = vector_scale(&visual_next_side_y, vars->tile_size);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
 		}
-		if (did_hit)
+		if (hit_data.hit_what > 0)
 			break;
 		++i;
 	}
@@ -118,19 +119,23 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
 	if ((int)hit_data.side == WE)
 	{
-		hit_data.pos_in_texture =  fabs(hit_data.where.y - mapidx.y);
+		hit_data.pos_in_texture =  fabs(hit_data.where.y - hit_data.map.y);
 		if (ray.x < 0)
 			hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
 	}
 	else
 	{
-		hit_data.pos_in_texture = fabs(hit_data.where.x - mapidx.x);
+		hit_data.pos_in_texture = fabs(hit_data.where.x - hit_data.map.x);
 		if (ray.y > 0)
 			hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
 	}
 
 	// t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
+	if (hit_data.hit_what == DOOR)
+	{
+		hit_data.dist += 0.5;
+	}
 	hit_data.dist /= vector_magnitude(&ray);
 	hit_data.side = get_wall_oriantation(&hit_data, &ray_normalized);
 

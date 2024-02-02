@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/31 16:26:00 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:00:27 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,12 @@ enum {
 	WE,
 	NS
 };
+
+typedef enum block_type {
+	EMPTY,
+	WALL,
+	DOOR
+}	t_block_type;
 
 typedef struct s_ivect2d
 {
@@ -86,6 +92,7 @@ typedef struct s_vars {
 	t_ivect2d	mouse;
 	mlx_texture_t *nletter_tex;
 	mlx_texture_t *wall_tex[4];
+	mlx_texture_t *door_tex;
 }				t_vars;
 
 typedef struct s_rayhit {
@@ -94,6 +101,7 @@ typedef struct s_rayhit {
 	e_orientation	side;
 	t_ivect2d		map;
 	double			pos_in_texture;
+	t_block_type	hit_what;
 }				t_rayhit;
 
 #endif
