@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/02 18:00:27 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/03 04:18:46 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #define TILE_W 25
 #define TILE_COL_1 0xFF69FFFF
 #define TILE_COL_2 0x69FFFFFF
+#define TILE_COL_3 0xFFFF69FF
 #define MINI_MAP_WIDTH 300
 
 #define OLD_MAP_2D 0xAA50AAFF

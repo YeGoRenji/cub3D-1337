@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 21:48:24 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/03 04:03:40 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,21 @@ static void	move_player(t_vars *vars, t_vect2d *movement)
 	
 	next_pos = vector_add(&vars->player.pos, &test1);
 	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
-	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) == 0)
+	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != 1)
 	{
 		vars->player.pos = next_pos;
 		return ;
 	}
 	next_pos = vector_add(&vars->player.pos, &test2);
 	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
-	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) == 0)
+	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != 1)
 	{
 		vars->player.pos = next_pos;
 		return ;
 	}
 	next_pos = vector_add(&vars->player.pos, &test3);
 	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
-	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) == 0)
+	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != 1)
 	{
 		vars->player.pos = next_pos;
 		return ;

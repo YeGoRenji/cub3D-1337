@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/02 18:03:31 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/03 04:47:54 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ e_orientation get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
 	return (EAST);
 }
 
-t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
+t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 {
 	t_rayhit	hit_data;
 	t_vect2d	ray_normalized;
@@ -51,7 +51,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 	t_vect2d	side_dist;
 	t_vect2d	*pos;
 
-	pos = &vars->player.pos;
+	pos = &from;
 
 	hit_data.map = (t_ivect2d) {
 		(int)floor(vars->player.pos.x),
@@ -89,7 +89,6 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 			hit_data.side = (e_orientation)NS;
 		}
 
-		// Check if ray has hit a wall
 		hit_data.hit_what = get_map_val(vars, hit_data.map.x, hit_data.map.y);
 
 		if (is_x)
@@ -108,36 +107,72 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d ray)
 			// visual_next_side_y = vector_scale(&visual_next_side_y, vars->tile_size);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
 		}
-		if (hit_data.hit_what > 0)
+		// TODO : refactor Garbage code ?
+		if (hit_data.hit_what == DOOR)
+		{
+			hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
+			hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
+			if ((int)hit_data.side == WE)
+			{
+				hit_data.pos_in_texture =  fabs(hit_data.where.y - hit_data.map.y);
+				if (ray.x < 0)
+					hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+			}
+			else
+			{
+				hit_data.pos_in_texture = fabs(hit_data.where.x - hit_data.map.x);
+				if (ray.y > 0)
+					hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+			}
+			// t_vect2d diff = vector_sub(pos, &hit_data.where);
+			// hit_data.dist /= vector_magnitude(&ray);
+			double dist_to_door = hit_data.dist;
+			if (1 - hit_data.pos_in_texture < dist_to_door - 1)
+			{
+				hit_data.pos_in_texture += (dist_to_door < 2) * dist_to_door;
+				hit_data.pos_in_texture = hit_data.pos_in_texture - floor(hit_data.pos_in_texture);
+				break;
+			}
+		}
+		else if (hit_data.hit_what > 0)
 			break;
 		++i;
 	}
 
-
-	hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
-	// t_vect2d visual_hit = vector_scale(&hit_data.where, vars->tile_size);
-	hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
-	if ((int)hit_data.side == WE)
+	// TODO : refactor Garbage code ?
+	if (hit_data.hit_what != DOOR)
 	{
-		hit_data.pos_in_texture =  fabs(hit_data.where.y - hit_data.map.y);
-		if (ray.x < 0)
-			hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+		hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
+		// t_vect2d visual_hit = vector_scale(&hit_data.where, vars->tile_size);
+		hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
+		// t_vect2d epsilon = vector_scale(&step, 0.5);
+		if ((int)hit_data.side == WE)
+		{
+			hit_data.pos_in_texture =  fabs(hit_data.where.y - hit_data.map.y);
+			if (ray.x < 0)
+				hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+		}
+		else
+		{
+			hit_data.pos_in_texture = fabs(hit_data.where.x - hit_data.map.x);
+			if (ray.y > 0)
+				hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
+		}
 	}
-	else
-	{
-		hit_data.pos_in_texture = fabs(hit_data.where.x - hit_data.map.x);
-		if (ray.y > 0)
-			hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
-	}
-
 	// t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
-	if (hit_data.hit_what == DOOR)
-	{
-		hit_data.dist += 0.5;
-	}
 	hit_data.dist /= vector_magnitude(&ray);
 	hit_data.side = get_wall_oriantation(&hit_data, &ray_normalized);
+	// if (hit_data.hit_what == DOOR && hit_data.pos_in_texture <= 0.5)
+	// {
+	// 	double old_dist = hit_data.dist;
+	// 	t_vect2d yep = vector_scale(&ray_normalized,
+	// 		(hit_data.side == NORTH || hit_data.side == SOUTH) * delta_dist.y
+	// 		+ (hit_data.side == WEST || hit_data.side == EAST) * delta_dist.x
+	// 	);
+	// 	hit_data = ray_cast_dda(vars, vector_add(&hit_data.where, &yep), ray, recur + 1);
+	// 	hit_data.dist += old_dist;
+	// }
 
 	// draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
 	// draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
@@ -149,7 +184,11 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 {
 	int	half_width = width >> 1;
 	double h_percent = hit->pos_in_texture;
-	mlx_texture_t *tex = vars->wall_tex[hit->side];
+	mlx_texture_t *tex;
+	if (hit->hit_what == WALL)
+		tex = vars->wall_tex[hit->side];
+	else
+		tex = vars->door_tex;
 	int start = drawStart;
 	if (start < 0) start = 0;
 	int end = drawEnd;
@@ -191,7 +230,7 @@ void draw_wall_stripes(t_vars *vars)
 
 		t_vect2d var_side = (t_vect2d){-cameraX * vars->fov * side_dir.x, -cameraX * vars->fov * side_dir.y};
 		t_vect2d ray = vector_add(&forward_scaled, &var_side);
-		t_rayhit hit = ray_cast_dda(vars, ray);
+		t_rayhit hit = ray_cast_dda(vars, vars->player.pos, ray);
 		int h = vars->mlx->height;
 		int lineHeight = (int)(HEIGHT / (hit.dist * vars->fov));
 

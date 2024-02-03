@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 18:00:16 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/03 04:21:18 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,12 @@ void mini_map(t_vars *vars, t_ivect2d pos)
 				coord_transform = vector_add(&coord_transform, &addit);
 				t_vect2d map_coord = vector_add(&vars->player.pos, &coord_transform);
 				// t_vect2d map_coord = vector_sub(&vars->player.pos, &coord_rel_center);
-				if (get_map_val(vars, floor(map_coord.x), floor(map_coord.y)) > 0)
-					prot_put_pixel(vars->img, x, y, TILE_COL_1);
-				else
-					prot_put_pixel(vars->img, x, y, TILE_COL_2);
+					//
+				int val = get_map_val(vars, floor(map_coord.x), floor(map_coord.y));
+				uint32_t color = (val == WALL) * TILE_COL_1
+							   + (val == EMPTY) * TILE_COL_2
+							   + (val == DOOR) * TILE_COL_3;
+				prot_put_pixel(vars->img, x, y, color);
 			}
 			else if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2))
 					prot_put_pixel(vars->img, x, y, 0x303030FF);
