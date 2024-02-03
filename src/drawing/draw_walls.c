@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/03 04:47:54 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/03 12:54:34 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 			// visual_next_side_y = vector_scale(&visual_next_side_y, vars->tile_size);
 			// draw_star(vars, vector_add(&visual_player_pos, &visual_next_side_y), hit ? 0xFF0000FF : 0x00FFFFFF);
 		}
-		// TODO : refactor Garbage code ?
+		// TODO : refactor repetitive code ?
 		if (hit_data.hit_what == DOOR)
 		{
 			hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
@@ -124,9 +124,12 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 				if (ray.y > 0)
 					hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
 			}
-			// t_vect2d diff = vector_sub(pos, &hit_data.where);
-			// hit_data.dist /= vector_magnitude(&ray);
-			double dist_to_door = hit_data.dist;
+			// double dist_to_door = hit_data.dist;
+			t_vect2d center_door = (t_vect2d){hit_data.map.x + 0.5, hit_data.map.y + 0.5};
+			t_vect2d diff = vector_sub(pos, &center_door);
+			double dist_to_door = vector_magnitude(&diff);
+			// double dist_to_door = ((int)hit_data.side == NS) * (fabs(hit_data.where.y - pos->y) / 2)
+			// 				+ ((int)hit_data.side == WE) * (fabs(hit_data.where.x - pos->x) / 2);
 			if (1 - hit_data.pos_in_texture < dist_to_door - 1)
 			{
 				hit_data.pos_in_texture += (dist_to_door < 2) * dist_to_door;
@@ -139,7 +142,7 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 		++i;
 	}
 
-	// TODO : refactor Garbage code ?
+	// TODO : refactor repetitive code ?
 	if (hit_data.hit_what != DOOR)
 	{
 		hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
@@ -163,16 +166,6 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
 	hit_data.dist /= vector_magnitude(&ray);
 	hit_data.side = get_wall_oriantation(&hit_data, &ray_normalized);
-	// if (hit_data.hit_what == DOOR && hit_data.pos_in_texture <= 0.5)
-	// {
-	// 	double old_dist = hit_data.dist;
-	// 	t_vect2d yep = vector_scale(&ray_normalized,
-	// 		(hit_data.side == NORTH || hit_data.side == SOUTH) * delta_dist.y
-	// 		+ (hit_data.side == WEST || hit_data.side == EAST) * delta_dist.x
-	// 	);
-	// 	hit_data = ray_cast_dda(vars, vector_add(&hit_data.where, &yep), ray, recur + 1);
-	// 	hit_data.dist += old_dist;
-	// }
 
 	// draw_star(vars, vector_add(&visual_player_pos, &visual_hit), 0xFF0000FF);
 	// draw_line(vars, visual_player_pos, vector_add(&visual_player_pos, &visual_hit), 0xFFFFFFFF);
