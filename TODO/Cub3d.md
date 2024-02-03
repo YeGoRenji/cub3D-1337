@@ -9,9 +9,10 @@
 - [x] Textures
 - [x] Fog / Shadow
 - [x] Wall Collision / Wall Sliding
-- [ ] Rotate POV with mouse
 - [ ] Doors
-	- [ ] Manually Openable ?
+	- [x] Automatic
+	- [x] Orientation specific
+- [ ] Rotate POV with mouse
 - [ ] Animated Sprites
 
 ## Issues:

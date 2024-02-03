@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/03 04:21:18 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/03 20:08:22 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,20 @@ void mini_map(t_vars *vars, t_ivect2d pos)
 				t_vect2d addit = vector_scale(&mat_col2, coord_rel_center.y);
 				coord_transform = vector_add(&coord_transform, &addit);
 				t_vect2d map_coord = vector_add(&vars->player.pos, &coord_transform);
-				// t_vect2d map_coord = vector_sub(&vars->player.pos, &coord_rel_center);
-					//
 				int val = get_map_val(vars, floor(map_coord.x), floor(map_coord.y));
 				uint32_t color = (val == WALL) * TILE_COL_1
 							   + (val == EMPTY) * TILE_COL_2
 							   + (val == DOOR) * TILE_COL_3;
-				prot_put_pixel(vars->img, x, y, color);
+				if (val == EMPTY)
+				{
+					if (!(x % 2 || y % 2))
+						prot_put_pixel(vars->img, x, y, color);
+				}
+				else
+					prot_put_pixel(vars->img, x, y, color);
 			}
 			else if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2))
-					prot_put_pixel(vars->img, x, y, 0x303030FF);
+					prot_put_pixel(vars->img, x, y, MINI_MAP_BORDER);
 		}
 	}
 	// draw_star(vars, center, 0x0000FFFF);
@@ -80,7 +84,7 @@ void mini_map(t_vars *vars, t_ivect2d pos)
 	t_vect2d center_to_n = vector_scale(&vars->player.dir, (double)MINI_MAP_WIDTH / 2 - 5);
 	t_ivect2d north_center = (t_ivect2d){center.x - center_to_n.x, center.y + center_to_n.y};
 	int n_radius = 20;
-	draw_circle(vars, north_center, n_radius, 0);
+	draw_circle(vars, north_center, n_radius, MINI_MAP_BORDER);
 	draw_texture(vars, vars->nletter_tex, (t_ivect2d){north_center.x - n_radius, north_center.y - n_radius});
 	// draw_line(vars, center, forward, 0xFF0000FF);
 	// draw_line(vars, center, right, 0x0000FFFF);

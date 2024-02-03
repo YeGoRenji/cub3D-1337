@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/03 12:54:34 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/03 20:39:20 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,30 +110,23 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 		// TODO : refactor repetitive code ?
 		if (hit_data.hit_what == DOOR)
 		{
+			// hit_data.dist += 0.5;
 			hit_data.where = vector_scale(&ray_normalized, hit_data.dist);
 			hit_data.where = vector_add(&vars->player.pos, &hit_data.where);
 			if ((int)hit_data.side == WE)
-			{
-				hit_data.pos_in_texture =  fabs(hit_data.where.y - hit_data.map.y);
-				if (ray.x < 0)
-					hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
-			}
+				hit_data.pos_in_texture = hit_data.where.y - hit_data.map.y;
 			else
-			{
-				hit_data.pos_in_texture = fabs(hit_data.where.x - hit_data.map.x);
-				if (ray.y > 0)
-					hit_data.pos_in_texture = 1 - hit_data.pos_in_texture;
-			}
+				hit_data.pos_in_texture = hit_data.where.x - hit_data.map.x;
 			// double dist_to_door = hit_data.dist;
 			t_vect2d center_door = (t_vect2d){hit_data.map.x + 0.5, hit_data.map.y + 0.5};
 			t_vect2d diff = vector_sub(pos, &center_door);
 			double dist_to_door = vector_magnitude(&diff);
-			// double dist_to_door = ((int)hit_data.side == NS) * (fabs(hit_data.where.y - pos->y) / 2)
-			// 				+ ((int)hit_data.side == WE) * (fabs(hit_data.where.x - pos->x) / 2);
 			if (1 - hit_data.pos_in_texture < dist_to_door - 1)
 			{
+				// double old_val = hit_data.pos_in_texture;
 				hit_data.pos_in_texture += (dist_to_door < 2) * dist_to_door;
-				hit_data.pos_in_texture = hit_data.pos_in_texture - floor(hit_data.pos_in_texture);
+				hit_data.pos_in_texture = fabs(hit_data.pos_in_texture - floor(hit_data.pos_in_texture));
+				// if (0 <= old_val && old_val <= 1)
 				break;
 			}
 		}
@@ -164,6 +157,8 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 	}
 	// t_vect2d forward_scaled = vector_scale(&vars->player.dir, vars->dist_to_plane);
 	// hit_data.dist *=  vector_magnitude(&forward_scaled) / vector_magnitude(&ray);
+	// if (hit_data.hit_what == DOOR)
+	// 	hit_data.dist += 0.5;
 	hit_data.dist /= vector_magnitude(&ray);
 	hit_data.side = get_wall_oriantation(&hit_data, &ray_normalized);
 
