@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/03 20:32:08 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/04 17:48:42 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	init_vars(t_vars *vars)
 	if (mlx_image_to_window(vars->mlx, vars->img, 0, 0) == -1)
 		exit_failure(vars);
 	// INFO: get this from parsing
-	vars->player.dir = (t_vect2d){1, 0};
-	vars->look_angle = 0;
+	// vars->player.dir = (t_vect2d){1, 0};
+	vars->look_angle = -M_PI / 2;
 	vars->player.pos = (t_vect2d){1.5, 1.5};
 
 	// Fix these values later (in parsing)

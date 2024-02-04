@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/26 19:25:00 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/04 16:12:16 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,19 @@
 # define MATHS_H
 
 # include <math.h>
+# include <stdbool.h>
 
 typedef struct s_vect2d
 {
 	double		x;
 	double		y;
 }				t_vect2d;
+
+typedef struct s_ivect2d
+{
+	int		x;
+	int		y;
+}				t_ivect2d;
 
 /* VECTOR OPERATIONS */
 t_vect2d	vector_add(t_vect2d *vec1, t_vect2d *vec2);

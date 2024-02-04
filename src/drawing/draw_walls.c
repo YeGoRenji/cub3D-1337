@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/03 20:39:20 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/04 16:10:50 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int get_map_val(t_vars *vars, int x, int y)
 	return vars->map.data[y * vars->map.width + x];
 }
 
-e_orientation get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
+t_orientation get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
 {
 	if ((int)hit->side == NS)
 	{
@@ -80,13 +80,13 @@ t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 			is_x = 1;
 			side_dist.x += delta_dist.x;
 			hit_data.map.x += step.x;
-			hit_data.side = (e_orientation)WE;
+			hit_data.side = (t_orientation)WE;
 		}
 		else
 		{
 			side_dist.y += delta_dist.y;
 			hit_data.map.y += step.y;
-			hit_data.side = (e_orientation)NS;
+			hit_data.side = (t_orientation)NS;
 		}
 
 		hit_data.hit_what = get_map_val(vars, hit_data.map.x, hit_data.map.y);

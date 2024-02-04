@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/03 20:08:22 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/04 16:02:55 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,9 @@ void mini_map(t_vars *vars, t_ivect2d pos)
 				uint32_t color = (val == WALL) * TILE_COL_1
 							   + (val == EMPTY) * TILE_COL_2
 							   + (val == DOOR) * TILE_COL_3;
-				if (val == EMPTY)
-				{
-					if (!(x % 2 || y % 2))
-						prot_put_pixel(vars->img, x, y, color);
-				}
-				else
+				if (val != EMPTY)
+					prot_put_pixel(vars->img, x, y, color);
+				else if (!((x + y) % 2))
 					prot_put_pixel(vars->img, x, y, color);
 			}
 			else if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2))

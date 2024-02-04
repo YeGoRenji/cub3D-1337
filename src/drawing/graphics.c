@@ -6,13 +6,13 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/03 04:03:40 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/04 17:46:54 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-static void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt)
+void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt)
 {
 	input_mvt->x = 0;
 	input_mvt->y = 0;
@@ -31,7 +31,7 @@ static void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt)
 	}
 }
 
-static void	move_player(t_vars *vars, t_vect2d *movement)
+void	move_player(t_vars *vars, t_vect2d *movement)
 {
 	// TODO: refactor this garbage
 	t_vect2d	test1 = *movement;
@@ -63,7 +63,7 @@ static void	move_player(t_vars *vars, t_vect2d *movement)
 	}
 }
 
-static void player_mvt(t_vars *vars)
+void player_mvt(t_vars *vars)
 {
 	t_vect2d	input_mvt;
 
@@ -113,7 +113,6 @@ static void player_mvt(t_vars *vars)
 
 void do_graphics(t_vars* vars)
 {
-	static double old_time = 0;
 
 	player_mvt(vars);
 
@@ -127,12 +126,5 @@ void do_graphics(t_vars* vars)
 
 	// if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
 	// 	mouse_ray_test(vars);
-
-	int fps = (int)(1 / vars->mlx->delta_time);
-	if (mlx_get_time() - old_time > 0.1)
-	{
-		printf("fps: %d        nvs: %d        fov: %d        \r" , fps, vars->nb_vert_stripes, vars->fov);
-		fflush(stdout);
-		old_time = mlx_get_time();
-	}
+	draw_fps(vars);
 }

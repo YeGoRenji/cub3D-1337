@@ -6,21 +6,11 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 18:01:52 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/26 19:53:17 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/04 16:07:53 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
-
-bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius)
-{
-	t_ivect2d	diff;
-
-	diff = (t_ivect2d){pt.x - center.x, pt.y - center.y};
-	if (diff.x * diff.x + diff.y * diff.y <= radius * radius)
-		return (true);
-	return (false);
-}
 
 void	clear_screen(t_vars* vars, uint32_t color)
 {
