@@ -6,21 +6,33 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 18:01:30 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/01 16:38:37 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/05 04:04:18 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-void	draw_square(t_vars* vars, t_vect2d anchor, int width, uint32_t color)
+void	draw_square(t_vars *vars, t_vect2d anchor, int width, uint32_t color)
 {
-	for (int i = 0; i < width; ++i)
-		for (int j = 0; j < width; ++j)
-			prot_put_pixel(vars->img, anchor.x + i, anchor.y + j, color);
+	t_ivect2d	iter;
+
+	iter = (t_ivect2d){0, 0};
+	while (iter.y < width)
+	{
+		while (iter.x < width)
+		{
+			prot_put_pixel(vars->img,
+				anchor.x + iter.x, anchor.y + iter.y, color);
+			++iter.x;
+		}
+		iter = (t_ivect2d){0, iter.y + 1};
+	}
 }
 
+/*
 void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 {
+	// TODO: prolly remove ! this is unused
 	int	i;
 	int	j;
 
@@ -35,8 +47,9 @@ void	draw_star(t_vars *vars, t_vect2d center, uint32_t color)
 	for (j = (int)center.y - 2; j <= (int)center.y + 2; ++j)
 		prot_put_pixel(vars->img, i, j, color);
 }
+*/
 
-void draw_trig(t_vars *vars, t_vect2d pos, int width, int height, uint32_t color)
+void	draw_trig(t_vars *vars, t_vect2d pos, int width, int height, uint32_t color)
 {
 	double percent;
 

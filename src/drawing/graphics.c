@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/04 17:46:54 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/05 03:43:23 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,49 +31,39 @@ void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt)
 	}
 }
 
-void	move_player(t_vars *vars, t_vect2d *movement)
+bool	test_collision(t_vars *vars, t_vect2d test)
 {
-	// TODO: refactor this garbage
-	t_vect2d	test1 = *movement;
-	t_vect2d	test2 = (t_vect2d){movement->x, 0};
-	t_vect2d	test3 = (t_vect2d){0, movement->y};
 	t_vect2d	next_pos;
 	t_ivect2d	next_mapidx;
-	
-	next_pos = vector_add(&vars->player.pos, &test1);
+
+	next_pos = vector_add(&vars->player.pos, &test);
 	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
 	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != 1)
 	{
 		vars->player.pos = next_pos;
-		return ;
+		return (false);
 	}
-	next_pos = vector_add(&vars->player.pos, &test2);
-	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
-	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != 1)
-	{
-		vars->player.pos = next_pos;
-		return ;
-	}
-	next_pos = vector_add(&vars->player.pos, &test3);
-	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
-	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != 1)
-	{
-		vars->player.pos = next_pos;
-		return ;
-	}
+	return (true);
 }
 
-void player_mvt(t_vars *vars)
+void	move_player(t_vars *vars, t_vect2d *movement)
+{
+	if (!test_collision(vars, *movement))
+		return ;
+	if (!test_collision(vars, (t_vect2d){movement->x, 0}))
+		return ;
+	if (!test_collision(vars, (t_vect2d){0, movement->y}))
+		return ;
+}
+
+void	player_mvt(t_vars *vars)
 {
 	t_vect2d	input_mvt;
 
-	// mlx_delete_image(vars->mlx, vars->img);
-	// vars->img = mlx_new_image(vars->mlx, vars->mlx->width, vars->mlx->height);
-	// if (!vars->img)
-	// 	exit(-1);
 	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(vars->mlx);
+
 	// Movement from input
 	get_input_mvt(vars, &input_mvt);
 	// Rotation

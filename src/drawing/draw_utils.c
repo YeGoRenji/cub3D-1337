@@ -6,13 +6,13 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 18:01:52 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/04 16:07:53 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/05 04:16:18 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-void	clear_screen(t_vars* vars, uint32_t color)
+void	clear_screen(t_vars *vars, uint32_t color)
 {
 	uint32_t	y;
 	uint32_t	x;

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/04 16:12:16 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/05 04:21:17 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_vect2d	vector_normalize(t_vect2d *vec);
 double		vector_dot(t_vect2d *vec1, t_vect2d *vec2);
 
 /* UTILS */
-int	clamp_value(int val, int min, int max);
+int		clamp_value(int val, int min, int max);
+bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius);
 
 #endif

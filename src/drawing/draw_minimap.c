@@ -6,35 +6,42 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/04 16:02:55 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/05 03:57:17 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-void	put_mini_map_cursor(t_vars *vars, t_vect2d center)
+void	put_mini_map_cursor(t_vars *vars, t_ivect2d center)
 {
-	const int half_width = 10;
-	const int trig_width = 2 * half_width - 2;
-	const int trig_height = 2 * half_width - 2;
+	const int	half_width = 10;
+	const int	trig_width = 2 * half_width - 2;
+	const int	trig_height = 2 * half_width - 2;
+	t_ivect2d	it;
+	t_ivect2d	current;
 
-	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y  - half_width - 10}, trig_width - 3, trig_height, 0);
-
-	for (int y = -half_width; y < half_width; ++y)
+	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y - half_width - 10},
+		trig_width - 3, trig_height, 0);
+	it.y = -half_width;
+	it = (t_ivect2d){-half_width, -half_width};
+	while (it.y < half_width)
 	{
-		for (int x = -half_width; x < half_width; ++x)
+		while (it.x < half_width)
 		{
-			if (inside_circle((t_ivect2d){center.x + x, center.y + y}, (t_ivect2d){center.x, center.y}, half_width - 5))
-				prot_put_pixel(vars->img, center.x + x, center.y + y, 0xFFFFFFFF);
-			else if (inside_circle((t_ivect2d){center.x + x, center.y + y}, (t_ivect2d){center.x, center.y}, half_width - 2))
-				prot_put_pixel(vars->img, center.x + x, center.y + y, 0);
+			current = (t_ivect2d){center.x + it.x, center.y + it.y};
+			if (inside_circle(current, center, half_width - 5))
+				prot_put_pixel(vars->img, current.x, current.y, 0xFFFFFFFF);
+			else if (inside_circle(current, center, half_width - 2))
+				prot_put_pixel(vars->img, current.x, current.y, 0);
+			++it.x;
 		}
+		it = (t_ivect2d){-half_width, it.y + 1};
 	}
-	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y - half_width - 3}, trig_width - 6, trig_height - 2, 0xFFFFFFFF);
+	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y - half_width - 3},
+		trig_width - 6, trig_height - 2, 0xFFFFFFFF);
 }
 
-
-void mini_map(t_vars *vars, t_ivect2d pos)
+void	mini_map(t_vars *vars, t_ivect2d pos)
 {
 	// TODO: the signs of the vectors are just tweaked bruteforce (UNDERSTAND MORE ?)
 	t_vect2d forward = (t_vect2d){vars->player.dir.x, -vars->player.dir.y};
@@ -77,7 +84,7 @@ void mini_map(t_vars *vars, t_ivect2d pos)
 		}
 	}
 	// draw_star(vars, center, 0x0000FFFF);
-	put_mini_map_cursor(vars, center);
+	put_mini_map_cursor(vars, (t_ivect2d){center.x, center.y});
 	t_vect2d center_to_n = vector_scale(&vars->player.dir, (double)MINI_MAP_WIDTH / 2 - 5);
 	t_ivect2d north_center = (t_ivect2d){center.x - center_to_n.x, center.y + center_to_n.y};
 	int n_radius = 20;

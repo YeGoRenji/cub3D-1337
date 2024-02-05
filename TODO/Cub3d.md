@@ -9,7 +9,7 @@
 - [x] Textures
 - [x] Fog / Shadow
 - [x] Wall Collision / Wall Sliding
-- [ ] Doors
+- [x] Doors
 	- [x] Automatic
 	- [x] Orientation specific
 - [ ] Rotate POV with mouse

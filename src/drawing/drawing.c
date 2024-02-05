@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:14:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/19 01:37:42 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/05 04:14:50 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ void	my_mlx_point_put(mlx_image_t *img, t_vect2d *pt, int flip, uint32_t color)
 		return ;
 	if (!(0 <= y && y < img->height))
 		return ;
-
 	mlx_put_pixel(img, x , y, color);
 }
 

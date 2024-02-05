@@ -6,22 +6,22 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/04 16:10:50 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/05 03:45:56 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-int get_map_val(t_vars *vars, int x, int y)
+int	get_map_val(t_vars *vars, int x, int y)
 {
 	if (x < 0 || x >= vars->map.width)
-		return 0;
+		return (0);
 	if (y < 0 || y >= vars->map.height)
-		return 0;
-	return vars->map.data[y * vars->map.width + x];
+		return (0);
+	return (vars->map.data[y * vars->map.width + x]);
 }
 
-t_orientation get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
+t_orientation	get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
 {
 	if ((int)hit->side == NS)
 	{
@@ -34,7 +34,7 @@ t_orientation get_wall_oriantation(t_rayhit *hit, t_vect2d *raydir)
 	return (EAST);
 }
 
-t_rayhit ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
+t_rayhit	ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 {
 	t_rayhit	hit_data;
 	t_vect2d	ray_normalized;
@@ -224,9 +224,7 @@ void draw_wall_stripes(t_vars *vars)
 
 		// calculate lowest and highest pixel to fill in current stripe
 		int drawStart = -lineHeight / 2 + h / 2;
-		// if (drawStart < 0) drawStart = 0;
 		int drawEnd = lineHeight / 2 + h / 2;
-		// if (drawEnd >= h) drawEnd = h - 1;
 
 		fog = clamp_value(0xFF + 10 - hit.dist * 20, 0, 0xFF);
 		// hit.side ? ((0xFF5050 << 8) | fog) : ((0x50FF50 << 8) | fog)
