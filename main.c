@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/04 17:48:42 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 05:52:40 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	init_vars(t_vars *vars)
 	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/greybricks.png");
 	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
 	vars->door_tex = load_tex_png("./resources/wolftex/door.png");
-
+	vars->sky_tex = load_tex_png("./resources/AuroraSkyBox.png");
 	hot_reload();
 }
 

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:52:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/05 04:21:25 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 05:46:30 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static mlx_texture_t	*get_default_tex(void)
 		x = 0;
 		while (x < def_tex->width)
 		{
-			((uint32_t *)def_tex->pixels)[y * def_tex->height + x]
+			((uint32_t *)def_tex->pixels)[y * def_tex->width + x]
 				= ((x + y) % 2) * 0xFF00FFFF;
 			++x;
 		}

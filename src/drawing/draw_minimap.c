@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/05 03:57:17 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 05:13:36 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	put_mini_map_cursor(t_vars *vars, t_ivect2d center)
 			if (inside_circle(current, center, half_width - 5))
 				prot_put_pixel(vars->img, current.x, current.y, 0xFFFFFFFF);
 			else if (inside_circle(current, center, half_width - 2))
-				prot_put_pixel(vars->img, current.x, current.y, 0);
+				prot_put_pixel(vars->img, current.x, current.y, 0x000000FF);
 			++it.x;
 		}
 		it = (t_ivect2d){-half_width, it.y + 1};

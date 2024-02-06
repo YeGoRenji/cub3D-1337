@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/05 03:43:23 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 05:54:13 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,9 @@ void do_graphics(t_vars* vars)
 	// Drawing Logic
 	// checker(vars);
 	// draw_map(vars);
-	clear_screen(vars, 0x303030FF);
-	// put_player(vars);
+	// clear_screen(vars, 0x303030FF);
+	draw_skybox(vars);
+	 // put_player(vars);
 	draw_wall_stripes(vars);
 	mini_map(vars, (t_ivect2d){25, 25});
 

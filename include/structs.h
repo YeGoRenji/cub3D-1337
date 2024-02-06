@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/04 16:07:49 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 04:31:16 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ typedef struct s_vars
 	mlx_texture_t *nletter_tex;
 	mlx_texture_t *wall_tex[4];
 	mlx_texture_t *door_tex;
+	mlx_texture_t *sky_tex;
 }				t_vars;
 
 typedef struct s_rayhit
