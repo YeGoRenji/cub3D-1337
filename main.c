@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 05:52:40 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 20:28:48 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	init_vars(t_vars *vars)
 	vars->mouse.x = 0;
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
+	vars->light_status = false;
 	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
 	// vars->wall_tex[NORTH] = load_tex_png("./resources/pics/MyPic.png");
 	// vars->wall_tex[EAST] = load_tex_png("./resources/pics/afatimi.png");
@@ -73,6 +74,8 @@ void	init_vars(t_vars *vars)
 	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
 	vars->door_tex = load_tex_png("./resources/wolftex/door.png");
 	vars->sky_tex = load_tex_png("./resources/AuroraSkyBox.png");
+	vars->light_on = load_tex_png("./resources/FlashLightOn.png");
+	vars->light_off = load_tex_png("./resources/FlashLightOff.png");
 	hot_reload();
 }
 
@@ -97,6 +100,15 @@ void on_resize(int32_t new_width, int32_t new_height, void *param)
 		exit_failure(vars);
 	if (mlx_image_to_window(vars->mlx, vars->img, 0, 0) == -1)
 		exit_failure(vars);
+}
+
+void on_click(mlx_key_data_t key_data, void *param)
+{
+	t_vars	*vars;
+
+	vars = param;
+	if (key_data.key == MLX_KEY_SPACE && key_data.action == MLX_RELEASE)
+		vars->light_status = !vars->light_status;
 }
 
 int32_t main(int32_t argc, const char* argv[])
@@ -125,6 +137,7 @@ int32_t main(int32_t argc, const char* argv[])
 	mlx_loop_hook(vars.mlx, ft_loop, &vars);
 	mlx_resize_hook(vars.mlx, on_resize, &vars);
 	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
+	mlx_key_hook(vars.mlx, on_click, &vars);
 	mlx_loop(vars.mlx);
 	mlx_terminate(vars.mlx);
 	return (EXIT_SUCCESS);

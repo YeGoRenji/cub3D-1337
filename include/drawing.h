@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 04:39:46 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:52:57 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ void mini_map(t_vars *vars, t_ivect2d pos);
 /* Textures */
 mlx_texture_t	*load_tex_png(const char *path);
 
-/* Skybox */
+/* Background/Foreground */
 void	draw_skybox(t_vars *vars);
+void	draw_flash_light(t_vars *vars);
 
 /* FPS COUNTER */
 void draw_fps(t_vars *vars);

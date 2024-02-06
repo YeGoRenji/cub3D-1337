@@ -6,13 +6,13 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 16:16:16 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/05 03:35:53 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:19:17 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-static void	draw_digit(t_vars *vars, int digit, t_ivect2d pos, int size)
+static void	draw_digit(t_vars *vars, int digit, t_shape square, uint32_t color)
 {
 	t_ivect2d	iter;
 	static int	digits_patt[5][3 * 10] = {
@@ -33,26 +33,34 @@ static void	draw_digit(t_vars *vars, int digit, t_ivect2d pos, int size)
 		while (iter.x < 3)
 		{
 			if (digits_patt[iter.y][iter.x + (digit % 10) * 3])
-				draw_square(vars, (t_vect2d){pos.x + iter.x * size,
-					pos.y + iter.y * size}, size, 0xFF6942FF);
+				draw_square(vars, (t_vect2d){square.x + iter.x * square.size,
+					square.y + iter.y * square.size}, square.size, color);
 			++iter.x;
 		}
 		iter = (t_ivect2d){0, iter.y + 1};
 	}
 }
 
-static void	draw_number(t_vars *vars, int number, t_ivect2d pos, int size)
+static void	draw_number(t_vars *vars, int number, t_shape sq, uint32_t color)
 {
 	int	i;
 
 	draw_digit(vars, number % 10,
-		(t_ivect2d){pos.x - 3 * size - size, pos.y}, size);
+		(t_shape){sq.x - 3 * sq.size - sq.size, sq.y + 2, sq.size}, 0x000000FF);
+	draw_digit(vars, number % 10,
+		(t_shape){sq.x - 3 * sq.size - sq.size, sq.y, sq.size}, color);
 	number /= 10;
 	i = 2;
 	while (number > 0)
 	{
-		draw_digit(vars, number % 10,
-			(t_ivect2d){pos.x - (3 * size + size / 2) * i - size, pos.y}, size);
+		draw_digit(vars, number % 10, (t_shape){
+			sq.x - (3 * sq.size + sq.size / 2) * i - sq.size,
+			sq.y + 2, sq.size},
+			0x000000FF);
+		draw_digit(vars, number % 10, (t_shape){
+			sq.x - (3 * sq.size + sq.size / 2) * i - sq.size,
+			sq.y, sq.size},
+			color);
 		number /= 10;
 		++i;
 	}
@@ -68,10 +76,10 @@ void	draw_fps(t_vars *vars)
 	if (current_time - old_time > 0.2)
 	{
 		fps = 1 / vars->mlx->delta_time;
-		printf("fps: %d        nvs: %d        fov: %d        \r",
-			fps, vars->nb_vert_stripes, vars->fov);
+		printf("angle: %f		nvs: %d        fov: %d        \r",
+			vars->look_angle, vars->nb_vert_stripes, vars->fov);
 		fflush(stdout);
 		old_time = current_time;
 	}
-	draw_number(vars, fps, (t_ivect2d){vars->mlx->width, 10}, 10);
+	draw_number(vars, fps, (t_shape){vars->mlx->width, 10, 10}, FPS_COLOR);
 }

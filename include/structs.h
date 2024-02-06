@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 04:31:16 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:50:21 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # define MINI_MAP_BORDER 0x202020FF
 # define MINI_MAP_WIDTH 300
 
+# define FPS_COLOR 0xFF6942FF
+
+// ! REMOVE THIS
 # define OLD_MAP_2D 0xAA50AAFF
 
 # define MVT_SPEED 2
@@ -95,6 +98,9 @@ typedef struct s_vars
 	mlx_texture_t *wall_tex[4];
 	mlx_texture_t *door_tex;
 	mlx_texture_t *sky_tex;
+	mlx_texture_t *light_off;
+	mlx_texture_t *light_on;
+	bool			light_status;
 }				t_vars;
 
 typedef struct s_rayhit

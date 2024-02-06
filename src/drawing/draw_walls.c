@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/05 03:45:56 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 20:50:33 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ t_rayhit	ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 				hit_data.pos_in_texture += (dist_to_door < 2) * dist_to_door;
 				hit_data.pos_in_texture = fabs(hit_data.pos_in_texture - floor(hit_data.pos_in_texture));
 				// if (0 <= old_val && old_val <= 1)
-				break;
+					break;
 			}
 		}
 		else if (hit_data.hit_what > 0)
@@ -167,6 +167,13 @@ t_rayhit	ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 	return hit_data;
 }
 
+double	dist_norm(t_ivect2d a, t_ivect2d b, int rad)
+{
+	t_ivect2d	diff;
+
+	diff = (t_ivect2d){a.x - b.x, a.y - b.y};
+	return (double)(diff.x * diff.x + diff.y * diff.y) / (rad * rad);
+}
 
 void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int drawEnd, int fog, int width)
 {
@@ -189,13 +196,18 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 	// Shadow ??
 	if (hit->side == SOUTH || hit->side == WEST)
 		fog = clamp_value(fog - 0x69, 0, 0xFF);
+	bool in_light;
 	for (int y = start; y <= end - 1; ++y)
 	{
+		in_light = false;
+		if (vars->light_status)
+			in_light = inside_circle((t_ivect2d){x_stripe, y}, (t_ivect2d){vars->mlx->width >> 1, vars->mlx->height >> 1}, vars->mlx->width >> 2);
 		double v_percent = (double)(y - drawStart) / (drawEnd - drawStart);
 		int x_tex = h_percent * tex->width;
 		int y_tex = v_percent * tex->height;
 		uint32_t color =  ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
-		color = (color & 0xFFFFFF00) | fog;
+		uint8_t new_fog = clamp_value(fog + 0xFF * in_light * (1 - dist_norm((t_ivect2d){x_stripe, y}, (t_ivect2d){vars->mlx->width >> 1, vars->mlx->height >> 1}, vars->mlx->width >> 2)), 0, 0xFF);
+		color = (color & 0xFFFFFF00) | new_fog;
 		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 			prot_put_pixel(vars->img, x, y, color);
 	}
@@ -215,7 +227,6 @@ void draw_wall_stripes(t_vars *vars)
 	for (i = 0; i < vars->mlx->width; i += steps)
 	{
 		double cameraX = 2 * (i + ((double)WIDTH/2 - (double)vars->mlx->width/2)) / (double)(WIDTH) - 1;
-
 		t_vect2d var_side = (t_vect2d){-cameraX * vars->fov * side_dir.x, -cameraX * vars->fov * side_dir.y};
 		t_vect2d ray = vector_add(&forward_scaled, &var_side);
 		t_rayhit hit = ray_cast_dda(vars, vars->player.pos, ray);

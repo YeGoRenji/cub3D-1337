@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/05 04:21:17 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:49:34 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ typedef struct s_ivect2d
 	int		y;
 }				t_ivect2d;
 
+typedef struct s_shape
+{
+	int		x;
+	int		y;
+	int		size;
+}				t_shape;
+
 /* VECTOR OPERATIONS */
 t_vect2d	vector_add(t_vect2d *vec1, t_vect2d *vec2);
 t_vect2d	vector_sub(t_vect2d *vec1, t_vect2d *vec2);
@@ -39,5 +46,6 @@ double		vector_dot(t_vect2d *vec1, t_vect2d *vec2);
 /* UTILS */
 int		clamp_value(int val, int min, int max);
 bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius);
+void	*ifelse(bool condition, void *truthy, void *falsy);
 
 #endif

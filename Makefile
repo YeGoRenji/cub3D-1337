@@ -20,7 +20,7 @@ HOT_RELOAD_FILES = drawing.o \
 				   draw_walls.o \
 				   draw_minimap.o \
 				   fps_counter.o \
-				   draw_skybox.o \
+				   draw_bg_fg.o \
 				   graphics.o
 
 HOT_RELOAD = $(foreach obj, $(HOT_RELOAD_FILES), $(OBJSFOLDER)$(obj))

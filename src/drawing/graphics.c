@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 05:54:13 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/06 17:07:20 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	player_mvt(t_vars *vars)
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_G))
 		vars->tile_size -= 1;
 
+	vars->look_angle = fmod(vars->look_angle + (vars->look_angle < 0) * (2 * M_PI), 2 * M_PI);
 	vars->tile_size = clamp_value(vars->tile_size, 5, 50);
 	vars->nb_vert_stripes = clamp_value(vars->nb_vert_stripes, 42, vars->mlx->width);
 	vars->fov = clamp_value(vars->fov, 1, 50);
@@ -113,6 +114,7 @@ void do_graphics(t_vars* vars)
 	draw_skybox(vars);
 	 // put_player(vars);
 	draw_wall_stripes(vars);
+	draw_flash_light(vars);
 	mini_map(vars, (t_ivect2d){25, 25});
 
 	// if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
