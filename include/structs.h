@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 16:50:21 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:36:51 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <maths.h>
+# include <pthread.h>
+# include <unistd.h>
 # include <MLX42/MLX42.h>
 
 # define WIDTH 1920

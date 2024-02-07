@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 16:52:57 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/07 20:24:53 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <maths.h>
+
+typedef struct e_thread_artist {
+	t_vars		*vars;
+	t_ivect2d	start;
+	t_ivect2d	end;
+} t_thread_artist;
+
 
 /* Entry func */
 void	do_graphics(t_vars* vars);
@@ -44,10 +51,13 @@ void mini_map(t_vars *vars, t_ivect2d pos);
 mlx_texture_t	*load_tex_png(const char *path);
 
 /* Background/Foreground */
-void	draw_skybox(t_vars *vars);
-void	draw_flash_light(t_vars *vars);
+void	draw_background(t_vars *vars);
+void	draw_foreground(t_vars *vars);
 
 /* FPS COUNTER */
-void draw_fps(t_vars *vars);
+void	*fps_thread(void *param);
+void	draw_fps(t_vars *vars);
 
+/* THREADING BROOOO UwU*/
+void	split_draw(t_vars *vars, void *(*func)(void *), int nb_threads, t_ivect2d size, t_ivect2d pos);
 #endif

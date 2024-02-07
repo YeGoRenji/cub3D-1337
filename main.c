@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 20:28:48 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/07 19:25:18 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,6 @@
 #include <maths.h>
 #include <drawing.h>
 #include <dlfcn.h>
-#include <time.h>
-
-typedef void (*do_graphics_ptr_t)(t_vars* vars);
-do_graphics_ptr_t do_graphics_ptr = NULL;
-void	*module = NULL;
-
-void hot_reload()
-{
-	if (module)
-		dlclose(module);
-	module = NULL;
-	system("make lib/lib.so");
-	module = dlopen("lib/lib.so", RTLD_NOW);
-	do_graphics_ptr = dlsym(module, "do_graphics");
-	// system("clear");
-	printf("Reloaded !!\n");
-}
 
 void	exit_failure(t_vars *vars)
 {
@@ -54,7 +37,7 @@ void	init_vars(t_vars *vars)
 		exit_failure(vars);
 	// INFO: get this from parsing
 	// vars->player.dir = (t_vect2d){1, 0};
-	vars->look_angle = -M_PI / 2;
+	vars->look_angle = M_PI / 2;
 	vars->player.pos = (t_vect2d){1.5, 1.5};
 
 	// Fix these values later (in parsing)
@@ -76,17 +59,13 @@ void	init_vars(t_vars *vars)
 	vars->sky_tex = load_tex_png("./resources/AuroraSkyBox.png");
 	vars->light_on = load_tex_png("./resources/FlashLightOn.png");
 	vars->light_off = load_tex_png("./resources/FlashLightOff.png");
-	hot_reload();
 }
 
 void ft_loop(void* v_vars)
 {
 	t_vars	*vars = v_vars;
 
-	if (mlx_is_key_down(vars->mlx, MLX_KEY_R))
-		hot_reload();
-
-	do_graphics_ptr(vars);
+	do_graphics(vars);
 }
 
 void on_resize(int32_t new_width, int32_t new_height, void *param)
@@ -109,10 +88,13 @@ void on_click(mlx_key_data_t key_data, void *param)
 	vars = param;
 	if (key_data.key == MLX_KEY_SPACE && key_data.action == MLX_RELEASE)
 		vars->light_status = !vars->light_status;
+	if (key_data.key == MLX_KEY_ESCAPE)
+		mlx_close_window(vars->mlx);
 }
 
 int32_t main(int32_t argc, const char* argv[])
 {
+	// pthread_t th;
 	(void)argc;
 	(void)argv;
 	t_vars vars;
@@ -136,10 +118,12 @@ int32_t main(int32_t argc, const char* argv[])
 	init_vars(&vars);
 	mlx_loop_hook(vars.mlx, ft_loop, &vars);
 	mlx_resize_hook(vars.mlx, on_resize, &vars);
+	// pthread_create(&th, NULL, fps_thread, &vars);
 	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
 	mlx_key_hook(vars.mlx, on_click, &vars);
 	mlx_loop(vars.mlx);
 	mlx_terminate(vars.mlx);
+
 	return (EXIT_SUCCESS);
 }
 

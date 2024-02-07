@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 17:07:20 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/07 20:43:44 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,9 @@ void	player_mvt(t_vars *vars)
 	t_vect2d	input_mvt;
 
 	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
-	if (mlx_is_key_down(vars->mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(vars->mlx);
-
 	// Movement from input
 	get_input_mvt(vars, &input_mvt);
 	// Rotation
-	// TODO: check if look_angle doesn't overflow
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
 		vars->look_angle += vars->mlx->delta_time * ROT_SPEED;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
@@ -104,20 +100,15 @@ void	player_mvt(t_vars *vars)
 
 void do_graphics(t_vars* vars)
 {
-
 	player_mvt(vars);
-
 	// Drawing Logic
 	// checker(vars);
 	// draw_map(vars);
 	// clear_screen(vars, 0x303030FF);
-	draw_skybox(vars);
-	 // put_player(vars);
+	draw_background(vars);
+	// put_player(vars);
 	draw_wall_stripes(vars);
-	draw_flash_light(vars);
+	draw_foreground(vars);
 	mini_map(vars, (t_ivect2d){25, 25});
-
-	// if (mlx_is_mouse_down(vars->mlx, MLX_MOUSE_BUTTON_LEFT))
-	// 	mouse_ray_test(vars);
 	draw_fps(vars);
 }
