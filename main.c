@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/07 19:25:18 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/08 19:23:01 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	init_vars(t_vars *vars)
 		exit_failure(vars);
 	if (mlx_image_to_window(vars->mlx, vars->img, 0, 0) == -1)
 		exit_failure(vars);
+	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
+	mlx_set_cursor_mode(vars->mlx,  MLX_MOUSE_HIDDEN);
 	// INFO: get this from parsing
 	// vars->player.dir = (t_vect2d){1, 0};
 	vars->look_angle = M_PI / 2;
@@ -43,25 +45,27 @@ void	init_vars(t_vars *vars)
 	// Fix these values later (in parsing)
 	vars->nb_vert_stripes = WIDTH;
 	vars->fov = 1;
+	vars->pitch = 0;
 	vars->mouse.x = 0;
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
-	vars->light_status = false;
 	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
 	// vars->wall_tex[NORTH] = load_tex_png("./resources/pics/MyPic.png");
 	// vars->wall_tex[EAST] = load_tex_png("./resources/pics/afatimi.png");
 	// vars->wall_tex[WEST] = load_tex_png("./resources/pics/rghouzra.png");
-	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/greybricks.png");
-	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
-	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/greybricks.png");
-	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
+	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/redbricks.png");
+	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/badgeOnRedbricks.png");
+	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/redbricks.png");
+	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/eagleOnRedbricks.png");
 	vars->door_tex = load_tex_png("./resources/wolftex/door.png");
 	vars->sky_tex = load_tex_png("./resources/AuroraSkyBox.png");
+	vars->light_status = false;
 	vars->light_on = load_tex_png("./resources/FlashLightOn.png");
 	vars->light_off = load_tex_png("./resources/FlashLightOff.png");
+	vars->mouse_locked = true;
 }
 
-void ft_loop(void* v_vars)
+void on_loop(void* v_vars)
 {
 	t_vars	*vars = v_vars;
 
@@ -86,10 +90,26 @@ void on_click(mlx_key_data_t key_data, void *param)
 	t_vars	*vars;
 
 	vars = param;
-	if (key_data.key == MLX_KEY_SPACE && key_data.action == MLX_RELEASE)
+	if ((key_data.key == MLX_KEY_SPACE) && key_data.action == MLX_RELEASE)
 		vars->light_status = !vars->light_status;
+	if (key_data.key == MLX_KEY_LEFT_ALT && key_data.action == MLX_RELEASE)
+	{
+		vars->mouse_locked = !vars->mouse_locked;
+		mlx_set_cursor_mode(vars->mlx, !vars->mouse_locked * MLX_MOUSE_NORMAL + vars->mouse_locked * MLX_MOUSE_HIDDEN);
+	}
 	if (key_data.key == MLX_KEY_ESCAPE)
 		mlx_close_window(vars->mlx);
+}
+
+
+void on_mouse(mouse_key_t button, action_t action, modifier_key_t mods, void* param)
+{
+	t_vars	*vars;
+
+	(void)mods;
+	vars = param;
+	if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE)
+		vars->light_status = !vars->light_status;
 }
 
 int32_t main(int32_t argc, const char* argv[])
@@ -116,10 +136,9 @@ int32_t main(int32_t argc, const char* argv[])
 	vars.map.height = 10;
 
 	init_vars(&vars);
-	mlx_loop_hook(vars.mlx, ft_loop, &vars);
+	mlx_loop_hook(vars.mlx, on_loop, &vars);
 	mlx_resize_hook(vars.mlx, on_resize, &vars);
-	// pthread_create(&th, NULL, fps_thread, &vars);
-	// mlx_mouse_hook(vars.mlx, ft_mouse, &vars);
+	mlx_mouse_hook(vars.mlx, on_mouse, &vars);
 	mlx_key_hook(vars.mlx, on_click, &vars);
 	mlx_loop(vars.mlx);
 	mlx_terminate(vars.mlx);

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/08 03:46:27 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/08 16:42:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 		int x_tex = h_percent * tex->width;
 		int y_tex = v_percent * tex->height;
 		uint32_t color =  ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
-		uint8_t new_fog = clamp_value(fog + 0xFF * in_light * (1 - dist_norm((t_ivect2d){x_stripe, y}, (t_ivect2d){vars->mlx->width >> 1, vars->mlx->height >> 1}, vars->mlx->width >> 2)), 0, 0xFF);
+		uint8_t new_fog = clamp_value(fog + 0xFF * in_light * (1 - dist_norm((t_ivect2d){x_stripe, y}, (t_ivect2d){vars->mlx->width >> 1, vars->mlx->height >> 1}, vars->mlx->width >> 2)), 0x10, 0xFF);
 		color = (color & 0xFFFFFF00) | new_fog;
 		for (int x = x_stripe - half_width; x <= x_stripe + half_width; x++)
 			prot_put_pixel(vars->img, x, y, color);
@@ -231,7 +231,7 @@ void *threaded_wall_stripes(void *params)
 		t_vect2d var_side = (t_vect2d){-cameraX * art->vars->fov * side_dir.x, -cameraX * art->vars->fov * side_dir.y};
 		t_vect2d ray = vector_add(&forward_scaled, &var_side);
 		t_rayhit hit = ray_cast_dda(art->vars, art->vars->player.pos, ray);
-		int h = art->vars->mlx->height;
+		int h = art->vars->mlx->height + 2 * art->vars->pitch;
 		int lineHeight = (int)(HEIGHT / (hit.dist * art->vars->fov));
 
 		// calculate lowest and highest pixel to fill in current stripe

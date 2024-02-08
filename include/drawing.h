@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/07 20:24:53 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/08 15:36:25 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,6 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <maths.h>
-
-typedef struct e_thread_artist {
-	t_vars		*vars;
-	t_ivect2d	start;
-	t_ivect2d	end;
-} t_thread_artist;
-
 
 /* Entry func */
 void	do_graphics(t_vars* vars);
@@ -58,6 +51,13 @@ void	draw_foreground(t_vars *vars);
 void	*fps_thread(void *param);
 void	draw_fps(t_vars *vars);
 
-/* THREADING BROOOO UwU*/
+/* Multi-Thread Drawing ~_~ */
+
+typedef struct e_thread_artist {
+	t_vars		*vars;
+	t_ivect2d	start;
+	t_ivect2d	end;
+} t_thread_artist;
+
 void	split_draw(t_vars *vars, void *(*func)(void *), int nb_threads, t_ivect2d size, t_ivect2d pos);
 #endif

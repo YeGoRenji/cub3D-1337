@@ -12,8 +12,8 @@
 - [x] Doors
 	- [x] Automatic
 	- [x] Orientation specific
-- [ ] Rotate POV with mouse
-- [ ] Animated Sprites
+- [x] Rotate POV with mouse
+- [ ] Animated Sprites ?
 
 ## Issues:
 

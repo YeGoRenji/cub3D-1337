@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/07 20:43:44 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:43:04 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,16 @@ bool	test_collision(t_vars *vars, t_vect2d test)
 {
 	t_vect2d	next_pos;
 	t_ivect2d	next_mapidx;
+	t_ivect2d	move_diff;
 
 	next_pos = vector_add(&vars->player.pos, &test);
 	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
-	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != 1)
+	move_diff = (t_ivect2d){next_mapidx.x - floor(vars->player.pos.x), next_mapidx.y - floor(vars->player.pos.y)};
+	if (move_diff.x == move_diff.y
+		&& get_map_val(vars, next_mapidx.x, floor(vars->player.pos.y)) == WALL
+		&& get_map_val(vars, floor(vars->player.pos.x), next_mapidx.y) == WALL)
+		return (true);
+	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != WALL)
 	{
 		vars->player.pos = next_pos;
 		return (false);
@@ -56,11 +62,24 @@ void	move_player(t_vars *vars, t_vect2d *movement)
 		return ;
 }
 
+void	mouse_mvt(t_vars *vars)
+{
+	t_ivect2d	mouse_move;
+
+	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
+	mouse_move = (t_ivect2d){vars->mouse.x - vars->mlx->width/2, vars->mouse.y - vars->mlx->height/2};	
+	mlx_set_mouse_pos(vars->mlx, vars->mlx->width/2, vars->mlx->height/2);
+	vars->look_angle += mouse_move.x * vars->mlx->delta_time * ROT_SPEED / 10;
+	vars->pitch -= mouse_move.y * vars->mlx->delta_time * ROT_SPEED * 69;
+}
+
 void	player_mvt(t_vars *vars)
 {
 	t_vect2d	input_mvt;
-
-	mlx_get_mouse_pos(vars->mlx, &vars->mouse.x, &vars->mouse.y);
+	// t_ivect2d	old_mouse;
+	
+	if (vars->mouse_locked)
+		mouse_mvt(vars);
 	// Movement from input
 	get_input_mvt(vars, &input_mvt);
 	// Rotation
@@ -81,6 +100,12 @@ void	player_mvt(t_vars *vars)
 		vars->tile_size += 1;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_G))
 		vars->tile_size -= 1;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_UP))
+		vars->pitch += 20;
+	if (mlx_is_key_down(vars->mlx, MLX_KEY_DOWN))
+		vars->pitch -= 20;
+
+	vars->pitch = clamp_value(vars->pitch, -vars->mlx->height/2, vars->mlx->height / 2);
 
 	vars->look_angle = fmod(vars->look_angle + (vars->look_angle < 0) * (2 * M_PI), 2 * M_PI);
 	vars->tile_size = clamp_value(vars->tile_size, 5, 50);

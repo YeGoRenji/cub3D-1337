@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/07 16:36:51 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:52:11 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 # define WIDTH 1920
 # define HEIGHT 1080
+// # define WIDTH 5120
+// # define HEIGHT 2880
 
 # define TILE_W 25
 # define TILE_COL_1 0x69FFFFFF
@@ -96,6 +98,7 @@ typedef struct s_vars
 	int			tile_size;
 	t_map		map;
 	t_ivect2d	mouse;
+	int			pitch;
 	mlx_texture_t *nletter_tex;
 	mlx_texture_t *wall_tex[4];
 	mlx_texture_t *door_tex;
@@ -103,6 +106,7 @@ typedef struct s_vars
 	mlx_texture_t *light_off;
 	mlx_texture_t *light_on;
 	bool			light_status;
+	bool			mouse_locked;
 }				t_vars;
 
 typedef struct s_rayhit
