@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 04:23:22 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/07 20:29:58 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/08 03:46:46 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ void	split_draw(t_vars *vars, void *(*func)(void *), int nb_threads, t_ivect2d s
 
 void	draw_background(t_vars *vars)
 {
-	split_draw(vars, draw_skybox, 2, (t_ivect2d){vars->mlx->width, vars->mlx->height >> 1}, (t_ivect2d){0, 0});
-	split_draw(vars, draw_floor, 2, (t_ivect2d){vars->mlx->width, vars->mlx->height >> 1}, (t_ivect2d){0, vars->mlx->height >> 1});
+	split_draw(vars, draw_skybox, 3, (t_ivect2d){vars->mlx->width, vars->mlx->height >> 1}, (t_ivect2d){0, 0});
+	split_draw(vars, draw_floor, 3, (t_ivect2d){vars->mlx->width, vars->mlx->height >> 1}, (t_ivect2d){0, vars->mlx->height >> 1});
 
 	// t_thread_artist	art;
 	// pthread_t th_skybox;
@@ -154,8 +154,7 @@ void	*draw_flash_light(void *param)
 
 void	draw_foreground(t_vars *vars)
 {
-	(void)vars;
 	// draw_flash_light(vars);
-	split_draw(vars, draw_flash_light, 4, (t_ivect2d){vars->mlx->width - 1331, vars->mlx->height - 737}, (t_ivect2d){1331, 737});
+	split_draw(vars, draw_flash_light, 3, (t_ivect2d){vars->mlx->width - 1331, vars->mlx->height - 737}, (t_ivect2d){1331, 737});
 	// draw_flash_light(vars);
 }

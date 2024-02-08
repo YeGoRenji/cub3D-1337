@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/07 20:29:11 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/08 03:46:27 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,5 +247,5 @@ void *threaded_wall_stripes(void *params)
 
 void draw_wall_stripes(t_vars *vars)
 {
-	split_draw(vars, threaded_wall_stripes, 69, (t_ivect2d){vars->mlx->width, vars->mlx->height}, (t_ivect2d){0, 0});
+	split_draw(vars, threaded_wall_stripes, 3, (t_ivect2d){vars->mlx->width, vars->mlx->height}, (t_ivect2d){0, 0});
 }
