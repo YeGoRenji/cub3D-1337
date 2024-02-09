@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 16:16:16 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/07 17:10:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 02:45:12 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,18 @@ static void	draw_number(t_vars *vars, int number, t_shape sq, uint32_t color)
 {
 	int	i;
 
-	// draw_digit(vars, number % 10,
-	// 	(t_shape){sq.x - 3 * sq.size - sq.size, sq.y + 2, sq.size}, 0x000000FF);
-	draw_digit(vars, number % 10,
-		(t_shape){sq.x - 3 * sq.size - sq.size, sq.y, sq.size}, color);
+	draw_digit(vars, number % 10, (t_shape){sq.x - 3 * sq.size - sq.size, sq.y
+		+ 2, sq.size}, 0x000000FF);
+	draw_digit(vars, number % 10, (t_shape){sq.x - 3 * sq.size - sq.size, sq.y,
+		sq.size}, color);
 	number /= 10;
 	i = 2;
 	while (number > 0)
 	{
-		// draw_digit(vars, number % 10, (t_shape){
-		// 	sq.x - (3 * sq.size + sq.size / 2) * i - sq.size,
-		// 	sq.y + 2, sq.size},
-		// 	0x000000FF);
-		draw_digit(vars, number % 10, (t_shape){
-			sq.x - (3 * sq.size + sq.size / 2) * i - sq.size,
-			sq.y, sq.size},
-			color);
+		draw_digit(vars, number % 10, (t_shape){sq.x - (3 * sq.size + sq.size
+				/ 2) * i - sq.size, sq.y + 2, sq.size}, 0x000000FF);
+		draw_digit(vars, number % 10, (t_shape){sq.x - (3 * sq.size + sq.size
+				/ 2) * i - sq.size, sq.y, sq.size}, color);
 		number /= 10;
 		++i;
 	}
@@ -78,19 +74,19 @@ void	draw_fps(t_vars *vars)
 	{
 		fps = 1 / vars->mlx->delta_time;
 		// printf("angle: %f		nvs: %d        fov: %d        \r",
-			// vars->look_angle, vars->nb_vert_stripes, vars->fov);
+		// vars->look_angle, vars->nb_vert_stripes, vars->fov);
 		// fflush(stdout);
 		old_time = current_time;
 	}
-
 	draw_number(vars, fps, (t_shape){vars->mlx->width, 10, 10}, FPS_COLOR);
 }
 
 void	*fps_thread(void *param)
 {
-	t_vars *vars = param;
+	t_vars	*vars;
+
+	vars = param;
 	while (1)
 		draw_fps(vars);
 	return (NULL);
 }
-

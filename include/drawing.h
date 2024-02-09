@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/08 15:36:25 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 02:12:34 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	clear_screen(t_vars* vars, uint32_t color);
 /* Primitives */
 void	draw_square(t_vars* vars, t_vect2d anchor, int width, uint32_t color);
 void	draw_star(t_vars *vars, t_vect2d center, uint32_t color);
-void	draw_trig(t_vars *vars, t_vect2d pos, int width, int height, uint32_t color);
+void	draw_trig(t_vars *vars, t_ivect2d pos, t_ivect2d size, uint32_t color);
 void	draw_circle(t_vars *vars, t_ivect2d center, int radius, uint32_t color);
 void	draw_texture(t_vars *vars, mlx_texture_t *texture, t_ivect2d pos);
 

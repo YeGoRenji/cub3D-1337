@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 05:13:36 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 02:21:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	put_mini_map_cursor(t_vars *vars, t_ivect2d center)
 	t_ivect2d	it;
 	t_ivect2d	current;
 
-	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y - half_width - 10},
-		trig_width - 3, trig_height, 0);
+	draw_trig(vars, (t_ivect2d){center.x + 0.5, center.y - half_width - 10},
+		(t_ivect2d){trig_width - 3, trig_height}, 0);
 	it.y = -half_width;
 	it = (t_ivect2d){-half_width, -half_width};
 	while (it.y < half_width)
@@ -37,8 +37,8 @@ void	put_mini_map_cursor(t_vars *vars, t_ivect2d center)
 		}
 		it = (t_ivect2d){-half_width, it.y + 1};
 	}
-	draw_trig(vars, (t_vect2d){center.x + 0.5, center.y - half_width - 3},
-		trig_width - 6, trig_height - 2, 0xFFFFFFFF);
+	draw_trig(vars, (t_ivect2d){center.x + 0.5, center.y - half_width - 3},
+		(t_ivect2d){trig_width - 6, trig_height - 2}, 0xFFFFFFFF);
 }
 
 void	mini_map(t_vars *vars, t_ivect2d pos)
