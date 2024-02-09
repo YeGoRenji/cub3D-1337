@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 02:49:20 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:13:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	test_collision(t_vars *vars, t_vect2d test)
 	t_ivect2d	next_mapidx;
 	t_ivect2d	move_diff;
 
-	next_pos = vector_add(&vars->player.pos, &test);
+	next_pos = vec_add(vars->player.pos, test);
 	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
 	move_diff = (t_ivect2d){next_mapidx.x - floor(vars->player.pos.x), next_mapidx.y - floor(vars->player.pos.y)};
 	if (move_diff.x == move_diff.y
@@ -116,10 +116,10 @@ void	player_mvt(t_vars *vars)
 	vars->player.dir = (t_vect2d){cos(vars->look_angle), sin(vars->look_angle)};
 
 	// Moving Logic
-	t_vect2d forward_move = vector_scale(&vars->player.dir, -input_mvt.y * vars->mlx->delta_time * MVT_SPEED);
+	t_vect2d forward_move = vec_scale(vars->player.dir, -input_mvt.y * vars->mlx->delta_time * MVT_SPEED);
 	t_vect2d side_dir = (t_vect2d){vars->player.dir.y, -vars->player.dir.x};
-	t_vect2d side_move = vector_scale(&side_dir, -input_mvt.x * vars->mlx->delta_time * MVT_SPEED);
-	t_vect2d movement = vector_add(&forward_move, &side_move);
+	t_vect2d side_move = vec_scale(side_dir, -input_mvt.x * vars->mlx->delta_time * MVT_SPEED);
+	t_vect2d movement = vec_add(forward_move, side_move);
 	move_player(vars, &movement);
 }
 

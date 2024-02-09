@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 16:49:34 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:43:12 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <math.h>
 # include <stdbool.h>
+
 
 typedef struct s_vect2d
 {
@@ -28,6 +29,12 @@ typedef struct s_ivect2d
 	int		y;
 }				t_ivect2d;
 
+typedef struct s_mat2x2
+{
+	t_vect2d c1;
+	t_vect2d c2;
+}			t_mat2x2;
+
 typedef struct s_shape
 {
 	int		x;
@@ -36,12 +43,13 @@ typedef struct s_shape
 }				t_shape;
 
 /* VECTOR OPERATIONS */
-t_vect2d	vector_add(t_vect2d *vec1, t_vect2d *vec2);
-t_vect2d	vector_sub(t_vect2d *vec1, t_vect2d *vec2);
-t_vect2d	vector_scale(t_vect2d *vec, double scale);
-double		vector_magnitude(t_vect2d *vec);
-t_vect2d	vector_normalize(t_vect2d *vec);
-double		vector_dot(t_vect2d *vec1, t_vect2d *vec2);
+t_vect2d	vec_add(t_vect2d vec1, t_vect2d vec2);
+t_vect2d	vec_sub(t_vect2d vec1, t_vect2d vec2);
+t_vect2d	vec_scale(t_vect2d vec, double scale);
+double		vec_mag(t_vect2d vec);
+t_vect2d	vec_norm(t_vect2d vec);
+double		vec_dot(t_vect2d vec1, t_vect2d vec2);
+t_vect2d	mat_mult(t_mat2x2 mat, t_vect2d v);
 
 /* UTILS */
 int		clamp_value(int val, int min, int max);

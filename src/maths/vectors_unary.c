@@ -6,24 +6,24 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:36:49 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/01/21 17:37:41 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:43:04 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <maths.h>
 
-double	vector_magnitude(t_vect2d *vec)
+double	vec_mag(t_vect2d vec)
 {
-	return (sqrt(vec->x * vec->x + vec->y * vec->y));
+	return (sqrt(vec.x * vec.x + vec.y * vec.y));
 }
 
-t_vect2d	vector_normalize(t_vect2d *vec)
+t_vect2d	vec_norm(t_vect2d vec)
 {
 	double	mag;
 
-	mag = vector_magnitude(vec);
+	mag = vec_mag(vec);
 	return ((t_vect2d){
-		vec->x / mag,
-		vec->y / mag
+		vec.x / mag,
+		vec.y / mag
 	});
 }

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 04:23:22 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/08 20:24:26 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:09:16 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ void	split_draw(t_vars *vars, void *(*func)(void *), int nb_threads, t_ivect2d s
 
 void	draw_background(t_vars *vars)
 {
-	split_draw(vars, draw_skybox, 3, (t_ivect2d){vars->mlx->width, (vars->mlx->height >> 1) + vars->pitch}, (t_ivect2d){0, 0});
-	split_draw(vars, draw_floor, 3, (t_ivect2d){vars->mlx->width, (vars->mlx->height >> 1) - vars->pitch}, (t_ivect2d){0, (vars->mlx->height >> 1) + vars->pitch});
+	split_draw(vars, draw_skybox, THREADS, (t_ivect2d){vars->mlx->width, (vars->mlx->height >> 1) + vars->pitch}, (t_ivect2d){0, 0});
+	split_draw(vars, draw_floor, THREADS, (t_ivect2d){vars->mlx->width, (vars->mlx->height >> 1) - vars->pitch}, (t_ivect2d){0, (vars->mlx->height >> 1) + vars->pitch});
 
 	// t_thread_artist	art;
 	// pthread_t th_skybox;
@@ -153,7 +153,7 @@ void	draw_foreground(t_vars *vars)
 {
 	t_ivect2d	tex_start = (t_ivect2d){(1331 * ((double)vars->mlx->width/WIDTH)), 757 * ((double)vars->mlx->height/HEIGHT)};
 	// draw_flash_light(vars);
-	split_draw(vars, draw_flash_light, 3, (t_ivect2d){vars->mlx->width - tex_start.x, vars->mlx->height - tex_start.y}, tex_start);
+	split_draw(vars, draw_flash_light, THREADS, (t_ivect2d){vars->mlx->width - tex_start.x, vars->mlx->height - tex_start.y}, tex_start);
 	// split_draw(vars, draw_flash_light, 3, (t_ivect2d){vars->mlx->width - 1331, vars->mlx->height - 757}, (t_ivect2d){tex_start.x, tex_start.y});
 	// draw_flash_light(vars);
 }

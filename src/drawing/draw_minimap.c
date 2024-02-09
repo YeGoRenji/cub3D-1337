@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 02:21:31 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:44:47 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,27 +49,24 @@ void	mini_map(t_vars *vars, t_ivect2d pos)
 	t_vect2d center = (t_vect2d){(double)MINI_MAP_WIDTH / 2 + pos.x, (double)MINI_MAP_WIDTH / 2 + pos.y};
 
 	// Testing
-	t_vect2d mat_col1 = (t_vect2d){forward.y, -right.y};
-	t_vect2d mat_col2 = (t_vect2d){-forward.x, right.x};
+	t_mat2x2 mat_rot = {
+		{forward.y, -right.y},
+		{-forward.x, right.x}
+	};
+	// t_vect2d mat_col1 = (t_vect2d){forward.y, -right.y};
+	// t_vect2d mat_col2 = (t_vect2d){-forward.x, right.x};
 
-	forward = vector_scale(&forward, vars->tile_size);
-	right = vector_scale(&right, vars->tile_size);
-
-	forward = vector_add(&forward, &center);
-	right = vector_add(&right, &center);
-
+	forward = vec_add(vec_scale(forward, vars->tile_size), center);
+	right = vec_add(vec_scale(right, vars->tile_size), center);
 	for (int y = pos.y; y < pos.y + MINI_MAP_WIDTH; ++y)
 	{
 		for (int x = pos.x; x < pos.x + MINI_MAP_WIDTH; ++x)
 		{
 			if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2 - 10))
 			{
-				t_vect2d coord_rel_center = {x - center.x, y - center.y};
-				coord_rel_center = vector_scale(&coord_rel_center, (double)1/vars->tile_size);
-				t_vect2d coord_transform = vector_scale(&mat_col1, coord_rel_center.x);
-				t_vect2d addit = vector_scale(&mat_col2, coord_rel_center.y);
-				coord_transform = vector_add(&coord_transform, &addit);
-				t_vect2d map_coord = vector_add(&vars->player.pos, &coord_transform);
+				t_vect2d coord_rel_center = vec_scale((t_vect2d){x - center.x, y - center.y}, (double)1/vars->tile_size);
+				t_vect2d coord_transform = mat_mult(mat_rot, coord_rel_center);
+				t_vect2d map_coord = vec_add(vars->player.pos, coord_transform);
 				int val = get_map_val(vars, floor(map_coord.x), floor(map_coord.y));
 				uint32_t color = (val == WALL) * TILE_COL_1
 							   + (val == EMPTY) * TILE_COL_2
@@ -85,7 +82,7 @@ void	mini_map(t_vars *vars, t_ivect2d pos)
 	}
 	// draw_star(vars, center, 0x0000FFFF);
 	put_mini_map_cursor(vars, (t_ivect2d){center.x, center.y});
-	t_vect2d center_to_n = vector_scale(&vars->player.dir, (double)MINI_MAP_WIDTH / 2 - 5);
+	t_vect2d center_to_n = vec_scale(vars->player.dir, (double)MINI_MAP_WIDTH / 2 - 5);
 	t_ivect2d north_center = (t_ivect2d){center.x - center_to_n.x, center.y + center_to_n.y};
 	int n_radius = 20;
 	draw_circle(vars, north_center, n_radius, MINI_MAP_BORDER);

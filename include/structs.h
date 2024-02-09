@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/08 22:28:58 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:33:27 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 # include <unistd.h>
 # include <MLX42/MLX42.h>
 
-// # define WIDTH 1920
-// # define HEIGHT 1080
-# define WIDTH 1280
-# define HEIGHT 720
+# define WIDTH 1920
+# define HEIGHT 1080
+
+# define THREADS 8
 
 # define TILE_W 25
 # define TILE_COL_1 0x69FFFFFF
