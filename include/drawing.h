@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 02:12:34 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:04:01 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 /* Entry func */
 void	do_graphics(t_vars* vars);
 
-void	draw_line(t_vars *vars, t_vect2d pt1, t_vect2d pt2, uint32_t color);
+void	draw_line(t_vars *vars, t_ivect2d pt1, t_ivect2d pt2, uint32_t color);
 void	prot_put_pixel(mlx_image_t *image, int x, int y, uint32_t color);
 void	clear_screen(t_vars* vars, uint32_t color);
 

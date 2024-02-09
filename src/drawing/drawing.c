@@ -6,22 +6,22 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:14:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/05 04:14:50 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:05:05 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-void	ft_swap(double *a, double *b)
+void	ft_swap(int *a, int *b)
 {
-	double	tmp;
+	int	tmp;
 
 	tmp = *a;
 	*a = *b;
 	*b = tmp;
 }
 
-float	err(t_vect2d *to_draw, t_vect2d *pt1, t_vect2d *pt2)
+float	err(t_ivect2d *to_draw, t_ivect2d *pt1, t_ivect2d *pt2)
 {
 	float	actual_y;
 	float	our_y;
@@ -38,7 +38,7 @@ int64_t	ft_abs(int64_t x)
 	return (-x);
 }
 
-void	get_direction(t_vect2d *pt1, t_vect2d *pt2, t_dir *dir)
+void	get_direction(t_ivect2d *pt1, t_ivect2d *pt2, t_dir *dir)
 {
 	dir->x = 1;
 	dir->y = 1;
@@ -48,7 +48,7 @@ void	get_direction(t_vect2d *pt1, t_vect2d *pt2, t_dir *dir)
 		dir->x = -1;
 }
 
-int	handle_y_x(t_vect2d *pt1, t_vect2d *pt2)
+int	handle_y_x(t_ivect2d *pt1, t_ivect2d *pt2)
 {
 	int	y_x_flip;
 
@@ -71,7 +71,7 @@ void	prot_put_pixel(mlx_image_t *image, int x, int y, uint32_t color)
 	mlx_put_pixel(image, x, y, color);
 }
 
-void	my_mlx_point_put(mlx_image_t *img, t_vect2d *pt, int flip, uint32_t color)
+void	my_mlx_point_put(mlx_image_t *img, t_ivect2d *pt, int flip, uint32_t color)
 {
 	int64_t		x;
 	int64_t		y;
@@ -90,10 +90,10 @@ void	my_mlx_point_put(mlx_image_t *img, t_vect2d *pt, int flip, uint32_t color)
 	mlx_put_pixel(img, x , y, color);
 }
 
-void	draw_line(t_vars *vars, t_vect2d pt1, t_vect2d pt2, uint32_t color)
+void	draw_line(t_vars *vars, t_ivect2d pt1, t_ivect2d pt2, uint32_t color)
 {
 	t_dir		dir;
-	t_vect2d	to_draw;
+	t_ivect2d	to_draw;
 
 	dir.is_flipped = handle_y_x(&pt1, &pt2);
 	get_direction(&pt1, &pt2, &dir);

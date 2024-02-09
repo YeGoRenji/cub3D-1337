@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:17:53 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/06 17:34:33 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:07:51 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,14 @@ void	*ifelse(bool condition, void *truthy, void *falsy)
 	if (condition)
 		return (truthy);
 	return (falsy);
+}
+
+t_vect2d	itovec(t_ivect2d ivec)
+{
+	return ((t_vect2d){ivec.x, ivec.y});
+}
+
+t_ivect2d	vectoi(t_vect2d vec)
+{
+	return ((t_ivect2d){vec.x, vec.y});
 }

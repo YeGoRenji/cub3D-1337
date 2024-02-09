@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 17:44:47 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:52:50 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,52 +41,60 @@ void	put_mini_map_cursor(t_vars *vars, t_ivect2d center)
 		(t_ivect2d){trig_width - 6, trig_height - 2}, 0xFFFFFFFF);
 }
 
+void	draw_north(t_vars *vars, t_ivect2d center)
+{
+	const int	circle_radius = 20;
+	t_vect2d	center_to_n;
+	t_ivect2d	north_center;
+
+	center_to_n = vec_scale(vars->player.dir, (double)MINI_MAP_WIDTH / 2 - 5);
+	north_center = (t_ivect2d){
+		center.x - center_to_n.x,
+		center.y + center_to_n.y
+	};
+	draw_circle(vars, north_center, circle_radius, MINI_MAP_BORDER);
+	draw_texture(vars, vars->nletter_tex, (t_ivect2d){
+		north_center.x - circle_radius,
+		north_center.y - circle_radius
+	});
+}
+
 void	mini_map(t_vars *vars, t_ivect2d pos)
 {
 	// TODO: the signs of the vectors are just tweaked bruteforce (UNDERSTAND MORE ?)
+	t_ivect2d	it;
 	t_vect2d forward = (t_vect2d){vars->player.dir.x, -vars->player.dir.y};
 	t_vect2d right = (t_vect2d){-vars->player.dir.y, -vars->player.dir.x};
-	t_vect2d center = (t_vect2d){(double)MINI_MAP_WIDTH / 2 + pos.x, (double)MINI_MAP_WIDTH / 2 + pos.y};
+	t_ivect2d center = (t_ivect2d){MINI_MAP_WIDTH / 2 + pos.x, MINI_MAP_WIDTH / 2 + pos.y};
 
 	// Testing
 	t_mat2x2 mat_rot = {
 		{forward.y, -right.y},
 		{-forward.x, right.x}
 	};
-	// t_vect2d mat_col1 = (t_vect2d){forward.y, -right.y};
-	// t_vect2d mat_col2 = (t_vect2d){-forward.x, right.x};
-
-	forward = vec_add(vec_scale(forward, vars->tile_size), center);
-	right = vec_add(vec_scale(right, vars->tile_size), center);
-	for (int y = pos.y; y < pos.y + MINI_MAP_WIDTH; ++y)
+	it = pos;
+	while (it.y < pos.y + MINI_MAP_WIDTH)
 	{
-		for (int x = pos.x; x < pos.x + MINI_MAP_WIDTH; ++x)
+		while (it.x < pos.x + MINI_MAP_WIDTH)
 		{
-			if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2 - 10))
+			if (inside_circle(it, center, MINI_MAP_WIDTH / 2 - 10))
 			{
-				t_vect2d coord_rel_center = vec_scale((t_vect2d){x - center.x, y - center.y}, (double)1/vars->tile_size);
-				t_vect2d coord_transform = mat_mult(mat_rot, coord_rel_center);
-				t_vect2d map_coord = vec_add(vars->player.pos, coord_transform);
+				t_vect2d rel_center = vec_scale(vec_sub(itovec(it), itovec(center)), (double)1/vars->tile_size);
+				t_vect2d transformed = mat_mult(mat_rot, rel_center);
+				t_vect2d map_coord = vec_add(vars->player.pos, transformed);
 				int val = get_map_val(vars, floor(map_coord.x), floor(map_coord.y));
-				uint32_t color = (val == WALL) * TILE_COL_1
-							   + (val == EMPTY) * TILE_COL_2
-							   + (val == DOOR) * TILE_COL_3;
-				if (val != EMPTY)
-					prot_put_pixel(vars->img, x, y, color);
-				else if (!((x + y) % 2))
-					prot_put_pixel(vars->img, x, y, color);
+				uint32_t color = (val == WALL) * TILE_COL_WALL
+							   + (val == EMPTY) * TILE_COL_EMPTY
+							   + (val == DOOR) * TILE_COL_DOOR;
+				if (val != EMPTY || !((it.x + it.y) % 2))
+					prot_put_pixel(vars->img, it.x, it.y, color);
 			}
-			else if (inside_circle((t_ivect2d){x, y}, (t_ivect2d){center.x, center.y}, MINI_MAP_WIDTH / 2))
-					prot_put_pixel(vars->img, x, y, MINI_MAP_BORDER);
+			else if (inside_circle(it, center, MINI_MAP_WIDTH / 2))
+					prot_put_pixel(vars->img, it.x, it.y, MINI_MAP_BORDER);
+			++it.x;
 		}
+		it = (t_ivect2d){pos.x, it.y + 1};
 	}
-	// draw_star(vars, center, 0x0000FFFF);
-	put_mini_map_cursor(vars, (t_ivect2d){center.x, center.y});
-	t_vect2d center_to_n = vec_scale(vars->player.dir, (double)MINI_MAP_WIDTH / 2 - 5);
-	t_ivect2d north_center = (t_ivect2d){center.x - center_to_n.x, center.y + center_to_n.y};
-	int n_radius = 20;
-	draw_circle(vars, north_center, n_radius, MINI_MAP_BORDER);
-	draw_texture(vars, vars->nletter_tex, (t_ivect2d){north_center.x - n_radius, north_center.y - n_radius});
-	// draw_line(vars, center, forward, 0xFF0000FF);
-	// draw_line(vars, center, right, 0x0000FFFF);
+	put_mini_map_cursor(vars, center);
+	draw_north(vars, center);
 }

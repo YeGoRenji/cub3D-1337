@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 17:33:27 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:49:05 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
 # define THREADS 8
 
 # define TILE_W 25
-# define TILE_COL_1 0x69FFFFFF
-# define TILE_COL_2 0xFF69FFFF
-# define TILE_COL_3 0xFFFF69FF
+# define TILE_COL_WALL 0x69FFFFFF
+# define TILE_COL_EMPTY 0xFF69FFFF
+# define TILE_COL_DOOR 0xFFFF69FF
 # define MINI_MAP_BORDER 0x202020FF
 # define MINI_MAP_WIDTH 300
 

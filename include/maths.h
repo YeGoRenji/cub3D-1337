@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 17:43:12 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:08:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ double		vec_dot(t_vect2d vec1, t_vect2d vec2);
 t_vect2d	mat_mult(t_mat2x2 mat, t_vect2d v);
 
 /* UTILS */
-int		clamp_value(int val, int min, int max);
-bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius);
-void	*ifelse(bool condition, void *truthy, void *falsy);
+int			clamp_value(int val, int min, int max);
+bool		inside_circle(t_ivect2d pt, t_ivect2d center, int radius);
+void		*ifelse(bool condition, void *truthy, void *falsy);
+t_ivect2d	vectoi(t_vect2d vec);
+t_vect2d	itovec(t_ivect2d ivec);
 
 #endif
