@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 20:49:05 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 04:29:37 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # define TILE_COL_WALL 0x69FFFFFF
 # define TILE_COL_EMPTY 0xFF69FFFF
 # define TILE_COL_DOOR 0xFFFF69FF
-# define MINI_MAP_BORDER 0x202020FF
-# define MINI_MAP_WIDTH 300
+# define MINIMAP_BORDER 0x202020FF
+# define MINIMAP_WIDTH 300
 
 # define FPS_COLOR 0xFF6942FF
 
@@ -60,6 +60,7 @@ typedef enum block_type
 	DOOR
 }	t_block_type;
 
+// ! Remove This
 typedef struct s_dir
 {
 	int	x;

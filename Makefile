@@ -1,6 +1,6 @@
 NAME = cub3D
 
-CFLAGS = -Wall -Wextra -Werror -Ofast #-g #-O3  #-fsanitize=address #-g
+CFLAGS = -Wall -Wextra -Werror -Ofast #-g #-O3  #-fsanitize=address
 
 LINK_H = -Iinclude
 
@@ -18,7 +18,8 @@ OBJS_FILES = main.o \
 			 draw_minimap.o \
 			 draw_bg_fg.o \
 			 fps_counter.o \
-			 graphics.o
+			 graphics.o \
+			 player_input.o
 
 OS := $(shell uname -s)
 
@@ -41,14 +42,19 @@ objs:
 $(NAME): $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) -o $@ -L`pwd`/lib $(LINKS) $(LINK_H) -lglfw
 
-$(OBJSFOLDER)%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(LINK_H)
+$(OBJSFOLDER)%.o: %.c $(GLOBAL_HEADERS)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 
 $(OBJSFOLDER)%.o: src/drawing/%.c include/drawing.h $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 
 $(OBJSFOLDER)%.o: src/maths/%.c include/maths.h $(GLOBAL_HEADERS)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+
+$(OBJSFOLDER)%.o: src/input/%.c include/input.h $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 

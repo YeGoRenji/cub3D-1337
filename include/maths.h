@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 20:08:31 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 04:22:04 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <math.h>
 # include <stdbool.h>
-
 
 typedef struct s_vect2d
 {
@@ -55,6 +54,7 @@ t_vect2d	mat_mult(t_mat2x2 mat, t_vect2d v);
 int			clamp_value(int val, int min, int max);
 bool		inside_circle(t_ivect2d pt, t_ivect2d center, int radius);
 void		*ifelse(bool condition, void *truthy, void *falsy);
+double		ifelsed(bool condition, double truthy, double falsy);
 t_ivect2d	vectoi(t_vect2d vec);
 t_vect2d	itovec(t_ivect2d ivec);
 

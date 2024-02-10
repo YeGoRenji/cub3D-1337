@@ -6,31 +6,34 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 04:23:22 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 17:09:16 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 04:24:56 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-void *draw_skybox(void *param)
+void	*draw_skybox(void *param)
 {
-	t_thread_artist	*art = param;
-	t_ivect2d		iter;
-	mlx_texture_t	*tex = art->vars->sky_tex;
-	uint32_t		color;
-	int				offset;
+	t_ivect2d				iter;
+	int						offset;
+	t_ivect2d				tex_pos;
+	const t_thread_artist	*art = param;
+	const mlx_texture_t		*tex = art->vars->sky_tex;
 
-	iter = art->start;
 	offset = tex->width * (art->vars->look_angle / (2 * M_PI));
+	iter = art->start;
 	while (iter.y < art->end.y)
 	{
 		while (iter.x < art->end.x)
 		{
-			int y_tex = (tex->height) * ((iter.y + art->vars->mlx->height / 2 - art->vars->pitch) % tex->height) / art->vars->mlx->height;
-			int x_tex = (tex->width) * iter.x / art->vars->mlx->width;
-			x_tex = (x_tex + offset) % tex->width;
-			color = ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
-			prot_put_pixel(art->vars->img, iter.x, iter.y, color);
+			tex_pos.y = (tex->height) * (iter.y + art->vars->mlx->height / 2
+						- art->vars->pitch)
+				/ art->vars->mlx->height;
+			tex_pos.y = clamp_value(tex_pos.y, 0, tex->height);
+			tex_pos.x = (tex->width) * iter.x / art->vars->mlx->width;
+			tex_pos.x = (tex_pos.x + offset) % tex->width;
+			prot_put_pixel(art->vars->img, iter.x, iter.y,
+				((uint32_t *)tex->pixels)[tex_pos.y * tex->width + tex_pos.x]);
 			++iter.x;
 		}
 		iter = (t_ivect2d){art->start.x, iter.y + 1};
@@ -38,19 +41,21 @@ void *draw_skybox(void *param)
 	return (NULL);
 }
 
-void *draw_floor(void *param)
+void	*draw_floor(void *param)
 {
-	t_thread_artist	*art = param;
+	t_thread_artist	*art;
 	t_ivect2d		iter;
 	double			div;
 
+	art = param;
 	iter = art->start;
 	div = (double)1 / (art->end.y - art->start.y);
 	while (iter.y < art->end.y)
 	{
 		while (iter.x < art->end.x)
 		{
-			prot_put_pixel(art->vars->img, iter.x, iter.y, (int)(0xFF * (iter.y - art->start.y) * div) & 0x000000FF);
+			prot_put_pixel(art->vars->img, iter.x, iter.y, (int)(0xFF * (iter.y
+						- art->start.y) * div) & 0x000000FF);
 			++iter.x;
 		}
 		iter = (t_ivect2d){art->start.x, iter.y + 1};
@@ -58,15 +63,19 @@ void *draw_floor(void *param)
 	return (NULL);
 }
 
-void	split_draw(t_vars *vars, void *(*func)(void *), int nb_threads, t_ivect2d size, t_ivect2d pos)
+void	split_draw(t_vars *vars, void *(*func)(void *), t_ivect2d size,
+		t_ivect2d pos)
 {
-	int	rg_width = size.x / nb_threads;
-	int	rg_height = size.y;
-	t_thread_artist art[nb_threads];
-	pthread_t	threads[nb_threads];
+	int				rg_width;
+	int				rg_height;
+	t_thread_artist	art[THREADS];
+	pthread_t		threads[THREADS];
+	int				i;
 
-	int i = 0;
-	while (i < nb_threads)
+	rg_width = size.x / THREADS;
+	rg_height = size.y;
+	i = 0;
+	while (i < THREADS)
 	{
 		art[i].vars = vars;
 		art[i].start = (t_ivect2d){pos.x + i * rg_width, pos.y};
@@ -75,48 +84,39 @@ void	split_draw(t_vars *vars, void *(*func)(void *), int nb_threads, t_ivect2d s
 		++i;
 	}
 	i = 0;
-	while (i < nb_threads)
+	while (i < THREADS)
 		pthread_join(threads[i++], NULL);
 }
 
 void	draw_background(t_vars *vars)
 {
-	split_draw(vars, draw_skybox, THREADS, (t_ivect2d){vars->mlx->width, (vars->mlx->height >> 1) + vars->pitch}, (t_ivect2d){0, 0});
-	split_draw(vars, draw_floor, THREADS, (t_ivect2d){vars->mlx->width, (vars->mlx->height >> 1) - vars->pitch}, (t_ivect2d){0, (vars->mlx->height >> 1) + vars->pitch});
-
-	// t_thread_artist	art;
-	// pthread_t th_skybox;
-	// pthread_t th_floor;
-
-	// art = (t_thread_artist){
-	// 	vars, {500, 0}, {500 + 500, 500}
-	// };
-	// pthread_create(&th_skybox, NULL, draw_skybox, &art);
-	// pthread_create(&th_floor, NULL, draw_floor, vars);
-
-	// pthread_join(th_skybox, NULL);
-	// pthread_join(th_floor, NULL);
-
-			// if (iter.y > vars->mlx->height / 2)
-			// 	prot_put_pixel(vars->img, iter.x, iter.y, 0xFF * (2 * (double)(iter.y - (double)vars->mlx->height / 2) / vars->mlx->height));
+	split_draw(vars, draw_skybox, (t_ivect2d){vars->mlx->width,
+		(vars->mlx->height >> 1) + vars->pitch}, (t_ivect2d){0, 0});
+	split_draw(vars, draw_floor, (t_ivect2d){vars->mlx->width,
+		(vars->mlx->height >> 1) - vars->pitch}, (t_ivect2d){0,
+		(vars->mlx->height >> 1) + vars->pitch});
 }
 
 void	*draw_flash_light(void *param)
 {
-	t_thread_artist *art = param;
+	t_thread_artist	*art;
 	t_ivect2d		iter;
 	mlx_texture_t	*tex;
 	uint32_t		color;
+	t_ivect2d		tex_pos;
 
-	tex = ifelse(art->vars->light_status, art->vars->light_on, art->vars->light_off);
+	art = param;
+	tex = ifelse(art->vars->light_status, art->vars->light_on,
+			art->vars->light_off);
 	iter = art->start;
 	while (iter.y < art->end.y)
 	{
 		while (iter.x < art->end.x)
 		{
-			int y_tex = (tex->height) * iter.y / art->vars->mlx->height;
-			int x_tex = (tex->width) * iter.x / art->vars->mlx->width;
-			color = ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
+			tex_pos.y = (tex->height) * iter.y / art->vars->mlx->height;
+			tex_pos.x = (tex->width) * iter.x / art->vars->mlx->width;
+			color = ((uint32_t *)tex->pixels)[tex_pos.y * tex->width
+				+ tex_pos.x];
 			if (color & 0xFF)
 				prot_put_pixel(art->vars->img, iter.x, iter.y, color);
 			++iter.x;
@@ -126,34 +126,12 @@ void	*draw_flash_light(void *param)
 	return (NULL);
 }
 
-// void	draw_flash_light(t_vars *vars)
-// {
-// 	t_ivect2d		iter;
-// 	mlx_texture_t	*tex;
-// 	uint32_t		color;
-
-// 	tex = ifelse(vars->light_status, vars->light_on, vars->light_off);
-// 	iter = (t_ivect2d){(1331 * (vars->mlx->width/WIDTH)), 757 * (vars->mlx->height/HEIGHT)};
-// 	while (iter.y < vars->mlx->height)
-// 	{
-// 		while (iter.x < vars->mlx->width)
-// 		{
-// 			int y_tex = (tex->height) * iter.y / vars->mlx->height;
-// 			int x_tex = (tex->width) * iter.x / vars->mlx->width;
-// 			color = ((uint32_t *)tex->pixels)[y_tex * tex->width + x_tex];
-// 			if (color & 0xFF)
-// 				prot_put_pixel(vars->img, iter.x, iter.y, color);
-// 			++iter.x;
-// 		}
-// 		iter = (t_ivect2d){0, iter.y + 1};
-// 	}
-// }
-
 void	draw_foreground(t_vars *vars)
 {
-	t_ivect2d	tex_start = (t_ivect2d){(1331 * ((double)vars->mlx->width/WIDTH)), 757 * ((double)vars->mlx->height/HEIGHT)};
-	// draw_flash_light(vars);
-	split_draw(vars, draw_flash_light, THREADS, (t_ivect2d){vars->mlx->width - tex_start.x, vars->mlx->height - tex_start.y}, tex_start);
-	// split_draw(vars, draw_flash_light, 3, (t_ivect2d){vars->mlx->width - 1331, vars->mlx->height - 757}, (t_ivect2d){tex_start.x, tex_start.y});
-	// draw_flash_light(vars);
+	t_ivect2d	tex_start;
+
+	tex_start = (t_ivect2d){(1331 * ((double)vars->mlx->width / WIDTH)), 757
+		* ((double)vars->mlx->height / HEIGHT)};
+	split_draw(vars, draw_flash_light, (t_ivect2d){vars->mlx->width
+		- tex_start.x, vars->mlx->height - tex_start.y}, tex_start);
 }

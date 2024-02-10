@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 17:45:38 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 04:13:36 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ t_rayhit	ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray)
 	ray_normalized = vec_norm(ray);
 
 	t_vect2d	delta_dist;
-	delta_dist.x = ray_normalized.x == 0 ? 1e30 : fabs(1 / ray_normalized.x);
-	delta_dist.y = ray_normalized.y == 0 ? 1e30 : fabs(1 / ray_normalized.y);
+	delta_dist.x = ifelsed(ray_normalized.x == 0, 1e30, fabs(1 / ray_normalized.x));
+	delta_dist.y = ifelsed(ray_normalized.y == 0, 1e30, fabs(1 / ray_normalized.y));
 
 	t_vect2d	step;
 	step.x = 1 - 2 * (ray.x < 0);
@@ -216,20 +216,17 @@ void  draw_stripe(t_vars *vars, t_rayhit *hit, int x_stripe, int drawStart, int 
 void *threaded_wall_stripes(void *params)
 {
 	t_thread_artist	*art = params;
-	t_vect2d	forward_scaled;
 	t_vect2d	side_dir;
 	int			i;
 
-	forward_scaled = art->vars->player.dir;
 	side_dir = (t_vect2d){art->vars->player.dir.y, -art->vars->player.dir.x};
-
 	int steps = art->vars->mlx->width / art->vars->nb_vert_stripes;
 	int64_t fog = 0xFF;
 	for (i = art->start.x; i < art->end.x; i += steps)
 	{
 		double cameraX = 2 * (i + ((double)WIDTH/2 - (double)art->vars->mlx->width/2)) / (double)(WIDTH) - 1;
 		t_vect2d var_side = (t_vect2d){-cameraX * art->vars->fov * side_dir.x, -cameraX * art->vars->fov * side_dir.y};
-		t_vect2d ray = vec_add(forward_scaled, var_side);
+		t_vect2d ray = vec_add(art->vars->player.dir, var_side);
 		t_rayhit hit = ray_cast_dda(art->vars, art->vars->player.pos, ray);
 		int h = art->vars->mlx->height + 2 * art->vars->pitch;
 		int lineHeight = (int)(HEIGHT / (hit.dist * art->vars->fov));
@@ -247,5 +244,5 @@ void *threaded_wall_stripes(void *params)
 
 void draw_wall_stripes(t_vars *vars)
 {
-	split_draw(vars, threaded_wall_stripes, THREADS, (t_ivect2d){vars->mlx->width, vars->mlx->height}, (t_ivect2d){0, 0});
+	split_draw(vars, threaded_wall_stripes, (t_ivect2d){vars->mlx->width, vars->mlx->height}, (t_ivect2d){0, 0});
 }

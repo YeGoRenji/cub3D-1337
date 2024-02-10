@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 17:30:12 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 04:32:30 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,27 @@ void on_mouse(mouse_key_t button, action_t action, modifier_key_t mods, void* pa
 		vars->light_status = !vars->light_status;
 }
 
+void	free_tex(mlx_texture_t *tex)
+{
+	free(tex->pixels);
+	free(tex);
+}
+
+void	free_stuff(t_vars *vars)
+{
+	free_tex(vars->sky_tex);
+	free_tex(vars->door_tex);
+	free_tex(vars->nletter_tex);
+	free_tex(vars->wall_tex[NORTH]);
+	free_tex(vars->wall_tex[SOUTH]);
+	free_tex(vars->wall_tex[EAST]);
+	free_tex(vars->wall_tex[WEST]);
+	free_tex(vars->light_on);
+	free_tex(vars->light_off);
+}
+
 int32_t main(int32_t argc, const char* argv[])
 {
-	// pthread_t th;
 	(void)argc;
 	(void)argv;
 	t_vars vars;
@@ -138,7 +156,9 @@ int32_t main(int32_t argc, const char* argv[])
 	mlx_mouse_hook(vars.mlx, on_mouse, &vars);
 	mlx_key_hook(vars.mlx, on_click, &vars);
 	mlx_loop(vars.mlx);
+	mlx_delete_image(vars.mlx, vars.img);
 	mlx_terminate(vars.mlx);
+	free_stuff(&vars);
 
 	return (EXIT_SUCCESS);
 }

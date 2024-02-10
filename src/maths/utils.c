@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:17:53 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 20:07:51 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 04:09:22 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@ bool	inside_circle(t_ivect2d pt, t_ivect2d center, int radius)
 }
 
 void	*ifelse(bool condition, void *truthy, void *falsy)
+{
+	if (condition)
+		return (truthy);
+	return (falsy);
+}
+
+double	ifelsed(bool condition, double truthy, double falsy)
 {
 	if (condition)
 		return (truthy);

@@ -6,14 +6,15 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:52:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 02:04:49 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 03:55:52 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-static mlx_texture_t	*get_default_tex(void)
+mlx_texture_t	*get_default_tex(void)
 {
+	// TODO: free or get rid of this func
 	static mlx_texture_t	def_tex;
 	uint32_t				x;
 	uint32_t				y;

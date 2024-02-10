@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 20:04:01 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 04:00:25 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <maths.h>
+# include <input.h>
 
 /* Entry func */
 void	do_graphics(t_vars* vars);
@@ -38,9 +39,10 @@ void	draw_wall_stripes(t_vars *vars);
 int		get_map_val(t_vars *vars, int x, int y);
 
 /* Mini map */
-void mini_map(t_vars *vars, t_ivect2d pos);
+void draw_minimap(t_vars *vars, t_ivect2d pos);
 
 /* Textures */
+mlx_texture_t	*get_default_tex(void);
 mlx_texture_t	*load_tex_png(const char *path);
 
 /* Background/Foreground */
@@ -59,5 +61,5 @@ typedef struct e_thread_artist {
 	t_ivect2d	end;
 } t_thread_artist;
 
-void	split_draw(t_vars *vars, void *(*func)(void *), int nb_threads, t_ivect2d size, t_ivect2d pos);
+void	split_draw(t_vars *vars, void *(*func)(void *), t_ivect2d size, t_ivect2d pos);
 #endif
