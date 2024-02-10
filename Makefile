@@ -19,7 +19,8 @@ OBJS_FILES = main.o \
 			 draw_bg_fg.o \
 			 fps_counter.o \
 			 graphics.o \
-			 player_input.o
+			 player_input.o \
+			 raycasting.o
 
 OS := $(shell uname -s)
 
@@ -55,6 +56,10 @@ $(OBJSFOLDER)%.o: src/maths/%.c include/maths.h $(GLOBAL_HEADERS)
 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 
 $(OBJSFOLDER)%.o: src/input/%.c include/input.h $(GLOBAL_HEADERS)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+
+$(OBJSFOLDER)%.o: src/raycasting/%.c include/raycasting.h $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 

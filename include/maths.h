@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:12:33 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 04:22:04 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 16:09:23 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,6 @@ void		*ifelse(bool condition, void *truthy, void *falsy);
 double		ifelsed(bool condition, double truthy, double falsy);
 t_ivect2d	vectoi(t_vect2d vec);
 t_vect2d	itovec(t_ivect2d ivec);
+double		dist_norm(t_ivect2d a, t_ivect2d b, int rad);
 
 #endif

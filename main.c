@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 04:32:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 18:08:41 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,11 +128,17 @@ void	free_stuff(t_vars *vars)
 	free_tex(vars->light_off);
 }
 
+void	check(void)
+{
+	system("leaks cub3D");
+}
+
 int32_t main(int32_t argc, const char* argv[])
 {
 	(void)argc;
 	(void)argv;
 	t_vars vars;
+	atexit(check);
 	int map[10][10] = {
 		{1, 1, 1, 1, 1, 0, 0, 1, 1, 1},
 		{1, 0, 0, 0, 1, 0, 0, 1, 0, 1},

@@ -1,36 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_utils.c                                       :+:      :+:    :+:   */
+/*   raycasting.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/26 18:01:52 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 18:01:18 by ylyoussf         ###   ########.fr       */
+/*   Created: 2024/02/10 16:17:23 by ylyoussf          #+#    #+#             */
+/*   Updated: 2024/02/10 16:18:45 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <drawing.h>
+#ifndef RAYCASTING_H
+# define RAYCASTING_H
 
-void	clear_screen(t_vars *vars, uint32_t color)
-{
-	uint32_t	y;
-	uint32_t	x;
+# include <structs.h>
 
-	y = 0;
-	while (y < vars->img->height)
-	{
-		x = 0;
-		while (x < vars->img->width)
-		{
-			prot_put_pixel(vars->img, x, y, color);
-			++x;
-		}
-		++y;
-	}
-}
+t_rayhit	ray_cast_dda(t_vars *vars, t_vect2d from, t_vect2d ray);
 
-int32_t	get_pixel(const mlx_texture_t	*tex, int x, int y)
-{
-	return ((uint32_t *)tex->pixels)[y * tex->width + x];
-}
+#endif

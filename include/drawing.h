@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 04:00:25 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/10 18:01:23 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <maths.h>
 # include <input.h>
+# include <raycasting.h>
 
 /* Entry func */
 void	do_graphics(t_vars* vars);
@@ -44,6 +45,7 @@ void draw_minimap(t_vars *vars, t_ivect2d pos);
 /* Textures */
 mlx_texture_t	*get_default_tex(void);
 mlx_texture_t	*load_tex_png(const char *path);
+int32_t			get_pixel(const mlx_texture_t	*tex, int x, int y);
 
 /* Background/Foreground */
 void	draw_background(t_vars *vars);
