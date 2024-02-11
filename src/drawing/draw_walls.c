@@ -6,70 +6,107 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 19:42:28 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 05:45:02 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <drawing.h>
 
-void  draw_stripe(t_vars *vars, t_rayhit *hit, t_ivect2d wlstart, t_ivect2d wlend, int fog, int width)
+static uint8_t	calc_fog(t_vars *vars, t_ivect2d it, t_ivect2d wlstart, t_rayhit hit)
 {
-	const int	half_width = width >> 1;
+	bool in_light;
+	uint8_t fog; 
+	double dist_center;
+	const t_ivect2d	center = (t_ivect2d){vars->mlx->width >> 1, vars->mlx->height >> 1};
+
+	fog = clamp_value(0xFF + 10 - hit.dist * 20, 0x10, 0xFF);
+	in_light = false;
+	if (hit.side == SOUTH || hit.side == WEST)
+		fog = clamp_value(fog - 0x69, 0x10, 0xFF);
+	if (vars->light_status)
+		in_light = inside_circle((t_ivect2d){wlstart.x, it.y}, 
+			center, vars->mlx->width >> 2);
+	if (in_light)
+		dist_center = dist_norm((t_ivect2d){wlstart.x, it.y}, 
+			center, vars->mlx->width >> 2);
+	fog = clamp_value(fog + 0xFF * in_light * (1 - dist_center), 0x10, 0xFF);
+	return (fog);
+}
+
+// Prolly remove this ?
+static uint32_t apply_fog(uint32_t color, uint8_t fog)
+{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	const double percent = (double)fog / 0xFF;
+
+	r = (color & 0xFF000000) >> 24;
+	g = (color & 0x00FF0000) >> 16;
+	b = (color & 0x0000FF00) >> 8;
+	r *= percent;
+	g *= percent;
+	b *= percent;
+	return (r << 24 | g << 16 | b << 8 | 0xFF);
+}
+
+static void  draw_stripe(t_vars *vars, t_rayhit *hit, t_ivect2d wlstart, t_ivect2d wlend, int width)
+{
+	const int half_width = width >> 1;
 	const int start = clamp_value(wlstart.y, 0, vars->mlx->height - 1);
 	const int end = clamp_value(wlend.y, 0, vars->mlx->height - 1);
 	t_vect2d	percent;
 	const mlx_texture_t *tex = ifelse(hit->hit_what == WALL, vars->wall_tex[hit->side], vars->door_tex);
 	t_ivect2d	it;
-	// Shadow ??
-	if (hit->side == SOUTH || hit->side == WEST)
-		fog = clamp_value(fog - 0x69, 0, 0xFF);
-	bool in_light;
 	percent.x = hit->pos_in_texture;
 	it = (t_ivect2d){wlstart.x - half_width, start};
 	while (it.y < end)
 	{
-		in_light = false;
-		if (vars->light_status)
-			in_light = inside_circle((t_ivect2d){wlstart.x, it.y}, (t_ivect2d){vars->mlx->width >> 1, vars->mlx->height >> 1}, vars->mlx->width >> 2);
 		percent.y = (double)(it.y - wlstart.y) / (wlend.y - wlstart.y);
 		uint32_t color =  get_pixel(tex, percent.x * tex->width,
 							percent.y * tex->height);
-		uint8_t new_fog = clamp_value(fog + 0xFF * in_light * (1 - dist_norm((t_ivect2d){wlstart.x, it.y}, (t_ivect2d){vars->mlx->width >> 1, vars->mlx->height >> 1}, vars->mlx->width >> 2)), 0x10, 0xFF);
-		color = (color & 0xFFFFFF00) | new_fog;
+		// color = (color & 0xFFFFFF00) | calc_fog(vars, it, wlstart, *hit);
+		color = apply_fog(color, calc_fog(vars, it, wlstart, *hit));
 		while (it.x <= wlstart.x + half_width)
 		{
-			prot_put_pixel(vars->img, ++it.x, it.y, color);
+			prot_put_pixel(vars->img, it.x, it.y, color);
 			++it.x;
 		}
 		it = (t_ivect2d){wlstart.x - half_width, it.y + 1};
 	}
 }
 
+static void	cast_and_draw(t_vars *vars, double cameraX, int x, int steps)
+{
+	const int h = vars->mlx->height + 2 * vars->pitch;
+	const t_vect2d var_side = vec_scale((t_vect2d){vars->player.dir.y, 
+		-vars->player.dir.x}, -cameraX * vars->fov);
+	int	stripe_height;
+	t_rayhit hit;
+
+	hit = ray_cast_dda(vars, vars->player.pos,
+		vec_add(vars->player.dir, var_side));
+	stripe_height = (HEIGHT / (hit.dist * vars->fov));
+	draw_stripe(vars, &hit,
+		(t_ivect2d){x, -stripe_height / 2 + h / 2},
+		(t_ivect2d){x, stripe_height / 2 + h / 2},
+		steps);
+}
+
 void *threaded_wall_stripes(void *params)
 {
-	t_thread_artist	*art = params;
-	t_vect2d	side_dir;
-	int			i;
+	const t_thread_artist	*art = params;
 	const int steps = art->vars->mlx->width / art->vars->nb_vert_stripes;
-	int64_t fog = 0xFF;
+	int			x;
+	double cameraX;
 
-	side_dir = (t_vect2d){art->vars->player.dir.y, -art->vars->player.dir.x};
-	for (i = art->start.x; i < art->end.x; i += steps)
+	x = art->start.x;
+	while (x < art->end.x)
 	{
-		double cameraX = 2 * (i + ((double)WIDTH/2 - (double)art->vars->mlx->width/2)) / (double)(WIDTH) - 1;
-		t_vect2d var_side = vec_scale(side_dir, -cameraX * art->vars->fov);
-		t_vect2d ray = vec_add(art->vars->player.dir, var_side);
-		t_rayhit hit = ray_cast_dda(art->vars, art->vars->player.pos, ray);
-		int h = art->vars->mlx->height + 2 * art->vars->pitch;
-		int lineHeight = (int)(HEIGHT / (hit.dist * art->vars->fov));
-
-		// calculate lowest and highest pixel to fill in current stripe
-		t_ivect2d drawStart = (t_ivect2d){i, -lineHeight / 2 + h / 2};
-		t_ivect2d drawEnd = (t_ivect2d){i, lineHeight / 2 + h / 2};
-
-		fog = clamp_value(0xFF + 10 - hit.dist * 20, 0, 0xFF);
-		// hit.side ? ((0xFF5050 << 8) | fog) : ((0x50FF50 << 8) | fog)
-		draw_stripe(art->vars, &hit, drawStart, drawEnd, fog, steps);
+		cameraX = 2 * (x + (double)(WIDTH - art->vars->mlx->width) / 2)
+			/ (double)(WIDTH) - 1;
+		cast_and_draw(art->vars, cameraX, x, steps);
+		x += steps;
 	}
 	return (NULL);
 }
