@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 03:31:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 17:43:29 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,3 @@ void	player_mvt(t_vars *vars)
 	move_player(vars, &movement);
 }
 
-void	do_graphics(t_vars *vars)
-{
-	player_mvt(vars);
-	// Drawing Logic
-	// clear_screen(vars, 0x303030FF);
-	draw_background(vars);
-	draw_wall_stripes(vars);
-	draw_foreground(vars);
-	draw_minimap(vars, (t_ivect2d){25, 25});
-	draw_fps(vars);
-}

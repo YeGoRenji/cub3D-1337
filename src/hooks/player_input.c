@@ -6,11 +6,11 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 03:19:54 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 03:32:33 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 17:33:13 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <input.h>
+#include <hooks.h>
 
 void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt)
 {

@@ -6,18 +6,18 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 04:29:37 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 18:12:46 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
-# include <stdbool.h>
-# include <stdio.h>
+# include <MLX42/MLX42.h>
 # include <maths.h>
 # include <pthread.h>
+# include <stdbool.h>
+# include <stdio.h>
 # include <unistd.h>
-# include <MLX42/MLX42.h>
 
 # define WIDTH 1920
 # define HEIGHT 1080
@@ -45,7 +45,7 @@ typedef enum orientation
 	EAST,
 	SOUTH,
 	WEST
-}	t_orientation;
+}					t_orientation;
 
 enum
 {
@@ -53,62 +53,62 @@ enum
 	NS
 };
 
-typedef enum block_type 
+typedef enum block_type
 {
 	EMPTY,
 	WALL,
 	DOOR
-}	t_block_type;
+}					t_block_type;
 
 // ! Remove This
 typedef struct s_dir
 {
-	int	x;
-	int	y;
-	int	is_flipped;
-}				t_dir;
+	int				x;
+	int				y;
+	int				is_flipped;
+}					t_dir;
 
 typedef struct s_color
 {
-	uint8_t	r;
-	uint8_t	g;
-	uint8_t	b;
-}				t_color;
+	uint8_t			r;
+	uint8_t			g;
+	uint8_t			b;
+}					t_color;
 
 typedef struct s_player
 {
-	t_vect2d	pos;
-	t_vect2d	dir;
-}				t_player;
+	t_vect2d		pos;
+	t_vect2d		dir;
+}					t_player;
 
 typedef struct s_map
 {
-	int		width;
-	int		height;
-	int		*data;
-}				t_map;
+	int				width;
+	int				height;
+	int				*data;
+}					t_map;
 
 typedef struct s_vars
 {
-	mlx_t		*mlx;
-	mlx_image_t	*img;
-	t_player	player;
-	double		look_angle;
-	int 		fov;
-	int 		nb_vert_stripes;
-	int			tile_size;
-	t_map		map;
-	t_ivect2d	mouse;
-	int			pitch;
-	mlx_texture_t *nletter_tex;
-	mlx_texture_t *wall_tex[4];
-	mlx_texture_t *door_tex;
-	mlx_texture_t *sky_tex;
-	mlx_texture_t *light_off;
-	mlx_texture_t *light_on;
+	mlx_t			*mlx;
+	mlx_image_t		*img;
+	t_player		player;
+	double			look_angle;
+	int				fov;
+	int				nb_vert_stripes;
+	int				tile_size;
+	t_map			map;
+	t_ivect2d		mouse;
+	int				pitch;
+	mlx_texture_t	*nletter_tex;
+	mlx_texture_t	*wall_tex[4];
+	mlx_texture_t	*door_tex;
+	mlx_texture_t	*sky_tex;
+	mlx_texture_t	*light_off;
+	mlx_texture_t	*light_on;
 	bool			light_status;
 	bool			mouse_locked;
-}				t_vars;
+}					t_vars;
 
 typedef struct s_rayhit
 {
@@ -118,6 +118,8 @@ typedef struct s_rayhit
 	t_ivect2d		map;
 	double			pos_in_texture;
 	t_block_type	hit_what;
-}				t_rayhit;
+}					t_rayhit;
+
+void				do_graphics(t_vars *vars);
 
 #endif

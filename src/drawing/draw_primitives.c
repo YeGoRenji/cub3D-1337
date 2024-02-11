@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 18:01:30 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 02:41:18 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 16:32:45 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,17 +89,15 @@ void	draw_circle(t_vars *vars, t_ivect2d center, int radius, uint32_t color)
 
 void	draw_texture(t_vars *vars, mlx_texture_t *texture, t_ivect2d pos)
 {
-	int			*pixels;
 	t_ivect2d	it;
 	uint32_t	color;
 
-	pixels = (int *)texture->pixels;
 	it = pos;
 	while (it.y < pos.y + (int)texture->height)
 	{
 		while (it.x < pos.x + (int)texture->width)
 		{
-			color = pixels[(it.y - pos.y) * texture->width + (it.x - pos.x)];
+			color = get_pixel(texture, (it.x - pos.x), (it.y - pos.y));
 			if (color & 0xFF)
 				prot_put_pixel(vars->img, it.x, it.y, color);
 			++it.x;

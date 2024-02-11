@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:17:53 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 16:08:45 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 15:29:36 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,10 @@ double	ifelsed(bool condition, double truthy, double falsy)
 	return (falsy);
 }
 
-t_vect2d	itovec(t_ivect2d ivec)
-{
-	return ((t_vect2d){ivec.x, ivec.y});
-}
-
-t_ivect2d	vectoi(t_vect2d vec)
-{
-	return ((t_ivect2d){vec.x, vec.y});
-}
-
 double	dist_norm(t_ivect2d a, t_ivect2d b, int rad)
 {
 	t_ivect2d	diff;
 
 	diff = (t_ivect2d){a.x - b.x, a.y - b.y};
-	return (double)(diff.x * diff.x + diff.y * diff.y) / (rad * rad);
+	return ((double)(diff.x * diff.x + diff.y * diff.y) / (rad * rad));
 }

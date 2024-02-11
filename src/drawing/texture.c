@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:52:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 03:55:52 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 15:22:59 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 mlx_texture_t	*get_default_tex(void)
 {
-	// TODO: free or get rid of this func
 	static mlx_texture_t	def_tex;
-	uint32_t				x;
-	uint32_t				y;
-
+	t_ivect2d				it;
+	// TODO: free or get rid of this func
 	if (def_tex.pixels)
 		return (&def_tex);
 	def_tex.width = 32;
@@ -27,17 +25,17 @@ mlx_texture_t	*get_default_tex(void)
 	// TODO: change to ft_malloc
 	def_tex.pixels = malloc(def_tex.width * def_tex.height
 			* def_tex.bytes_per_pixel);
-	y = 0;
-	while (y < def_tex.height)
+	it.y = 0;
+	while (it.y < (int)def_tex.height)
 	{
-		x = 0;
-		while (x < def_tex.width)
+		it.x = 0;
+		while (it.x < (int)def_tex.width)
 		{
-			((uint32_t *)def_tex.pixels)[y * def_tex.width + x]
-				= ((x + y) % 2) * 0xFF00FFFF;
-			++x;
+			((uint32_t *)def_tex.pixels)[it.y * def_tex.width + it.x]
+				= ((it.x + it.y) % 2) * 0xFF00FFFF;
+			++it.x;
 		}
-		++y;
+		++it.y;
 	}
 	return (&def_tex);
 }

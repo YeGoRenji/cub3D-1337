@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 04:23:22 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 04:24:56 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 15:25:47 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ void	*draw_skybox(void *param)
 		while (iter.x < art->end.x)
 		{
 			tex_pos.y = (tex->height) * (iter.y + art->vars->mlx->height / 2
-						- art->vars->pitch)
-				/ art->vars->mlx->height;
+					- art->vars->pitch) / art->vars->mlx->height;
 			tex_pos.y = clamp_value(tex_pos.y, 0, tex->height);
 			tex_pos.x = (tex->width) * iter.x / art->vars->mlx->width;
 			tex_pos.x = (tex_pos.x + offset) % tex->width;
@@ -61,31 +60,6 @@ void	*draw_floor(void *param)
 		iter = (t_ivect2d){art->start.x, iter.y + 1};
 	}
 	return (NULL);
-}
-
-void	split_draw(t_vars *vars, void *(*func)(void *), t_ivect2d size,
-		t_ivect2d pos)
-{
-	int				rg_width;
-	int				rg_height;
-	t_thread_artist	art[THREADS];
-	pthread_t		threads[THREADS];
-	int				i;
-
-	rg_width = size.x / THREADS;
-	rg_height = size.y;
-	i = 0;
-	while (i < THREADS)
-	{
-		art[i].vars = vars;
-		art[i].start = (t_ivect2d){pos.x + i * rg_width, pos.y};
-		art[i].end = (t_ivect2d){pos.x + (i + 1) * rg_width, pos.y + rg_height};
-		pthread_create(threads + i, NULL, func, art + i);
-		++i;
-	}
-	i = 0;
-	while (i < THREADS)
-		pthread_join(threads[i++], NULL);
 }
 
 void	draw_background(t_vars *vars)

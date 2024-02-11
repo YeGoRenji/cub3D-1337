@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 17:36:49 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 17:43:04 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 15:28:50 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,14 @@ t_vect2d	vec_norm(t_vect2d vec)
 		vec.x / mag,
 		vec.y / mag
 	});
+}
+
+t_vect2d	itovec(t_ivect2d ivec)
+{
+	return ((t_vect2d){ivec.x, ivec.y});
+}
+
+t_ivect2d	vectoi(t_vect2d vec)
+{
+	return ((t_ivect2d){vec.x, vec.y});
 }
