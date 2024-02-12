@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 16:16:16 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/09 02:45:12 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 19:18:24 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,14 @@ static void	draw_number(t_vars *vars, int number, t_shape sq, uint32_t color)
 
 void	draw_fps(t_vars *vars)
 {
-	static double	old_time = 0;
+	static double	old_time;
 	static int		fps;
 	double			current_time;
 
 	current_time = mlx_get_time();
-	// printf("%f\n", vars->mlx->delta_time);
 	if (current_time - old_time > 0.2)
 	{
 		fps = 1 / vars->mlx->delta_time;
-		// printf("angle: %f		nvs: %d        fov: %d        \r",
-		// vars->look_angle, vars->nb_vert_stripes, vars->fov);
-		// fflush(stdout);
 		old_time = current_time;
 	}
 	draw_number(vars, fps, (t_shape){vars->mlx->width, 10, 10}, FPS_COLOR);

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 18:12:46 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 17:51:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,12 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <fcntl.h>
 
 # define WIDTH 1920
 # define HEIGHT 1080
+
+# define ll long long
 
 # define THREADS 8
 
@@ -81,11 +84,22 @@ typedef struct s_player
 	t_vect2d		dir;
 }					t_player;
 
+typedef struct s_surroundings
+{
+	int				ceiling;
+	int				floor;
+	int				ceiling_set;
+	int				floor_set;
+}					t_surroundings;
+
 typedef struct s_map
 {
-	int				width;
-	int				height;
+	int				fd;
+	size_t			height;
+	size_t			width;
 	int				*data;
+	char			*tex[4];
+	t_surroundings	colors;
 }					t_map;
 
 typedef struct s_vars
@@ -119,6 +133,9 @@ typedef struct s_rayhit
 	double			pos_in_texture;
 	t_block_type	hit_what;
 }					t_rayhit;
+
+typedef t_ivect2d t_ivector;
+typedef t_vect2d t_vector;
 
 void				do_graphics(t_vars *vars);
 

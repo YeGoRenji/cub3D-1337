@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 17:48:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 18:02:13 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <maths.h>
 #include <drawing.h>
 #include <hooks.h>
+#include <parse.h>
+#include <validation.h>
 
 void	init_vars(t_vars *vars)
 {
@@ -42,10 +44,12 @@ void	init_vars(t_vars *vars)
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
 	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
-	vars->wall_tex[NORTH] = load_tex_png("./resources/wolftex/greybricks.png");
-	vars->wall_tex[EAST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
-	vars->wall_tex[SOUTH] = load_tex_png("./resources/wolftex/greybricks.png");
-	vars->wall_tex[WEST] = load_tex_png("./resources/wolftex/greybricksCracked.png");
+
+	vars -> wall_tex[NORTH] = load_tex_png(vars -> map.tex[NORTH]);
+	vars -> wall_tex[SOUTH] = load_tex_png(vars -> map.tex[SOUTH]);
+	vars -> wall_tex[EAST] = load_tex_png(vars -> map.tex[EAST]);
+	vars -> wall_tex[WEST] = load_tex_png(vars -> map.tex[WEST]);
+
 	vars->door_tex = load_tex_png("./resources/wolftex/door.png");
 	vars->sky_tex = load_tex_png("./resources/AuroraSkyBox.png");
 	vars->light_status = false;
@@ -75,7 +79,7 @@ void	free_stuff(t_vars *vars)
 
 void	check(void)
 {
-	system("leaks cub3D");
+	// system("leaks cub3D");
 }
 
 void	do_graphics(t_vars *vars)
@@ -88,30 +92,24 @@ void	do_graphics(t_vars *vars)
 	draw_fps(vars);
 }
 
-int32_t main(int32_t argc, const char* argv[])
+int32_t main(int32_t argc, char* argv[])
 {
 	(void)argc;
 	(void)argv;
 	t_vars vars;
 	atexit(check);
-	int map[10][10] = {
-		{1, 1, 1, 1, 1, 0, 0, 1, 1, 1},
-		{1, 0, 0, 0, 1, 0, 0, 1, 0, 1},
-		{1, 0, 0, 0, 2, 0, 0, 0, 0, 1},
-		{1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
-		{1, 0, 0, 1, 0, 2, 0, 1, 0, 1},
-		{1, 0, 0, 1, 0, 1, 0, 1, 0, 1},
-		{1, 2, 1, 1, 1, 1, 1, 1, 1, 1}
-	};
-
-	vars.map.data = (int *)map;
-	vars.map.width = 10;
-	vars.map.height = 10;
-
+	if (argc != 2)
+		return (ft_putstr_fd("Usage: ./cub3D map.cub\n", 2), -1);
+	if (parser(&vars, argv[1]))
+		return (-1);
+	if (validator(&vars))
+		return (-1);
+	// if (init_player_data(&vars))
+	// 	return (ft_putstr_fd("Error: could not initiate player data\n", 2), -1);
 	init_vars(&vars);
+	// vars.map.data = (int *)map;
+	// vars.map.width = 10;
+	// vars.map.height = 10;
 	mlx_loop_hook(vars.mlx, on_loop, &vars);
 	mlx_resize_hook(vars.mlx, on_resize, &vars);
 	mlx_mouse_hook(vars.mlx, on_mouse, &vars);

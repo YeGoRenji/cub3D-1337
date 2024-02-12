@@ -1,6 +1,18 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/02/12 17:13:54 by ylyoussf          #+#    #+#              #
+#    Updated: 2024/02/12 18:14:06 by ylyoussf         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = cub3D
 
-CFLAGS = -Wall -Wextra -Werror  -Ofast#-g  -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror  -g #-Ofast  -fsanitize=address 
 
 LINK_H = -Iinclude
 
@@ -22,7 +34,18 @@ OBJS_FILES = main.o \
 			 event_hooks.o \
 			 raycasting.o \
 			 raycasting_utils.o \
-			 multithreading.o
+			 multithreading.o    \
+			 parse.o		 	  \
+			 parse_utils.o	  	   \
+			 map_validation.o		\
+			 validation_utils.o		 \
+			 player_utils.o			  \
+			 line_utils.o			   \
+			 p_map_utils.o				\
+			 map_ds_utils.o				 \
+			 texture_utils.o			  \
+			 parse_not_utils.o			   \
+			 parse_definitely_not_utils.o
 
 OS := $(shell uname -s)
 
@@ -37,13 +60,19 @@ OBJS = $(foreach obj, $(OBJS_FILES), $(OBJSFOLDER)$(obj))
 
 GLOBAL_HEADERS = include/structs.h
 
+LIBFT = src/libft/libft.a
+
 all: objs $(NAME)
 
 objs:
 	@mkdir objs
 
-$(NAME): $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) -o $@ -L`pwd`/lib $(LINKS) $(LINK_H) -lglfw
+$(LIBFT):
+	@echo "Compiling libft..."
+	@make -C src/libft bonus
+
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(OBJS) $(CFLAGS) $(LIBFT) -o $@ -L`pwd`/lib $(LINKS) $(LINK_H) -lglfw
 
 $(OBJSFOLDER)%.o: %.c $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
@@ -65,12 +94,22 @@ $(OBJSFOLDER)%.o: src/raycasting/%.c include/raycasting.h $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 
+$(OBJSFOLDER)%.o: src/parsing/%.c include/parse.h $(GLOBAL_HEADERS)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+
+$(OBJSFOLDER)%.o: src/validation/%.c include/validation.h $(GLOBAL_HEADERS)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+
 re: fclean all
 
 fclean: clean
 	rm -rf $(NAME)
+	make -C src/libft clean
 
 clean:
-	rm -rf $(OBJS) $(HOT_RELOAD)
+	rm -rf $(OBJS)
+	make -C src/libft fclean
 
 .PHONY: all clean fclean re

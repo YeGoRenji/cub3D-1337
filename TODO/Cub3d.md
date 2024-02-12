@@ -13,8 +13,12 @@
 	- [x] Automatic
 	- [x] Orientation specific
 - [x] Rotate POV with mouse
-- [ ] Animated Sprites ?
-
+- [x] Animated Sprites ?
+### Last Tasks:
+- [x] Libft
+- [ ] ft_malloc
+- [ ] Norm main
+- [ ] Adapting mandatory parsing with bonus
 ## Issues:
 
 - [x] When map is not closed there is a problem near border y = 0

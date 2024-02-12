@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 17:43:29 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/11 19:19:49 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,3 @@ void	player_mvt(t_vars *vars)
 	movement = vec_add(forward_move, side_move);
 	move_player(vars, &movement);
 }
-

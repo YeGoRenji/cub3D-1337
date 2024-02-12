@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 17:18:49 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 17:19:29 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 17:29:43 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	get_map_val(t_vars *vars, int x, int y)
 {
-	if (x < 0 || x >= vars->map.width)
+	if (x < 0 || x >= (ll)vars->map.width)
 		return (0);
-	if (y < 0 || y >= vars->map.height)
+	if (y < 0 || y >= (ll)vars->map.height)
 		return (0);
 	return (vars->map.data[y * vars->map.width + x]);
 }
