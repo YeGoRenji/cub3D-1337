@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/12 18:02:13 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 20:39:39 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ void	init_vars(t_vars *vars)
 	mlx_set_cursor_mode(vars->mlx,  MLX_MOUSE_HIDDEN);
 	// INFO: get this from parsing
 	// vars->player.dir = (t_vect2d){1, 0};
-	vars->look_angle = M_PI / 2;
-	vars->player.pos = (t_vect2d){1.5, 1.5};
+	// vars->look_angle = M_PI / 2;
+	// vars->player.pos = (t_vect2d){1.5, 1.5};
 
 	// Fix these values later (in parsing)
-	vars->nb_vert_stripes = WIDTH;
+	vars->nb_vert_stripes = 10;
 	vars->fov = 1;
 	vars->pitch = 0;
 	vars->mouse.x = 0;

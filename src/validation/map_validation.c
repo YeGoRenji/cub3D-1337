@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:01:27 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/12 17:53:43 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 20:24:03 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,11 @@ bool	zero_or_one(t_map *map, int x, int y)
 	if (y < 0 || y >= (ll)map->height)
 		return (false);
 	val = map->data[y * map->width + x];
-	return (val == 1 || val == 0);
+	return (val == WALL || val == EMPTY || val == DOOR);
 }
 
 bool	check_neighbours_binary(t_map *map, t_ivect2d pt)
 {
-	// TODO: add bonus characters
 	if (map->data[(pt.y) * map->width + (pt.x)] == WALL)
 		return (true);
 	if (map->data[(pt.y) * map->width + (pt.x)] == SPACE_IN_MAP)

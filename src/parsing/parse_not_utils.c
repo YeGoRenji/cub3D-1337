@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:55:19 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/12 18:12:41 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 19:50:49 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ bool	check_colors(t_map *map)
 
 int	check_map_items(t_map *map)
 {
-	if (check_textures(map))
-		return (ft_putstr_fd("Error!\nTextures problem\n", 2), false);
-	if (check_colors(map))
-		return (ft_putstr_fd("Error!\nTextures problem\n", 2), false);
-	return (true);
+	if (!check_textures(map))
+		return (ft_putstr_fd("Error!\nTextures problem\n", 2), -1);
+	if (!check_colors(map))
+		return (ft_putstr_fd("Error!\nColors problem\n", 2), -1);
+	return (0);
 }
 
 static void	free_stuff(char **ptr, char *line)

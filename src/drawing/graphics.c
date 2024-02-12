@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 19:19:49 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 20:08:30 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ static bool	test_collision(t_vars *vars, t_vect2d test)
 	next_mapidx = (t_ivect2d){floor(next_pos.x), floor(next_pos.y)};
 	move_diff = (t_ivect2d){next_mapidx.x - floor(vars->player.pos.x),
 		next_mapidx.y - floor(vars->player.pos.y)};
-	if (move_diff.x == move_diff.y && get_map_val(vars, next_mapidx.x,
-			floor(vars->player.pos.y)) == WALL && get_map_val(vars,
-			floor(vars->player.pos.x), next_mapidx.y) == WALL)
+	if (abs(move_diff.x) == abs(move_diff.y)
+		&& get_map_val(vars, next_mapidx.x, floor(vars->player.pos.y)) == WALL
+		&& get_map_val(vars, floor(vars->player.pos.x), next_mapidx.y) == WALL)
 		return (true);
 	if (get_map_val(vars, next_mapidx.x, next_mapidx.y) != WALL)
 	{

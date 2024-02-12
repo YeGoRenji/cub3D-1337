@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:50:04 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/10 03:31:28 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 19:58:50 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,10 @@ void	draw_tranformed(t_vars *vars, t_ivect2d point, t_ivect2d center,
 					itovec(center)), (double)1 / vars->tile_size));
 	map_coord = vec_add(vars->player.pos, transformed);
 	map_val = get_map_val(vars, floor(map_coord.x), floor(map_coord.y));
-	color = (map_val == WALL) * TILE_COL_WALL + (map_val == EMPTY)
-		* TILE_COL_EMPTY + (map_val == DOOR) * TILE_COL_DOOR;
-	if (map_val != EMPTY || !((point.x + point.y) % 2))
+	color = (map_val == WALL) * TILE_COL_WALL + (map_val == EMPTY
+			|| map_val == SPACE) * TILE_COL_EMPTY + (map_val == DOOR)
+		* TILE_COL_DOOR;
+	if ((map_val != EMPTY && map_val != SPACE) || !((point.x + point.y) % 2))
 		prot_put_pixel(vars->img, point.x, point.y, color);
 }
 

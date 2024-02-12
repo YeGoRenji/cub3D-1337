@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/12 17:51:31 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 19:57:03 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ typedef enum block_type
 {
 	EMPTY,
 	WALL,
-	DOOR
+	DOOR,
+	SPACE = 9
 }					t_block_type;
 
 // ! Remove This

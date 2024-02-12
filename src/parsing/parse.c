@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 15:22:47 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/12 17:33:47 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/12 20:21:32 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	get_map_parts(t_map *map)
 	res = get_map_items(map, set_map_colors);
 	if (res == -1)
 		return (-1);
-	if (!check_map_items(map))
+	if (check_map_items(map) == -1)
 		return (-1);
 	// TODO : make an err_and_exit function
 	// TODO : politically correct errors
@@ -120,10 +120,11 @@ int	convert_map_char(char c)
 {
 	int	res;
 
-	// TODO: add bonus characters
 	res = 0;
 	if (c == ' ')
 		res = SPACE_IN_MAP;
+	else if (c == 'D')
+		res = DOOR;
 	else if (c == '0')
 		res = 0;
 	else if (c == '1')

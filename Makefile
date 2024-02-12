@@ -6,13 +6,13 @@
 #    By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 17:13:54 by ylyoussf          #+#    #+#              #
-#    Updated: 2024/02/12 18:14:06 by ylyoussf         ###   ########.fr        #
+#    Updated: 2024/02/12 20:37:41 by ylyoussf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
 
-CFLAGS = -Wall -Wextra -Werror  -g #-Ofast  -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror  -fsanitize=thread #-g  -Ofast
 
 LINK_H = -Iinclude
 
