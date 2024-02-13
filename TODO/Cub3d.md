@@ -16,9 +16,10 @@
 - [x] Animated Sprites ?
 ### Last Tasks:
 - [x] Libft
+- [x] Adapting mandatory parsing with bonus
 - [ ] ft_malloc
 - [ ] Norm main
-- [ ] Adapting mandatory parsing with bonus
+- [ ] Leaks
 ## Issues:
 
 - [x] When map is not closed there is a problem near border y = 0

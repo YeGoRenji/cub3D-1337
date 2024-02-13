@@ -1,2 +1,4 @@
 objs
 cub3D
+src/libft/*.o
+src/libft/*.a

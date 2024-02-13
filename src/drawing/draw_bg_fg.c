@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 04:23:22 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 15:25:47 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:54:02 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ void	*draw_skybox(void *param)
 
 void	*draw_floor(void *param)
 {
-	t_thread_artist	*art;
-	t_ivect2d		iter;
-	double			div;
+	const t_thread_artist	*art = param;
+	t_ivect2d				iter;
+	double					div;
+	const uint32_t			color = art->vars->map.colors.floor << 8;
 
-	art = param;
 	iter = art->start;
 	div = (double)1 / (art->end.y - art->start.y);
 	while (iter.y < art->end.y)
@@ -54,7 +54,7 @@ void	*draw_floor(void *param)
 		while (iter.x < art->end.x)
 		{
 			prot_put_pixel(art->vars->img, iter.x, iter.y, (int)(0xFF * (iter.y
-						- art->start.y) * div) & 0x000000FF);
+						- art->start.y) * div) | color);
 			++iter.x;
 		}
 		iter = (t_ivect2d){art->start.x, iter.y + 1};

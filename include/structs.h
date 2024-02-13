@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/12 19:57:03 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:44:22 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ typedef enum orientation
 	NORTH,
 	EAST,
 	SOUTH,
-	WEST
+	WEST,
+	DOOR_TEX
 }					t_orientation;
 
 enum
@@ -99,7 +100,7 @@ typedef struct s_map
 	size_t			height;
 	size_t			width;
 	int				*data;
-	char			*tex[4];
+	char			*tex[5];
 	t_surroundings	colors;
 }					t_map;
 

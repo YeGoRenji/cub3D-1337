@@ -24,13 +24,16 @@ bonus_obj = $(bonus_src:.c=.o)
 all : $(NAME)
 
 $(NAME) : $(OBJ) ../../include/libft.h
-	ar rcs $@ $(OBJ)
+	@echo "[LIBFT] Creating $(NAME)..."
+	@ar rcs $@ $(OBJ)
 
 bonus : $(OBJ) $(bonus_obj) ../../include/libft.h
-	ar rcs $(NAME) $^
+	@echo "[LIBFT] Creating $(NAME)..."
+	@ar rcs $(NAME) $^
 
-%.o : %.c libft.h
-	$(CC) $(CFLAGS)  -c $< -o $@
+%.o : %.c ../../include/libft.h
+	@echo "[LIBFT] Compiling $<..."
+	@$(CC) $(CFLAGS)  -c $< -o $@
 
 clean :
 	rm -rf $(OBJ) $(bonus_obj)
@@ -38,4 +41,5 @@ fclean : clean
 	rm -rf $(NAME)
 
 re : fclean all
-.PHONY: clen fclean re bonus
+
+.PHONY: clean fclean re bonus

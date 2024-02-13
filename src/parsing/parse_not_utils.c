@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:55:19 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/12 19:50:49 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:45:19 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ bool	check_textures(t_map *map)
 	return ((!!map -> tex[SOUTH]
 			+ !!map -> tex[NORTH]
 			+ !!map -> tex[EAST]
-			+ !!map -> tex[WEST]) == 4);
+			+ !!map -> tex[WEST]
+			+ !!map -> tex[DOOR_TEX]) == 5);
 }
 
 bool	check_colors(t_map *map)
@@ -41,7 +42,7 @@ static void	free_stuff(char **ptr, char *line)
 	free(line);
 }
 
-int	get_map_items(t_map *m, int (*item_setter)(t_map *, char *, char *))
+int	get_map_items(t_map *m, int (*item_setter)(t_map *, char *, char *), char *which)
 {
 	char		*line;
 	char		**ptr;
@@ -56,7 +57,9 @@ int	get_map_items(t_map *m, int (*item_setter)(t_map *, char *, char *))
 		if (!ptr || get_list_len(ptr) == 2)
 		{
 			if (item_setter(m, ptr[0], ptr[1]) == -1)
-				return (ft_putstr_fd("Error\nInvalid Color\n", 2),
+				return (ft_putstr_fd("Error\nInvalid ", 2),
+					ft_putstr_fd(which, 2),
+					ft_putstr_fd("\n", 2),
 					free_stuff(ptr, line), -1);
 		}
 		free_stuff(ptr, line);

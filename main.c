@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/12 20:39:39 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 02:50:02 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	init_vars(t_vars *vars)
 	// vars->player.pos = (t_vect2d){1.5, 1.5};
 
 	// Fix these values later (in parsing)
-	vars->nb_vert_stripes = 10;
+	vars->nb_vert_stripes = WIDTH;
 	vars->fov = 1;
 	vars->pitch = 0;
 	vars->mouse.x = 0;
@@ -49,8 +49,8 @@ void	init_vars(t_vars *vars)
 	vars -> wall_tex[SOUTH] = load_tex_png(vars -> map.tex[SOUTH]);
 	vars -> wall_tex[EAST] = load_tex_png(vars -> map.tex[EAST]);
 	vars -> wall_tex[WEST] = load_tex_png(vars -> map.tex[WEST]);
+	vars->door_tex = load_tex_png(vars -> map.tex[DOOR_TEX]);
 
-	vars->door_tex = load_tex_png("./resources/wolftex/door.png");
 	vars->sky_tex = load_tex_png("./resources/AuroraSkyBox.png");
 	vars->light_status = false;
 	vars->light_on = load_tex_png("./resources/FlashLightOn.png");
