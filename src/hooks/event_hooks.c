@@ -6,19 +6,11 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 17:38:26 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 17:47:28 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:11:08 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <hooks.h>
-
-void	exit_failure(t_vars *vars)
-{
-	if (vars->mlx)
-		mlx_close_window(vars->mlx);
-	puts(mlx_strerror(mlx_errno));
-	exit(EXIT_FAILURE);
-}
 
 void	on_loop(void *v_vars)
 {
@@ -67,4 +59,12 @@ void	on_mouse(mouse_key_t button, action_t action, modifier_key_t mods,
 	vars = param;
 	if (button == MLX_MOUSE_BUTTON_LEFT && action == MLX_RELEASE)
 		vars->light_status = !vars->light_status;
+}
+
+void	install_hooks(t_vars *vars)
+{
+	mlx_loop_hook(vars->mlx, on_loop, vars);
+	mlx_resize_hook(vars->mlx, on_resize, vars);
+	mlx_mouse_hook(vars->mlx, on_mouse, vars);
+	mlx_key_hook(vars->mlx, on_click, vars);
 }

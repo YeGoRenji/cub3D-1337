@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/12 20:08:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 13:57:55 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	mouse_mvt(t_vars *vars)
 	mouse_move = (t_ivect2d){vars->mouse.x - vars->mlx->width / 2, vars->mouse.y
 		- vars->mlx->height / 2};
 	mlx_set_mouse_pos(vars->mlx, vars->mlx->width / 2, vars->mlx->height / 2);
-	vars->look_angle += mouse_move.x * vars->mlx->delta_time * ROT_SPEED / 10;
+	vars->look_angle += mouse_move.x * vars->mlx->delta_time * ROT_SPEED / 20;
 	vars->pitch -= mouse_move.y * vars->mlx->delta_time * ROT_SPEED * 69;
 }
 

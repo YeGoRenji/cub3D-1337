@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:47:12 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 16:53:01 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 14:12:51 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	draw_stripe(t_vars *vars, t_rayhit *hit, t_ivect2d wlstart,
 	t_ivect2d			it;
 	uint32_t			color;
 
-	percent.x = hit->pos_in_texture;
+	percent.x = fmod(hit->pos_in_texture, 1);
 	it = (t_ivect2d){wlstart.x - (wlend.x >> 1), wall_y.start};
 	while (it.y < wall_y.end)
 	{

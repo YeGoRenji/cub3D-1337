@@ -6,13 +6,13 @@
 #    By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 17:13:54 by ylyoussf          #+#    #+#              #
-#    Updated: 2024/02/13 02:24:29 by ylyoussf         ###   ########.fr        #
+#    Updated: 2024/02/13 17:07:26 by ylyoussf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
 
-CFLAGS = -Wall -Wextra -Werror  -Ofast#-fsanitize=thread #-g  
+CFLAGS = -Wall -Wextra -Werror  -Ofast#-fsanitize=thread -g
 
 LINK_H = -Iinclude
 
@@ -30,6 +30,8 @@ OBJS_FILES = main.o \
 			 draw_bg_fg.o \
 			 graphics.o \
 			 fps_counter.o \
+			 error.o \
+			 init.o \
 			 player_input.o \
 			 event_hooks.o \
 			 raycasting.o \

@@ -14,11 +14,15 @@
 	- [x] Orientation specific
 - [x] Rotate POV with mouse
 - [x] Animated Sprites ?
-### Last Tasks:
+### Merging Tasks:
 - [x] Libft
-- [x] Adapting mandatory parsing with bonus
+- [x] Norm main
+- [ ] What if Skybox / NLetter textures are missing
 - [ ] ft_malloc
-- [ ] Norm main
+- [ ] Adapting mandatory parsing with bonus
+	- [x] Map parsing
+    - [x] Door
+    - [ ] Ceiling color should be ignored
 - [ ] Leaks
 ## Issues:
 

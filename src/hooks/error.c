@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hooks.h                                            :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/10 03:20:37 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/13 17:07:11 by ylyoussf         ###   ########.fr       */
+/*   Created: 2024/02/13 14:55:31 by ylyoussf          #+#    #+#             */
+/*   Updated: 2024/02/13 20:39:01 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HOOKS_H
-# define HOOKS_H
+#include <hooks.h>
 
-# include <stdlib.h>
-# include <drawing.h>
-# include <structs.h>
+void	exit_failure(t_vars *vars)
+{
+	if (vars->mlx)
+		mlx_close_window(vars->mlx);
+	ft_putstr_fd((char *)mlx_strerror(mlx_errno), 2);
+	exit(EXIT_FAILURE);
+}
 
-/* Player input */
-void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt);
-void	view_control(t_vars *vars);
-void	limit_values(t_vars *vars);
-
-/* Event hooks */
-void	install_hooks(t_vars *vars);
-
-/* Err */
-void	exit_failure(t_vars *vars);
-
-/* init */
-void	initialize(t_vars *vars);
-
-#endif
+void	load_img_err(char *path)
+{
+	if (!path)
+		return ;
+	ft_putstr_fd("Error\nCouldn't Load image ", 2);
+	ft_putendl_fd(path, 2);
+}

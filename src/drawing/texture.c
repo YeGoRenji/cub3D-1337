@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:52:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 15:22:59 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/13 20:48:37 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,28 @@ static int	big_to_little(int big)
 	return (little);
 }
 
-mlx_texture_t	*load_tex_png(const char *path)
+static bool	file_exists(const char *path)
+{
+	int	fd;
+
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
+		return (false);
+	close(fd);
+	return (true);
+}
+
+mlx_texture_t	*load_tex_png(t_vars *vars, const char *path, char *err_msg)
 {
 	mlx_texture_t	*tex;
 	uint32_t		x;
 	uint32_t		y;
 	uint32_t		color;
 
+	if (!file_exists(path))
+		(ft_putstr_fd("Error\n", 2), ft_putstr_fd(err_msg, 2), exit_failure(vars));
 	tex = mlx_load_png(path);
+	// TODO: remove this
 	if (!tex)
 		return (get_default_tex());
 	y = 0;
