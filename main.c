@@ -21,7 +21,7 @@
 
 void	check(void)
 {
-	system("leaks cub3D");
+	// system("leaks cub3D");
 }
 
 void	do_graphics(t_vars *vars)
