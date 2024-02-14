@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 12:16:48 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 16:23:03 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 17:24:31 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	set_map_colors(t_map *map, char *_obj, char *lgbt_colors)
 	if (!map || !lgbt_colors || !_obj)
 		return (-1);
 	obj = *_obj;
-	// TODO: check only floor ?
 	if (obj == 'F')
 		set_where_and_flag(&where, &flag, &map->colors.floor,
 			&map->colors.floor_set);

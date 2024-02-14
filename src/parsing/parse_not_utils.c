@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:55:19 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 16:36:56 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 17:23:20 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,17 @@ static void	free_stuff(char **ptr, char *line)
 	free(line);
 }
 
+static char	*get_trimmed_line(int fd)
+{
+	char	*line;
+
+	line = get_next_line(fd);
+	if (!line)
+		return (NULL);
+	line[ft_strlen(line) - 1] = 0;
+	return (line);
+}
+
 void	scan_and_dispatch(t_map *m, char *line, int fd)
 {
 	char	**ptr;
@@ -29,28 +40,21 @@ void	scan_and_dispatch(t_map *m, char *line, int fd)
 		if (!ft_strlen(line))
 		{
 			(free(line), line = NULL);
-			line = get_next_line(fd);
+			line = get_trimmed_line(fd);
 			if (!line)
 				break ;
-			line[ft_strlen(line) - 1] = 0;
 			continue ;
 		}
 		ptr = ft_split(line, ' ');
-		if (ptr && *ptr)
-			if (get_list_len(ptr) == 2)
-			{
-				if (item_setter_dispatcher(m, ptr[0], ptr[1]) == -1)
-					err_and_exit("Invalid Color\n");
-			}
-			else
-				err_and_exit("Parsing error\n");
-		else
+		if (!(ptr && *ptr) || get_list_len(ptr) != 2)
 			err_and_exit("Parsing error\n");
-		free_stuff(ptr, line);
-		line = get_next_line(fd);
+		if (get_list_len(ptr) == 2)
+			if (item_setter_dispatcher(m, ptr[0], ptr[1]) == -1)
+				err_and_exit("Invalid Color\n");
+		(free_stuff(ptr, line), line = NULL);
+		line = get_trimmed_line(fd);
 		if (!line)
 			break ;
-		line[ft_strlen(line) - 1] = 0;
 	}
 	free(line);
 }

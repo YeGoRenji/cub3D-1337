@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 15:35:46 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 17:26:40 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int32_t argc, char *argv[])
 {
 	t_vars	vars;
 
-	// atexit(check);
+	atexit(check);
 	if (argc != 2)
 		return (ft_putstr_fd("Usage: ./cub3D map.cub\n", 2), -1);
 	if (parser(&vars, argv[1]))
