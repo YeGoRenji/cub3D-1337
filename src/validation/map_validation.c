@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:01:27 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 11:19:37 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 18:18:06 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	validator(t_vars *vars)
 		err_and_exit("There has to be one player on the map\n");
 	register_player_pos(vars, map);
 	if (validate_map(map) == -1)
-		err_and_exit("Error\nInvalid map\n");
+		err_and_exit("Invalid map\n");
 	return (0);
 }
 

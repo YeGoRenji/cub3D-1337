@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 15:22:47 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 10:52:35 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 18:17:44 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ int	get_map_parts(t_map *map)
 		return (-1);
 	lst_map = read_map(map);
 	if (!lst_map)
-		err_and_exit("Error: while reading the map\n");
+		err_and_exit("Error while reading the map\n");
 	map->data = consume_map(lst_map);
 	if (map->data == NULL)
-		err_and_exit("Error: while consuming the map\n");
+		err_and_exit("Error while consuming the map\n");
 	map->width = lst_map->width;
 	free_lst_map(lst_map);
 	return (0);

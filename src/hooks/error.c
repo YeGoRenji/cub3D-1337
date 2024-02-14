@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 14:55:31 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 11:34:28 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 18:01:36 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	load_img_err(const char *path)
 		return ;
 	ft_putstr_fd("Error\nCouldn't Load image ", 2);
 	ft_putendl_fd((char *)path, 2);
+	exit(-1);
 }
 
 void	err_and_exit(char *err)

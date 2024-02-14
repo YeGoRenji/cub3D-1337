@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:52:45 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 11:35:06 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 18:01:49 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static bool	file_exists(const char *path)
 	return (true);
 }
 
-mlx_texture_t	*load_tex_png(t_vars *vars, const char *path)
+mlx_texture_t	*load_tex_png(const char *path)
 {
 	mlx_texture_t	*tex;
 	uint32_t		x;
@@ -43,7 +43,7 @@ mlx_texture_t	*load_tex_png(t_vars *vars, const char *path)
 	uint32_t		color;
 
 	if (!file_exists(path))
-		(load_img_err(path), exit_failure(vars));
+		load_img_err(path);
 	tex = mlx_load_png(path);
 	y = 0;
 	while (y < tex->height)
