@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 11:26:14 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 17:01:45 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ void	player_mvt(t_vars *vars)
 	get_input_mvt(vars, &input_mvt);
 	view_control(vars);
 	limit_values(vars);
-	vars->player.dir = (t_vect2d){cos(vars->player.angle), sin(vars->player.angle)};
+	vars->player.dir = (t_vect2d){cos(vars->player.angle),
+		sin(vars->player.angle)};
 	forward_move = vec_scale(vars->player.dir, -input_mvt.y
 			* vars->mlx->delta_time * MVT_SPEED);
 	side_move = vec_scale((t_vect2d){vars->player.dir.y, -vars->player.dir.x},

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 11:45:05 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 15:35:46 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 #include <parse.h>
 #include <validation.h>
 #include <clean.h>
-
-
 
 void	check(void)
 {
@@ -52,6 +50,5 @@ int	main(int32_t argc, char *argv[])
 	mlx_loop(vars.mlx);
 	mlx_delete_image(vars.mlx, vars.img);
 	mlx_terminate(vars.mlx);
-	free_textures(&vars);
-	return (EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }

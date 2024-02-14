@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 16:16:57 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 17:19:04 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 12:49:38 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,12 @@ void	iterate_dda(t_vars *vars, t_rayhit *hit_dt, t_vect2d ray_norm)
 	{
 		go_next_square(&side_dist, delta_dist, step, hit_dt);
 		hit_dt->hit_what = get_map_val(vars, hit_dt->map.x, hit_dt->map.y);
-		if (hit_dt->hit_what > 0)
-			if (hit_dt->hit_what == WALL || handle_door(vars, hit_dt,
-					ray_norm))
+		if ((hit_dt->hit_what > 0) && 
+			(hit_dt->hit_what == WALL || handle_door(vars, hit_dt, ray_norm)))
 				break ;
 		++i;
 	}
+	hit_dt->dist = ifelsed(i >= 1e3, 2000, hit_dt->dist);
 }
 
 t_rayhit	ray_cast_dda(t_vars *vars, t_vect2d ray)

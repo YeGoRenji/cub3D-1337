@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 21:43:22 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 11:14:26 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 16:30:20 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 
 int	item_setter_dispatcher(t_map *m, char *where, char *what)
 {
-	if (!check_textures(m))
+	int	res = 0;
+
+	if (!where || !what)
+		return (-1);
+	res += (!ft_strncmp(where, "NO", 3))
+	 	+ (!ft_strncmp(where, "SO", 3))
+		+ (!ft_strncmp(where, "WE", 3))
+		+ (!ft_strncmp(where, "EA", 3))
+		+ (!ft_strncmp(where, "DO", 3));
+	if (res)
 		return (set_map_texture(m, where, what));
 	else
 		return (set_map_colors(m, where, what));

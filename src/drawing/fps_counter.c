@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/04 16:16:16 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 19:18:24 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 14:48:38 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	draw_fps(t_vars *vars)
 	current_time = mlx_get_time();
 	if (current_time - old_time > 0.2)
 	{
-		fps = 1 / vars->mlx->delta_time;
+		fps = ifelsed(vars->mlx->delta_time != 0, 1 / vars->mlx->delta_time, 0);
 		old_time = current_time;
 	}
 	draw_number(vars, fps, (t_shape){vars->mlx->width, 10, 10}, FPS_COLOR);
