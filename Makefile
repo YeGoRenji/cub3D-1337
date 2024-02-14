@@ -6,14 +6,13 @@
 #    By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 17:13:54 by ylyoussf          #+#    #+#              #
-#    Updated: 2024/02/13 17:07:26 by ylyoussf         ###   ########.fr        #
+#    Updated: 2024/02/14 12:02:25 by ylyoussf         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
 
-CFLAGS = -Wall -Wextra -Werror  -Ofast#-fsanitize=thread -g
-
+CFLAGS = -Wall -Wextra -Werror -Ofast#-fsanitize=address
 LINK_H = -Iinclude
 
 OBJSFOLDER = objs/
@@ -47,7 +46,11 @@ OBJS_FILES = main.o \
 			 map_ds_utils.o				 \
 			 texture_utils.o			  \
 			 parse_not_utils.o			   \
-			 parse_definitely_not_utils.o
+			 parse_definitely_not_utils.o   \
+			 tiny_parsing_helpers.o			 \
+		     clean_map.o					  \
+		     clean_mlx.o					   \
+		     clean_textures.o
 
 OS := $(shell uname -s)
 
@@ -101,6 +104,10 @@ $(OBJSFOLDER)%.o: src/parsing/%.c include/parse.h $(GLOBAL_HEADERS)
 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 
 $(OBJSFOLDER)%.o: src/validation/%.c include/validation.h $(GLOBAL_HEADERS)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
+
+$(OBJSFOLDER)%.o: src/cleaning/%.c include/clean.h $(GLOBAL_HEADERS)
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) $(LINK_H) -c $< -o $@
 

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 03:20:37 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/13 17:07:11 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:33:08 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	install_hooks(t_vars *vars);
 
 /* Err */
 void	exit_failure(t_vars *vars);
+void	err_and_exit(char *err);
+void	load_img_err(const char *path);
 
 /* init */
 void	initialize(t_vars *vars);

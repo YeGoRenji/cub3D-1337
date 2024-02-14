@@ -6,35 +6,13 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:55:19 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/13 02:45:19 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:37:26 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parse.h>
-
-bool	check_textures(t_map *map)
-{
-	return ((!!map -> tex[SOUTH]
-			+ !!map -> tex[NORTH]
-			+ !!map -> tex[EAST]
-			+ !!map -> tex[WEST]
-			+ !!map -> tex[DOOR_TEX]) == 5);
-}
-
-bool	check_colors(t_map *map)
-{
-	return ((map -> colors.ceiling_set
-			+ map -> colors.floor_set) == 2);
-}
-
-int	check_map_items(t_map *map)
-{
-	if (!check_textures(map))
-		return (ft_putstr_fd("Error!\nTextures problem\n", 2), -1);
-	if (!check_colors(map))
-		return (ft_putstr_fd("Error!\nColors problem\n", 2), -1);
-	return (0);
-}
+#include <clean.h>
+#include <hooks.h>
 
 static void	free_stuff(char **ptr, char *line)
 {
@@ -42,25 +20,26 @@ static void	free_stuff(char **ptr, char *line)
 	free(line);
 }
 
-int	get_map_items(t_map *m, int (*item_setter)(t_map *, char *, char *), char *which)
+void	scan_and_dispatch(t_map *m, char *line, int fd)
 {
-	char		*line;
-	char		**ptr;
-	const int	fd = m -> fd;
+	char	**ptr;
 
-	line = get_next_line(fd);
-	if (line)
-		line[ft_strlen(line) - 1] = 0;
-	while (line && ft_strlen(line))
+	while (line && !map_items_collected(m))
 	{
+		if (!ft_strlen(line))
+		{
+			free(line);
+			line = get_next_line(fd);
+			if (!line)
+				break ;
+			line[ft_strlen(line) - 1] = 0;
+			continue ;
+		}
 		ptr = ft_split(line, ' ');
 		if (!ptr || get_list_len(ptr) == 2)
 		{
-			if (item_setter(m, ptr[0], ptr[1]) == -1)
-				return (ft_putstr_fd("Error\nInvalid ", 2),
-					ft_putstr_fd(which, 2),
-					ft_putstr_fd("\n", 2),
-					free_stuff(ptr, line), -1);
+			if (item_setter_dispatcher(m, ptr[0], ptr[1]) == -1)
+				err_and_exit("Invalid Color\n");
 		}
 		free_stuff(ptr, line);
 		line = get_next_line(fd);
@@ -68,5 +47,16 @@ int	get_map_items(t_map *m, int (*item_setter)(t_map *, char *, char *), char *w
 			break ;
 		line[ft_strlen(line) - 1] = 0;
 	}
+}
+
+int	get_map_items(t_map *m)
+{
+	char		*line;
+	const int	fd = m -> fd;
+
+	line = get_next_line(fd);
+	if (line)
+		line[ft_strlen(line) - 1] = 0;
+	scan_and_dispatch(m, line, fd);
 	return (0);
 }

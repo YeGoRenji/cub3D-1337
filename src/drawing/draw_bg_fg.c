@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 04:23:22 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/13 02:54:02 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:26:24 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*draw_skybox(void *param)
 	const t_thread_artist	*art = param;
 	const mlx_texture_t		*tex = art->vars->sky_tex;
 
-	offset = tex->width * (art->vars->look_angle / (2 * M_PI));
+	offset = tex->width * (art->vars->player.angle / (2 * M_PI));
 	iter = art->start;
 	while (iter.y < art->end.y)
 	{

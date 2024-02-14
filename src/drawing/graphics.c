@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 20:31:14 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/13 13:57:55 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:26:14 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	mouse_mvt(t_vars *vars)
 	mouse_move = (t_ivect2d){vars->mouse.x - vars->mlx->width / 2, vars->mouse.y
 		- vars->mlx->height / 2};
 	mlx_set_mouse_pos(vars->mlx, vars->mlx->width / 2, vars->mlx->height / 2);
-	vars->look_angle += mouse_move.x * vars->mlx->delta_time * ROT_SPEED / 20;
+	vars->player.angle += mouse_move.x * vars->mlx->delta_time * ROT_SPEED / 20;
 	vars->pitch -= mouse_move.y * vars->mlx->delta_time * ROT_SPEED * 69;
 }
 
@@ -68,7 +68,7 @@ void	player_mvt(t_vars *vars)
 	get_input_mvt(vars, &input_mvt);
 	view_control(vars);
 	limit_values(vars);
-	vars->player.dir = (t_vect2d){cos(vars->look_angle), sin(vars->look_angle)};
+	vars->player.dir = (t_vect2d){cos(vars->player.angle), sin(vars->player.angle)};
 	forward_move = vec_scale(vars->player.dir, -input_mvt.y
 			* vars->mlx->delta_time * MVT_SPEED);
 	side_move = vec_scale((t_vect2d){vars->player.dir.y, -vars->player.dir.x},

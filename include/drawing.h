@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 18:21:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/13 20:49:05 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:34:37 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void			draw_minimap(t_vars *vars, t_ivect2d pos);
 
 /* Textures */
 mlx_texture_t	*get_default_tex(void);
-mlx_texture_t	*load_tex_png(t_vars *vars, const char *path, char *err_msg);
+mlx_texture_t	*load_tex_png(t_vars *vars, const char *path);
 int32_t			get_pixel(const mlx_texture_t *tex, int x, int y);
 
 /* Background/Foreground */

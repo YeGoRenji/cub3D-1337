@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 15:23:11 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/13 02:39:44 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:09:52 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSE_H
 # include <libft.h>
 # include <stdlib.h>
+# include <hooks.h>
 # include <structs.h>
 
 enum
@@ -33,9 +34,10 @@ typedef struct s_map_data
 }				t_map_data;
 
 //# define DEBUG
+bool			map_items_collected(t_map *map);
+int				item_setter_dispatcher(t_map *m, char *where, char *what);
 int				parser(t_vars *vars, char *file);
-int				get_map_items(t_map *m, int (*item_setter)(t_map *, char *,
-						char *), char *which);
+int				get_map_items(t_map *map);
 int				check_extension(char *name, char *extension);
 t_map			*init_map(char *file);
 int				try_open_file(char *file, char *extension);
@@ -56,7 +58,6 @@ int				convert_map_char(char c);
 void			set_where_and_flag(int **where, int **flag, int *w_val,
 					int *f_val);
 int				get_map_textures(t_map *map);
-void			display_map(t_map *map);
 bool			check_textures(t_map *map);
 bool			check_colors(t_map *map);
 int				check_map_items(t_map *map);

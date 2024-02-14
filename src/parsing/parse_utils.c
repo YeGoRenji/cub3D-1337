@@ -6,12 +6,12 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 16:05:36 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/12 16:27:52 by afatimi          ###   ########.fr       */
+/*   Updated: 2024/02/14 10:58:13 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parse.h>
-#include <stdio.h>
+#include <hooks.h>
 
 int	check_extension(char *name, char *extension)
 {
@@ -45,7 +45,7 @@ uint32_t	construct_lgbt(char *_r, char *_g, char *_b)
 	col.g = ft_atoi(_g);
 	col.b = ft_atoi(_b);
 	if (validate_lgbt(_r, _g, _b) == -1)
-		return (ft_putstr_fd("Error: invalid lgbt\n", 2), -1);
+		err_and_exit("Invalid lgbt\n");
 	return (col.r << 16 | col.g << 8 | col.b);
 }
 

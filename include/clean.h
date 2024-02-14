@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_definitely_not_utils.c                       :+:      :+:    :+:   */
+/*   clean.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/12 16:28:25 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/13 20:28:17 by afatimi          ###   ########.fr       */
+/*   Created: 2024/02/13 21:07:14 by afatimi           #+#    #+#             */
+/*   Updated: 2024/02/14 11:44:57 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parse.h>
+#include <stdlib.h>
+#include <structs.h>
 
-int	try_open_file(char *file, char *extension)
-{
-	if (!file)
-		return (-1);
-	if (check_extension(file, extension))
-	{
-		ft_putstr_fd("we only accept .", 2);
-		ft_putstr_fd(extension, 2);
-		ft_putstr_fd(" files \n", 2);
-		exit(-1);
-		return (-1);
-	}
-	return (open_file(file));
-}
+void	free_tex(mlx_texture_t *tex);
+void	free_textures(t_vars *vars);
+void	free_lst_map(t_map_data *ptr);
+void	destroy_map(t_map *map);
+void	free_texture_names(char **texture_names);

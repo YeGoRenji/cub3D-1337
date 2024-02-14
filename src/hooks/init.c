@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 17:01:17 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/13 17:09:27 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:34:53 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,16 @@ void	init_configs(t_vars *vars)
 	vars->mouse.x = 0;
 	vars->mouse.y = 0;
 	vars->tile_size = TILE_W;
-	vars->wall_tex[NORTH] = load_tex_png(vars->map.tex[NORTH]);
-	vars->wall_tex[SOUTH] = load_tex_png(vars->map.tex[SOUTH]);
-	vars->wall_tex[EAST] = load_tex_png(vars->map.tex[EAST]);
-	vars->wall_tex[WEST] = load_tex_png(vars->map.tex[WEST]);
-	vars->door_tex = load_tex_png(vars->map.tex[DOOR_TEX]);
-	// TODO validate textures ?
-	vars->nletter_tex = load_tex_png("./resources/NLetter.png");
-	vars->sky_tex = load_tex_png("./resources/AuroraSkyBox.png");
+	vars->wall_tex[NORTH] = load_tex_png(vars, vars->map.tex[NORTH]);
+	vars->wall_tex[SOUTH] = load_tex_png(vars, vars->map.tex[SOUTH]);
+	vars->wall_tex[EAST] = load_tex_png(vars, vars->map.tex[EAST]);
+	vars->wall_tex[WEST] = load_tex_png(vars, vars->map.tex[WEST]);
+	vars->door_tex = load_tex_png(vars, vars->map.tex[DOOR_TEX]);
+	vars->nletter_tex = load_tex_png(vars, "./resources/NLetter.png");
+	vars->sky_tex = load_tex_png(vars, "./resources/AuroraSkyBox.png");
 	vars->light_status = false;
-	vars->light_on = load_tex_png("./resources/FlashLightOn.png");
-	vars->light_off = load_tex_png("./resources/FlashLightOff.png");
+	vars->light_on = load_tex_png(vars, "./resources/FlashLightOn.png");
+	vars->light_off = load_tex_png(vars, "./resources/FlashLightOff.png");
 	vars->mouse_locked = true;
 }
 

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/13 13:16:36 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:43:23 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,14 @@ typedef struct s_player
 {
 	t_vect2d		pos;
 	t_vect2d		dir;
+	double			angle;
 }					t_player;
 
 typedef struct s_surroundings
 {
 	int				ceiling;
 	int				floor;
+	// TODO: check only floor ?
 	int				ceiling_set;
 	int				floor_set;
 }					t_surroundings;
@@ -109,7 +111,6 @@ typedef struct s_vars
 	mlx_t			*mlx;
 	mlx_image_t		*img;
 	t_player		player;
-	double			look_angle;
 	int				fov;
 	int				nb_vert_stripes;
 	int				tile_size;

@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 03:19:54 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 17:33:13 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:25:57 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	get_input_mvt(t_vars *vars, t_vect2d *input_mvt)
 void	view_control(t_vars	*vars)
 {
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_RIGHT))
-		vars->look_angle += vars->mlx->delta_time * ROT_SPEED;
+		vars->player.angle += vars->mlx->delta_time * ROT_SPEED;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_LEFT))
-		vars->look_angle -= vars->mlx->delta_time * ROT_SPEED;
+		vars->player.angle -= vars->mlx->delta_time * ROT_SPEED;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_Y))
 		vars->nb_vert_stripes += 10;
 	if (mlx_is_key_down(vars->mlx, MLX_KEY_H))
@@ -59,7 +59,7 @@ void	limit_values(t_vars *vars)
 {
 	vars->pitch = clamp_value(vars->pitch, -vars->mlx->height / 2,
 			vars->mlx->height / 2);
-	vars->look_angle = fmod(vars->look_angle + (vars->look_angle < 0) * (2
+	vars->player.angle = fmod(vars->player.angle + (vars->player.angle < 0) * (2
 				* M_PI), 2 * M_PI);
 	vars->tile_size = clamp_value(vars->tile_size, 5, 50);
 	vars->nb_vert_stripes = clamp_value(vars->nb_vert_stripes, 42,

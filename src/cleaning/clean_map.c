@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_definitely_not_utils.c                       :+:      :+:    :+:   */
+/*   clean_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/12 16:28:25 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/13 20:28:17 by afatimi          ###   ########.fr       */
+/*   Created: 2024/02/13 21:19:58 by afatimi           #+#    #+#             */
+/*   Updated: 2024/02/13 21:21:52 by afatimi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <parse.h>
+#include <clean.h>
 
-int	try_open_file(char *file, char *extension)
+void	free_lst_map(t_map_data *ptr)
 {
-	if (!file)
-		return (-1);
-	if (check_extension(file, extension))
+	t_map_line	*line;
+	t_map_line	*tmp;
+
+	line = ptr -> data;
+	while (line)
 	{
-		ft_putstr_fd("we only accept .", 2);
-		ft_putstr_fd(extension, 2);
-		ft_putstr_fd(" files \n", 2);
-		exit(-1);
-		return (-1);
+		tmp = line -> next;
+		free(line -> line);
+		free(line);
+		line = tmp;
 	}
-	return (open_file(file));
+	free(ptr);
+}
+
+void	destroy_map(t_map *map)
+{
+	(void)map;
+	return ;
 }

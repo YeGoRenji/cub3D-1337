@@ -6,7 +6,7 @@
 /*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:01:27 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/12 20:24:03 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:19:37 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,12 @@ int	validator(t_vars *vars)
 
 	map = &vars->map;
 	if (check_for_invalid_characters(map))
-		return (ft_putstr_fd("Error\nfound weird chars in map!\n", \
-			2), 1);
+		err_and_exit("found weird chars in map!\n");
 	if (count_players(map) != 1)
-		return (ft_putstr_fd("Error\nThere has to be one player on the map\n", \
-			2), 1);
+		err_and_exit("There has to be one player on the map\n");
 	register_player_pos(vars, map);
 	if (validate_map(map) == -1)
-		return (ft_putstr_fd("Error\nInvalid map\n", \
-			2), 1);
+		err_and_exit("Error\nInvalid map\n");
 	return (0);
 }
 
@@ -34,15 +31,15 @@ bool	zero_or_one(t_map *map, int x, int y)
 {
 	int	val;
 
-	if (x < 0 || x >= (ll)map->width)
+	if (x < 0 || x >= (long long)map->width)
 		return (false);
-	if (y < 0 || y >= (ll)map->height)
+	if (y < 0 || y >= (long long)map->height)
 		return (false);
 	val = map->data[y * map->width + x];
 	return (val == WALL || val == EMPTY || val == DOOR);
 }
 
-bool	check_neighbours_binary(t_map *map, t_ivect2d pt)
+bool	check_neighbours_binary(t_map *map, t_ivector pt)
 {
 	if (map->data[(pt.y) * map->width + (pt.x)] == WALL)
 		return (true);
@@ -59,7 +56,7 @@ bool	check_neighbours_binary(t_map *map, t_ivect2d pt)
 	return (true);
 }
 
-bool	test_middle_part(t_map *map, t_ivect2d start, size_t w, size_t h)
+bool	test_middle_part(t_map *map, t_ivector start, size_t w, size_t h)
 {
 	size_t	x;
 	size_t	y;
