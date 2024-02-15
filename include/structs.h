@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 18:21:44 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/15 21:44:19 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,11 @@
 
 # define FPS_COLOR 0xFF6942FF
 
-// ! REMOVE THIS
-# define OLD_MAP_2D 0xAA50AAFF
-
 # define MVT_SPEED 2
 # define ROT_SPEED 2
 
 # define N_TEX "./resources/NLetter.png"
-# define SKYBOX_TEX "./resources/SkyBox5.png"
+# define SKYBOX_TEX "./resources/SkyBox.png"
 # define FLASHON_TEX "./resources/FlashLightOn.png"
 # define FLASHOFF_TEX "./resources/FlashLightOff.png"
 
