@@ -7,6 +7,7 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
 /*   Updated: 2024/02/14 21:53:30 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/15 21:44:19 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +33,6 @@
 # define MINIMAP_WIDTH 300
 
 # define FPS_COLOR 0xFF6942FF
-
-// ! REMOVE THIS
-# define OLD_MAP_2D 0xAA50AAFF
 
 # define MVT_SPEED 2
 # define ROT_SPEED 2
