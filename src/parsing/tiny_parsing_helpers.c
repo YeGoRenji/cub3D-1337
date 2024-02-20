@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   tiny_parsing_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 21:43:22 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 17:25:12 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:43:49 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parse.h>
 
-int	item_setter_dispatcher(t_map *m, char *where, char *what)
+int	item_setter_dispatcher(t_map *m, char *line, char *where, char *what)
 {
 	int	res;
 
-	res = 0;
 	if (!where || !what)
 		return (-1);
+	res = 0;
 	res += (!ft_strncmp(where, "NO", 3))
 		+ (!ft_strncmp(where, "SO", 3))
 		+ (!ft_strncmp(where, "WE", 3))
@@ -27,7 +27,11 @@ int	item_setter_dispatcher(t_map *m, char *where, char *what)
 	if (res)
 		return (set_map_texture(m, where, what));
 	else
+	{
+		if (count_chars(line, ',') != 2)
+			err_and_exit("Error with rgb values\n");
 		return (set_map_colors(m, where, what));
+	}
 }
 
 int	check_map_items(t_map *map)

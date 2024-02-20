@@ -6,25 +6,22 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:31:08 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 18:21:44 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:53:30 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
 # include <MLX42/MLX42.h>
+# include <fcntl.h>
 # include <maths.h>
 # include <pthread.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <unistd.h>
-# include <fcntl.h>
 
 # define WIDTH 1920
 # define HEIGHT 1080
-
-# define ll long long
-
 # define THREADS 8
 
 # define TILE_W 25
@@ -43,7 +40,7 @@
 # define ROT_SPEED 2
 
 # define N_TEX "./resources/NLetter.png"
-# define SKYBOX_TEX "./resources/SkyBox5.png"
+# define SKYBOX_TEX "./resources/SkyBox.png"
 # define FLASHON_TEX "./resources/FlashLightOn.png"
 # define FLASHOFF_TEX "./resources/FlashLightOff.png"
 
@@ -142,8 +139,8 @@ typedef struct s_rayhit
 	t_block_type	hit_what;
 }					t_rayhit;
 
-typedef t_ivect2d t_ivector;
-typedef t_vect2d t_vector;
+typedef t_ivect2d	t_ivector;
+typedef t_vect2d	t_vector;
 
 void				do_graphics(t_vars *vars);
 

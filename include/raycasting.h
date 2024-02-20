@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 16:17:23 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/11 18:12:44 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:17:34 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define RAYCASTING_H
 
 # include <structs.h>
+# include <parse.h>
 
 t_rayhit		ray_cast_dda(t_vars *vars, t_vect2d ray);
 int				get_map_val(t_vars *vars, int x, int y);

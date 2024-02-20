@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 20:42:42 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 18:22:50 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:47:36 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,6 @@
 #include <parse.h>
 #include <validation.h>
 #include <clean.h>
-
-void	check(void)
-{
-	// system("leaks cub3D");
-}
 
 void	do_graphics(t_vars *vars)
 {
@@ -38,13 +33,13 @@ int	main(int32_t argc, char *argv[])
 {
 	t_vars	vars;
 
-	atexit(check);
 	if (argc != 2)
 		return (ft_putstr_fd("Usage: ./cub3D map.cub\n", 2), -1);
 	if (parser(&vars, argv[1]))
 		return (-1);
 	if (validator(&vars))
 		return (-1);
+	close(vars.map.fd);
 	initialize(&vars);
 	install_hooks(&vars);
 	mlx_loop(vars.mlx);

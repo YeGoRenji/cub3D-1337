@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_not_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:55:19 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 17:23:20 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:37:08 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ static char	*get_trimmed_line(int fd)
 	return (line);
 }
 
+int	count_chars(const char *s, int c)
+{
+	int	res;
+
+	res = 0;
+	while (*s)
+		res += *s++ == c;
+	return (res);
+}
+
 void	scan_and_dispatch(t_map *m, char *line, int fd)
 {
 	char	**ptr;
@@ -49,7 +59,7 @@ void	scan_and_dispatch(t_map *m, char *line, int fd)
 		if (!(ptr && *ptr) || get_list_len(ptr) != 2)
 			err_and_exit("Parsing error\n");
 		if (get_list_len(ptr) == 2)
-			if (item_setter_dispatcher(m, ptr[0], ptr[1]) == -1)
+			if (item_setter_dispatcher(m, line, ptr[0], ptr[1]) == -1)
 				err_and_exit("Invalid Color\n");
 		(free_stuff(ptr, line), line = NULL);
 		line = get_trimmed_line(fd);

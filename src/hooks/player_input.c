@@ -6,7 +6,7 @@
 /*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 03:19:54 by ylyoussf          #+#    #+#             */
-/*   Updated: 2024/02/14 11:25:57 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:48:47 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,5 @@ void	limit_values(t_vars *vars)
 	vars->tile_size = clamp_value(vars->tile_size, 5, 50);
 	vars->nb_vert_stripes = clamp_value(vars->nb_vert_stripes, 42,
 			vars->mlx->width);
-	vars->fov = clamp_value(vars->fov, 1, 50);
+	vars->fov = clamp_value(vars->fov, 1, 25);
 }

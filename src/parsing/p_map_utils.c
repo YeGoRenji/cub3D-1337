@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_map_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 12:16:48 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 18:14:15 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:43:20 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,30 @@ t_map	*init_map(char *file)
 	return (map);
 }
 
-int	set_map_colors(t_map *map, char *_obj, char *lgbt_colors)
+int	set_map_colors(t_map *m, char *_obj, char *lgbt_colors)
 {
 	int		*where;
-	int		*flag;
+	int		*f;
 	char	**ptr;
-	char	obj;
 
-	flag = NULL;
+	f = NULL;
 	where = NULL;
-	if (!map || !lgbt_colors || !_obj)
+	if (!m || !lgbt_colors || !_obj)
 		return (-1);
-	obj = *_obj;
-	if (obj == 'F')
-		set_where_and_flag(&where, &flag, &map->colors.floor,
-			&map->colors.floor_set);
-	else if (obj == 'C')
-		set_where_and_flag(&where, &flag, &map->colors.ceiling,
-			&map->colors.ceiling_set);
+	if (!ft_strncmp(_obj, "F", 2))
+		set_where_and_flag(&where, &f, &m->colors.floor, &m->colors.floor_set);
+	else if (!ft_strncmp(_obj, "C", 2))
+		set_where_and_flag(&where, &f, &m->colors.ceiling,
+			&m->colors.ceiling_set);
 	else
 		err_and_exit("Invalid surrounding!\n");
-	if (*flag)
-		err_and_exit("Duplicated colors\n!");
+	if (*f)
+		err_and_exit("Duplicated colors!\n");
 	ptr = ft_split(lgbt_colors, ',');
+	if (check_digit_list(ptr))
+		err_and_exit("Rgb not a numeric value!\n");
 	*where = construct_lgbt(ptr[0], ptr[1], ptr[2]);
-	*flag = (*where != -1);
+	*f = (*where != -1);
 	return (free_list(ptr), *where);
 }
 

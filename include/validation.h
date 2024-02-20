@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:01:26 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/12 17:34:45 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:54:19 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define VALIDATION_H
 # include <parse.h>
 # include <structs.h>
-# define ll long long
 
 int		validator(t_vars *vars);
 size_t	count_object(t_map *map, int object);

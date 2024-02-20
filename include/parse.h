@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afatimi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ylyoussf <ylyoussf@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 15:23:11 by afatimi           #+#    #+#             */
-/*   Updated: 2024/02/14 11:09:52 by ylyoussf         ###   ########.fr       */
+/*   Updated: 2024/02/14 21:32:40 by ylyoussf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,11 @@ typedef struct s_map_data
 
 //# define DEBUG
 bool			map_items_collected(t_map *map);
-int				item_setter_dispatcher(t_map *m, char *where, char *what);
+int				item_setter_dispatcher(t_map *m, char *line,
+					char *where, char *what);
 int				parser(t_vars *vars, char *file);
 int				get_map_items(t_map *map);
+int				count_chars(const char *s, int c);
 int				check_extension(char *name, char *extension);
 t_map			*init_map(char *file);
 int				try_open_file(char *file, char *extension);
